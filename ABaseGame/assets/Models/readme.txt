@@ -1,0 +1,1 @@
+ordner für modelle (jedes modell bekommt seinen eigenen ordner zusammen mit texturen und materialien und sounds)

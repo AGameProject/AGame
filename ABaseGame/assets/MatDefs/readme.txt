@@ -1,0 +1,1 @@
+ordner für MaterialDefinitionTemplates (relevant nur für entwicklung eines shadingmodels, Shader bitte im entsprechenden ordner bei Shaders einordnen)

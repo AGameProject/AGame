@@ -1,0 +1,1 @@
+ordner für sämtliche charactermodelle (verschiedene Fractionen in verschiedene ordner)

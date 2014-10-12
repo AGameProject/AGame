@@ -6,6 +6,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import de.agame.appstates.GameState;
 
 /**
  * test
@@ -28,6 +29,8 @@ public class Main extends SimpleApplication {
         geom.setMaterial(mat);
 
         rootNode.attachChild(geom);
+        
+        stateManager.attach(new GameState());
     }
 
     @Override

@@ -7,6 +7,7 @@ package de.agame.appstates;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.scene.Node;
 import de.agame.world.WorldManager;
 
 /**
@@ -20,8 +21,10 @@ public class GameState extends AbstractAppState {
     
     private WorldManager worldManager;
     
-    public GameState() {
-        
+    private Node root;
+    
+    public GameState(Node rootNode) {
+        this.root = rootNode;
     }
     
     @Override
@@ -33,7 +36,7 @@ public class GameState extends AbstractAppState {
         
         this.worldManager = new WorldManager();
         
-        setEnabled(true);
+        enable();
     }
     
     @Override
@@ -59,9 +62,10 @@ public class GameState extends AbstractAppState {
     
     public void enable() {
         worldManager.initialize(app.getAssetManager());
+        root.attachChild(worldManager.getWholeWorld());
     }
     
     public void disable() {
-        
+        root.detachChild(worldManager.getWholeWorld());
     }
 }

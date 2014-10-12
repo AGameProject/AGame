@@ -7,6 +7,7 @@ package de.agame.world;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /**
@@ -21,6 +22,7 @@ public class DayTimeManager {
     public DayTimeManager() {
         sun = new DirectionalLight();
         sun.setColor(new ColorRGBA(0.9f, 1.0f, 0.6f, 1.0f));
+        sun.setDirection(new Vector3f(0.5f, -0.5f, 0.5f).normalizeLocal());
     }
     
     public Spatial getSkyBox() {

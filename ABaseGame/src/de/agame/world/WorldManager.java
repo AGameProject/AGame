@@ -18,6 +18,8 @@ import de.agame.entitys.EntityWorld;
 public class WorldManager {
     private LevelIO io = new LevelIO();
     
+    private DayTimeManager time;
+    
     private Spatial statics;
     private Node dynamics;
     
@@ -26,15 +28,20 @@ public class WorldManager {
     private EntityWorld entitys;
     
     public void initialize(AssetManager assets) {
+        entitys = new EntityWorld();
+        time = new DayTimeManager();
+
         statics = io.loadStaticWorld(StaticLocations.WORLD_MAIN_LEVEL, assets);
         dynamics = new Node("dynamics");
         whole = new Node("world");
         
-        entitys = new EntityWorld();
+        whole.attachChild(statics);
+        whole.attachChild(dynamics);
+        whole.addLight(time.getSun());
     }
     
     public void onUpdate(float tpf) {
-        
+        time.onUpdate(tpf);
     }
     
     public Node getWholeWorld() {

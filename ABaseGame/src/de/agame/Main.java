@@ -30,7 +30,7 @@ public class Main extends SimpleApplication {
 
         rootNode.attachChild(geom);
         
-        stateManager.attach(new GameState());
+        stateManager.attach(new GameState(rootNode));
     }
 
     @Override

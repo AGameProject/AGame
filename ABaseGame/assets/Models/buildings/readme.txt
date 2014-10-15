@@ -1,1 +1,1 @@
-ordner für sämtliche gebäudemodelle
+Ordner für sämtliche Gebäudemodelle

@@ -5,6 +5,7 @@
 package de.agame.world;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.input.InputManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import de.agame.StaticLocations;
@@ -17,6 +18,7 @@ import de.agame.entitys.EntityWorld;
  */
 public class WorldManager {
     private LevelIO io = new LevelIO();
+    private InputManager input;
     
     private DayTimeManager time;
     
@@ -27,7 +29,8 @@ public class WorldManager {
     
     private EntityWorld entitys;
     
-    public void initialize(AssetManager assets) {
+    public void initialize(AssetManager assets, InputManager inputManager) {
+        input = inputManager;
         entitys = new EntityWorld();
         time = new DayTimeManager();
 
@@ -38,6 +41,10 @@ public class WorldManager {
         whole.attachChild(statics);
         whole.attachChild(dynamics);
         whole.addLight(time.getSun());
+    }
+    
+    public InputManager getInput() {
+        return input;
     }
     
     public void onUpdate(float tpf) {

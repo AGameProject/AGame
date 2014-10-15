@@ -61,7 +61,7 @@ public class GameState extends AbstractAppState {
     }
     
     public void enable() {
-        worldManager.initialize(app.getAssetManager());
+        worldManager.initialize(app.getAssetManager(), app.getInputManager());
         root.attachChild(worldManager.getWholeWorld());
     }
     

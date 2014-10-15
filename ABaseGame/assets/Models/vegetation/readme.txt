@@ -1,1 +1,1 @@
-ordner für sämtliche vegetationsmodelle
+Ordner für sämtliche Vegetationsmodelle

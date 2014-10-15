@@ -1,1 +1,1 @@
-ordner für sämtliche tiermodelle
+Odner für sämtliche Tiermodelle

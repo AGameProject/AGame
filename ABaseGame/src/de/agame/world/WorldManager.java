@@ -10,48 +10,45 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import de.agame.StaticLocations;
 import de.agame.data.LevelIO;
-import de.agame.entitys.EntityWorld;
 
 /**
  *
  * @author Fredie
  */
 public class WorldManager {
-    private LevelIO io = new LevelIO();
-    private InputManager input;
+    private LevelIO m_io = new LevelIO();
+    private InputManager m_input;
     
-    private DayTimeManager time;
+    private DayTimeManager m_time;
     
-    private Spatial statics;
-    private Node dynamics;
+    private Spatial m_statics;
+    private Node m_dynamics;
     
-    private Node whole;
+    private Node m_whole;
     
-    private EntityWorld entitys;
     
     public void initialize(AssetManager assets, InputManager inputManager) {
-        input = inputManager;
-        entitys = new EntityWorld();
-        time = new DayTimeManager();
+        m_input = inputManager;
+        m_time = new DayTimeManager();
 
-        statics = io.loadStaticWorld(StaticLocations.WORLD_MAIN_LEVEL, assets);
-        dynamics = new Node("dynamics");
-        whole = new Node("world");
+        m_statics = m_io.loadStaticWorld(StaticLocations.WORLD_MAIN_LEVEL, assets);
+        m_dynamics = new Node("dynamics");
+        m_whole = new Node("world");
         
-        whole.attachChild(statics);
-        whole.attachChild(dynamics);
-        whole.addLight(time.getSun());
+        m_whole.attachChild(m_statics);
+        m_whole.attachChild(m_dynamics);
+        m_whole.addLight(m_time.getSun());
     }
     
     public InputManager getInput() {
-        return input;
+        return m_input;
     }
     
     public void onUpdate(float tpf) {
-        time.onUpdate(tpf);
+        m_time.onUpdate(tpf);
     }
     
     public Node getWholeWorld() {
-        return whole;
+        return m_whole;
     }
 }

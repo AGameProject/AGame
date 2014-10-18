@@ -16,21 +16,21 @@ import com.jme3.scene.Spatial;
  */
 public class DayTimeManager {
     
-    private Spatial sky;
-    private DirectionalLight sun;
+    private Spatial m_sky;
+    private DirectionalLight m_sun;
     
     public DayTimeManager() {
-        sun = new DirectionalLight();
-        sun.setColor(new ColorRGBA(0.9f, 1.0f, 0.6f, 1.0f));
-        sun.setDirection(new Vector3f(0.5f, -0.5f, 0.5f).normalizeLocal());
+        m_sun = new DirectionalLight();
+        m_sun.setColor(new ColorRGBA(0.9f, 1.0f, 0.6f, 1.0f));
+        m_sun.setDirection(new Vector3f(0.5f, -0.5f, 0.5f).normalizeLocal());
     }
     
     public Spatial getSkyBox() {
-        return sky;
+        return m_sky;
     }
     
     public Light getSun() {
-        return sun;
+        return m_sun;
     }
     
     public void onUpdate(float tpf) {

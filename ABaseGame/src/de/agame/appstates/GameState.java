@@ -16,25 +16,25 @@ import de.agame.world.WorldManager;
  */
 public class GameState extends AbstractAppState {
     
-    private Application app;
-    private AppStateManager stateManager;
+    private Application m_app;
+    private AppStateManager m_stateManager;
     
-    private WorldManager worldManager;
+    private WorldManager m_worldManager;
     
-    private Node root;
+    private Node m_root;
     
     public GameState(Node rootNode) {
-        this.root = rootNode;
+        this.m_root = rootNode;
     }
     
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         
-        this.app = app;
-        this.stateManager = stateManager;
+        this.m_app = app;
+        this.m_stateManager = stateManager;
         
-        this.worldManager = new WorldManager();
+        this.m_worldManager = new WorldManager();
         
         enable();
     }
@@ -61,11 +61,11 @@ public class GameState extends AbstractAppState {
     }
     
     public void enable() {
-        worldManager.initialize(app.getAssetManager(), app.getInputManager());
-        root.attachChild(worldManager.getWholeWorld());
+        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager());
+        m_root.attachChild(m_worldManager.getWholeWorld());
     }
     
     public void disable() {
-        root.detachChild(worldManager.getWholeWorld());
+        m_root.detachChild(m_worldManager.getWholeWorld());
     }
 }

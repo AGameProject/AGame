@@ -7,6 +7,7 @@ package de.agame.appstates;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.Node;
 import de.agame.world.WorldManager;
 
@@ -15,12 +16,15 @@ import de.agame.world.WorldManager;
  * @author Fredie
  */
 public class GameState extends AbstractAppState {
-    
+    //process related globals
     private Application m_app;
     private AppStateManager m_stateManager;
     
+    //game related globals
     private WorldManager m_worldManager;
+    private BulletAppState m_physics;
     
+    //the lowest node in the scenegraph
     private Node m_root;
     
     public GameState(Node rootNode) {
@@ -31,10 +35,13 @@ public class GameState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         
+        //initialize members
         this.m_app = app;
         this.m_stateManager = stateManager;
         
+        this.m_physics = new BulletAppState();
         this.m_worldManager = new WorldManager();
+        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager(), m_physics.getPhysicsSpace());
         
         enable();
     }
@@ -60,12 +67,25 @@ public class GameState extends AbstractAppState {
         if(isEnabled()) disable();
     }
     
+    /**
+     * does the necessary stuff to enable gamestate
+     */
     public void enable() {
-        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager());
+        //enable physics
+        m_stateManager.attach(m_physics);
+        
+        //init level and game data
+        m_worldManager.freshLevel();
+        m_worldManager.freshPlayer();
         m_root.attachChild(m_worldManager.getWholeWorld());
     }
     
+    /**
+     * disables the gamestate
+     */
     public void disable() {
+        //detach all level related data from scenegraph
         m_root.detachChild(m_worldManager.getWholeWorld());
+        m_worldManager.setPaused(true);
     }
 }

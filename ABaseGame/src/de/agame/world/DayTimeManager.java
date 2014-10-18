@@ -11,7 +11,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /**
- *
+ * this class will be switched to a abstract control later for easier saving
  * @author Fredie
  */
 public class DayTimeManager {
@@ -33,7 +33,10 @@ public class DayTimeManager {
         return m_sun;
     }
     
+    /**
+     * updates direction and rotation of light and sky
+     * @param tpf time since last update
+     */
     public void onUpdate(float tpf) {
-        //TODO: update according to day - night cycle (if used)
     }
 }

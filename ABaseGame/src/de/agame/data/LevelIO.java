@@ -13,6 +13,12 @@ import com.jme3.scene.Spatial;
  */
 public class LevelIO {
     
+    /**
+     * loads the specified .j3o
+     * @param world path to the file
+     * @param assets the assetmanager to be used for loading
+     * @return a spatial containing the .j3o's data
+     */
     public Spatial loadStaticWorld(String world, AssetManager assets) {
         return assets.loadModel(world);
     }

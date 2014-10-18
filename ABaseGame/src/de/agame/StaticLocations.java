@@ -10,5 +10,8 @@ package de.agame;
  */
 public class StaticLocations {
     
+    /**
+     * path to the main level
+     */
     public static final String WORLD_MAIN_LEVEL = "Scenes/world.j3o";
 }

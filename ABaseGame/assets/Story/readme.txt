@@ -1,1 +1,0 @@
-Alle Notizen oder konkrete Beschreibungen bezüglich Setting und Story hier rein :) 

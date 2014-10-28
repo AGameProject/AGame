@@ -1,4 +1,4 @@
-package de.agame.testing;
+package de.turnlane.testing;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;

@@ -1,0 +1,31 @@
+Name
+---------
+Selbstgegebener Name der Rasse: erhabene Beispielklasse
+Kurzname:   Beispiel
+Abwertende Bezeichnung: Schinken
+
+Körper
+----------
+Beine: 3
+Arme: 1
+Köpfe: 1
+(nichtzutreffendes bitte streichen!)
+Durchschnittliche Größe: 1,2m
+Charakteristische Merkmale: Haare am Kopf
+Unterschiede zwischen den Geschlechtern: Länge der Haare
+
+Ökosystem
+----------
+Ernährung: Fleisch! Jäger.
+Verhältnis zur Natur: nicht besonders
+Typischer Tagesinhalt: Jagen, fressen, masturbieren.
+
+
+Verhältnisse zu anderen Rassen
+---------
+Neutral: Rasse A
+Verfeindet: Rasse B
+Kooperativ: keine.
+
+
+etc. Jeder darf gerne Kategorien ergänzen! :)

@@ -18,6 +18,8 @@ import com.jme3.scene.Spatial;
  */
 public class GameTest extends SimpleApplication {
 
+    private Spatial terrain;
+    
     public static void main(String[] args) {
         GameTest app = new GameTest();
         app.start();
@@ -38,12 +40,13 @@ public class GameTest extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
+        terrain = assetManager.loadModel("Scenes/world.j3o");
+        rootNode.attachChild(terrain);
+        
         Spatial tree = loadModel("vegetation/laubbaum_1/laubbaum_1", "vegetation/laubbaum_1/baumstamm");
-        
         Node trees = new SpatialDistributor(new Vector2f(100f,100f),0.25f,tree).distribute();
-        
         rootNode.attachChild(trees);
-        
+               
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);

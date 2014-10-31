@@ -4,15 +4,13 @@
  */
 package de.agame.entitys;
 
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
-import com.jme3.scene.control.AbstractControl;
+import com.jme3.scene.Spatial;
 
 /**
- *
+ * BaseClass for all AI driven Characters in the Game
  * @author Fredie
  */
-public abstract class EntityBehavior extends AbstractControl{
+public abstract class EntityLiving extends Entity{
 
     /**
      * how many complex updates per second are executed
@@ -22,6 +20,10 @@ public abstract class EntityBehavior extends AbstractControl{
     //calculate time between complex updates
     private float m_complexElapse = 1.0f / (float) COMPLEX_UPDATES_PER_SECOND;
     private float m_accu = 0;
+    
+    public EntityLiving(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset) {
+        super(spatial, spatialcontrolset, enviromentobservationset);
+    }
     
     @Override
     protected void controlUpdate(float tpf) {
@@ -36,10 +38,6 @@ public abstract class EntityBehavior extends AbstractControl{
         
         //always do simple update
         simpleUpdate(tpf);
-    }
-
-    @Override
-    protected void controlRender(RenderManager rm, ViewPort vp) {
     }
     
     /**

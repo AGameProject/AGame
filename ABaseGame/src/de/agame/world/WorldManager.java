@@ -6,15 +6,18 @@ package de.agame.world;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.scene.Geometry;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import de.agame.StaticLocations;
 import de.agame.data.LevelIO;
+import de.agame.entitys.Entity;
+import de.agame.entitys.EntityManager;
 
 /**
  *
@@ -26,6 +29,8 @@ public class WorldManager {
     private InputManager m_input;
     private AssetManager m_assets;
     private PhysicsSpace m_physicsspace;
+    private EntityManager m_entitymanager;
+    private ChaseCamera m_chasecam;
     private boolean m_paused = false;
     
     //levelrelated members
@@ -33,23 +38,31 @@ public class WorldManager {
     private Spatial m_statics;
     private Node m_dynamics;
     private Node m_whole;
-    private Spatial m_player;
     
     
-    public void initialize(AssetManager assets, InputManager inputManager, PhysicsSpace physicsspace) {
+    public void initialize(AssetManager assets, InputManager inputManager, Camera cam, PhysicsSpace physicsspace) {
         m_input = inputManager;
         m_assets = assets;
         m_whole = new Node("world");
+        m_dynamics = new Node("dynamics");
         m_physicsspace = physicsspace;
+        m_chasecam = new ChaseCamera(cam, m_dynamics, m_input);
+        m_chasecam.setDragToRotate(false);
+        m_chasecam.setInvertVerticalAxis(true);
+        
+        m_entitymanager = new EntityManager();
+        m_entitymanager.finishInit(m_physicsspace, m_dynamics, cam, m_chasecam, m_input, m_assets);
     }
     
     /**
      * Loads data for a fresh untouched level
      */
     public void freshLevel() {
-        //load levelstatics and prepare dynamics node
+        //load levelstatics
         m_statics = m_io.loadStaticWorld(StaticLocations.WORLD_MAIN_LEVEL, m_assets);
-        m_dynamics = new Node("dynamics");
+        RigidBodyControl scenecontroll = new RigidBodyControl(CollisionShapeFactory.createMeshShape(m_statics), 0);
+        m_statics.addControl(scenecontroll);
+        m_physicsspace.add(m_statics);
         m_time = new DayTimeManager();
         
         //attach all leveldata to this worlds content
@@ -59,23 +72,11 @@ public class WorldManager {
     }
     
     /**
-     * loads a fresh unmodified player character
+     * spawns a new EntityPlayer with a chasecam
      */
-    public void freshPlayer() {
-        //create basic character
-        Box box = new Box(1, 1.8f, 1);
-        Geometry geom = new Geometry("player", box);
-        geom.setLocalTranslation(0, 1.8f, 0);
-        
-        Material mat = new Material(m_assets, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        
-        geom.setMaterial(mat);
-        
-        m_player = geom;
-        
-        //attach the player to this worlds content
-        m_whole.attachChild(m_player);
+    public void spawnFreshPlayer() {
+        Entity e = m_entitymanager.spawnEntityAt("Player", Vector3f.ZERO);
+        m_chasecam.setSpatial(e.getWrapperSpatial());
     }
     
     /**

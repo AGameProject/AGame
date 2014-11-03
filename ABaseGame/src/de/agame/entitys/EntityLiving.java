@@ -27,6 +27,8 @@ public abstract class EntityLiving extends Entity{
     
     @Override
     protected void controlUpdate(float tpf) {
+        super.controlUpdate(tpf);
+        
         //accumulate time passed since the last complex update sceduled
         m_accu += tpf;
         

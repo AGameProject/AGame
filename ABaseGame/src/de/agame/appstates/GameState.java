@@ -40,8 +40,6 @@ public class GameState extends AbstractAppState {
         this.m_stateManager = stateManager;
         
         this.m_physics = new BulletAppState();
-        this.m_worldManager = new WorldManager();
-        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager(), m_physics.getPhysicsSpace());
         
         enable();
     }
@@ -74,9 +72,13 @@ public class GameState extends AbstractAppState {
         //enable physics
         m_stateManager.attach(m_physics);
         
+        //init worldmanager
+        this.m_worldManager = new WorldManager();
+        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager(), m_app.getCamera(), m_physics.getPhysicsSpace());
+        
         //init level and game data
         m_worldManager.freshLevel();
-        m_worldManager.freshPlayer();
+        m_worldManager.spawnFreshPlayer();
         m_root.attachChild(m_worldManager.getWholeWorld());
     }
     

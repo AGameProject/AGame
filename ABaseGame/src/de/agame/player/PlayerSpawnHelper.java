@@ -1,0 +1,57 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.agame.player;
+
+import com.jme3.asset.AssetManager;
+import com.jme3.bullet.control.BetterCharacterControl;
+import com.jme3.input.InputManager;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.shape.Box;
+import de.agame.entitys.Entity;
+import de.agame.entitys.EntitySpawnHelper;
+import de.agame.entitys.EnviromentObservationSet;
+import de.agame.entitys.SpatialControlSet;
+
+/**
+ *
+ * @author Fredie
+ */
+public class PlayerSpawnHelper implements EntitySpawnHelper{
+
+    public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset) {
+        Box box = new Box(new Vector3f(0.0f, 0.9f, 0.0f), 0.5f, 0.9f, 0.5f);
+        Geometry geom = new Geometry("PlayerBody", box);
+        Material mat = new Material(assets, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", ColorRGBA.Blue);
+        geom.setMaterial(mat);
+        
+        Node wrapper = new Node();
+        wrapper.attachChild(geom);
+        
+        BetterCharacterControl control = new BetterCharacterControl(0.5f, 1.8f, 1.0f);
+        control.setJumpForce(new Vector3f(0.0f, 10.0f, 0.0f));
+        control.setGravity(new Vector3f(0, 1.0f, 0));
+        
+        wrapper.addControl(control);
+        
+        SpatialControlSet spatset = new SpatialControlSet();
+        spatset.setMovementControll(control);
+        
+        EntityPlayer player = new EntityPlayer(wrapper, spatset, enviromentobservationset);
+        wrapper.addControl(player);
+        
+        return player;
+    }
+
+    public void spawnEntityAt(Vector3f spawnpoint, Entity entity, InputManager input) {
+        entity.teleportTo(spawnpoint.addLocal(0, 10, 0));
+        entity.onAttach(input);
+    }
+    
+}

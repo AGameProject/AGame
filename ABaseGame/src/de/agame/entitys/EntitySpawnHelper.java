@@ -14,7 +14,7 @@ import com.jme3.math.Vector3f;
  */
 public interface EntitySpawnHelper {
     
-    public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset);
+    public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset);
     
-    public void spawnEntityAt(Vector3f spawnpoint, Entity entity, InputManager input);
+    public void spawnEntityAt(Vector3f spawnpoint, Entity entity);
 }

@@ -17,6 +17,7 @@ import de.agame.entitys.Entity;
 import de.agame.entitys.EntitySpawnHelper;
 import de.agame.entitys.EnviromentObservationSet;
 import de.agame.entitys.SpatialControlSet;
+import de.agame.entitys.UserInterfaceSet;
 
 /**
  *
@@ -24,7 +25,7 @@ import de.agame.entitys.SpatialControlSet;
  */
 public class PlayerSpawnHelper implements EntitySpawnHelper{
 
-    public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset) {
+    public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         Box box = new Box(new Vector3f(0.0f, 0.9f, 0.0f), 0.5f, 0.9f, 0.5f);
         Geometry geom = new Geometry("PlayerBody", box);
         Material mat = new Material(assets, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -43,15 +44,15 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         SpatialControlSet spatset = new SpatialControlSet();
         spatset.setMovementControll(control);
         
-        EntityPlayer player = new EntityPlayer(wrapper, spatset, enviromentobservationset);
+        EntityPlayer player = new EntityPlayer(wrapper, spatset, enviromentobservationset, userinterfaceset);
         wrapper.addControl(player);
         
         return player;
     }
 
-    public void spawnEntityAt(Vector3f spawnpoint, Entity entity, InputManager input) {
+    public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
         entity.teleportTo(spawnpoint.addLocal(0, 10, 0));
-        entity.onAttach(input);
+        entity.onAttach();
     }
     
 }

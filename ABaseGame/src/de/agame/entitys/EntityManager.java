@@ -21,22 +21,26 @@ import java.util.Iterator;
  * @author Fredie
  */
 public class EntityManager {
-    private InputManager m_inputmanager;
     private AssetManager m_assets;
     
     private ArrayList<Entity> m_entitys = new ArrayList<Entity>();
     private HashMap<String, EntitySpawnHelper> m_spawnhelpers = new HashMap<String, EntitySpawnHelper>();
-    private EnviromentObservationSet m_enviromentobservationset;
     
-    public void finishInit(PhysicsSpace physicsspace, Node root, Camera cam, ChaseCamera chasecam, InputManager inputmanager, AssetManager assets) {
+    private EnviromentObservationSet m_enviromentobservationset;
+    private UserInterfaceSet m_userinterfaceset;
+    
+    public void finishInit(PhysicsSpace physicsspace, Node root, Node gui, Camera cam, ChaseCamera chasecam, InputManager inputmanager, AssetManager assets) {
         m_enviromentobservationset = new EnviromentObservationSet();
         m_enviromentobservationset.setEntityManager(this);
         m_enviromentobservationset.setPhysicsSpace(physicsspace);
         m_enviromentobservationset.setRoot(root);
-        m_enviromentobservationset.setChaseCam(chasecam);
-        m_enviromentobservationset.setCam(cam);
         
-        m_inputmanager = inputmanager;
+        m_userinterfaceset = new UserInterfaceSet();
+        m_userinterfaceset.setCam(cam);
+        m_userinterfaceset.setChaseCam(chasecam);
+        m_userinterfaceset.setInputManager(inputmanager);
+        m_userinterfaceset.setGuiNode(gui);
+        
         m_assets = assets;
         
         //register SpawnHelpers
@@ -53,16 +57,16 @@ public class EntityManager {
     
     public Entity spawnEntityAt(String entity, Vector3f position) {
         EntitySpawnHelper helper = m_spawnhelpers.get(entity);
-        Entity e = helper.createFromScratch(m_assets, m_enviromentobservationset);
+        Entity e = helper.createFromScratch(m_assets, m_enviromentobservationset, m_userinterfaceset);
         
-        helper.spawnEntityAt(position, e, m_inputmanager);
+        helper.spawnEntityAt(position, e);
         m_entitys.add(e);
         
         return e;
     }
     
     public void despawnEntity(Entity entity) {
-        entity.onDetach(m_inputmanager);
+        entity.onDetach();
         m_entitys.remove(entity);
     }
     

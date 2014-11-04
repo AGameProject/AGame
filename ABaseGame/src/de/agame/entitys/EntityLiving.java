@@ -21,8 +21,8 @@ public abstract class EntityLiving extends Entity{
     private float m_complexElapse = 1.0f / (float) COMPLEX_UPDATES_PER_SECOND;
     private float m_accu = 0;
     
-    public EntityLiving(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset) {
-        super(spatial, spatialcontrolset, enviromentobservationset);
+    public EntityLiving(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
+        super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
     }
     
     @Override

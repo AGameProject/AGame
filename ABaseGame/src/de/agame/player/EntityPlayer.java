@@ -13,6 +13,7 @@ import com.jme3.scene.Spatial;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EnviromentObservationSet;
 import de.agame.entitys.SpatialControlSet;
+import de.agame.entitys.UserInterfaceSet;
 
 /**
  *
@@ -29,8 +30,8 @@ public class EntityPlayer extends Entity implements ActionListener{
     
     private float m_walkspeed = 1000f;
     
-    public EntityPlayer(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset) {
-        super(spatial, spatialcontrolset, enviromentobservationset);
+    public EntityPlayer(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
+        super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
     }
     
     public void setWalkSpeed(float speed) {
@@ -47,8 +48,10 @@ public class EntityPlayer extends Entity implements ActionListener{
     }
     
     @Override
-    public void onAttach(InputManager inputmanager) {
-        super.onAttach(inputmanager);
+    public void onAttach() {
+        super.onAttach();
+        
+        InputManager inputmanager = m_userinterfaceset.getInputManager();
         
         inputmanager.addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
         inputmanager.addMapping("backward", new KeyTrigger(KeyInput.KEY_S));
@@ -61,8 +64,10 @@ public class EntityPlayer extends Entity implements ActionListener{
     }
     
     @Override
-    public void onDetach(InputManager inputmanager) {
-        super.onDetach(inputmanager);
+    public void onDetach() {
+        super.onDetach();
+        
+        InputManager inputmanager = m_userinterfaceset.getInputManager();
         
         inputmanager.deleteMapping("forward");
         inputmanager.deleteMapping("backward");
@@ -85,8 +90,8 @@ public class EntityPlayer extends Entity implements ActionListener{
     public void controlUpdate(float tpf) {
         super.controlUpdate(tpf);
         
-        Vector3f camDir = m_enviromentobservationset.getCam().getDirection();
-        Vector3f camLeft = m_enviromentobservationset.getCam().getLeft();
+        Vector3f camDir = m_userinterfaceset.getCam().getDirection();
+        Vector3f camLeft = m_userinterfaceset.getCam().getLeft();
         camDir.setY(0);
         camLeft.setY(0);
         camDir.normalizeLocal();

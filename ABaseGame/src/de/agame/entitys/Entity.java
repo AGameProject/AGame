@@ -22,13 +22,15 @@ public class Entity extends AbstractControl{
     protected Spatial m_spatial;
     protected SpatialControlSet m_spatialcontrolset;
     protected EnviromentObservationSet m_enviromentobservationset;
+    protected UserInterfaceSet m_userinterfaceset;
     
     protected float m_timeexisted = 0;
     
-    public Entity(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset) {
+    public Entity(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         m_spatial = spatial;
         m_spatialcontrolset = spatialcontrolset;
         m_enviromentobservationset = enviromentobservationset;
+        m_userinterfaceset = userinterfaceset;
     }
     
     @Override
@@ -65,13 +67,13 @@ public class Entity extends AbstractControl{
         return m_spatial;
     }
     
-    public void onAttach(InputManager inputmanager) {
+    public void onAttach() {
         m_enviromentobservationset.getPhysicsSpace().addAll(m_spatial);
         m_enviromentobservationset.getPhysicsSpace().add(m_spatialcontrolset.getMovementControl());
         m_enviromentobservationset.getRoot().attachChild(m_spatial);
     }
     
-       public void onDetach(InputManager inputmanager) {
+       public void onDetach() {
         m_enviromentobservationset.getPhysicsSpace().removeAll(m_spatial);
         m_enviromentobservationset.getPhysicsSpace().remove(m_spatialcontrolset.getMovementControl());
         m_enviromentobservationset.getRoot().detachChild(m_spatial);

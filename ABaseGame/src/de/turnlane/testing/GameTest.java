@@ -3,7 +3,6 @@ package de.turnlane.testing;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -26,27 +25,28 @@ public class GameTest extends SimpleApplication {
     }
 
     
-    private Spatial loadModel(String modelPath, String MatPath){
-        /** Load a model. Uses model and texture from jme3-test-data library! */ 
+    private Spatial loadModel(String modelPath){
         Spatial model = assetManager.loadModel("Models/"+modelPath+".j3o");
-        //Material treeMat = assetManager.loadMaterial("Materials/"+path+".j3md");
         
-        Material treeMat = assetManager.loadMaterial("MatDefs/"+MatPath+".j3m");
-        treeMat.setBoolean("UseMaterialColors", true);
-        model.setMaterial(treeMat);
         return model;
     }
     
     
     @Override
-    public void simpleInitApp() {
+    public void simpleInitApp() {       
         terrain = assetManager.loadModel("Scenes/world.j3o");
         rootNode.attachChild(terrain);
+
+        Vector2f forestBounds = new Vector2f(200f,200f);
         
-        Spatial tree = loadModel("vegetation/laubbaum_1/laubbaum_1", "vegetation/laubbaum_1/baumstamm");
-        Node trees = new SpatialDistributor(new Vector2f(100f,100f),0.25f,tree).distribute();
+        Spatial[] treeModels = new Spatial[2];
+        treeModels[0] = loadModel("vegetation/Dreiastbaum/Dreiastbaum_1");
+        treeModels[1] = loadModel("vegetation/Dreiastbaum/Dreiastbaum_2");
+        Node trees = new SpatialDistributor(forestBounds,0.25f,treeModels).distribute();
         rootNode.attachChild(trees);
-               
+        
+        // Spatial windmühle = loadModel("buildings/Windmühle");
+        
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
@@ -54,7 +54,7 @@ public class GameTest extends SimpleApplication {
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(new ColorRGBA(0.1f,0.1f,0.1f, 1f));
 
-        rootNode.addLight(ambient); 
+        rootNode.addLight(ambient);
     }
 
     @Override

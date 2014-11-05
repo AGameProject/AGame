@@ -106,5 +106,6 @@ public class EntityPlayer extends Entity implements ActionListener{
         
         m_walkdirection.multLocal(m_walkspeed).multLocal(tpf);
         m_spatialcontrolset.getMovementControl().setWalkDirection(m_walkdirection);
+        m_spatialcontrolset.getMovementControl().setViewDirection(m_walkdirection);
     }
 }

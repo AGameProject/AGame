@@ -1,1 +1,1 @@
-ordner für Shader (nur für shadingmodelle nötig)
+Ordner für Shader (nur für Shadingmodelle nötig)

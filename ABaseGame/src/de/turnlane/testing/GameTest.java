@@ -44,7 +44,7 @@ public class GameTest extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {       
-        terrain = assetManager.loadModel("Scenes/world.j3o");
+        terrain = assetManager.loadModel("Scenes/testing/world.j3o");
         rootNode.attachChild(terrain);
         
         flyCam.setMoveSpeed(10);

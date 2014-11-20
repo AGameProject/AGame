@@ -29,7 +29,6 @@ varying vec4 DiffuseSum;
 varying vec3 SpecularSum;
 
 varying vec3 ec_pos;
-varying mat4 ec_mat;
 
 attribute vec3 inPosition;
 attribute vec2 inTexCoord;
@@ -139,8 +138,6 @@ void main(){
    vec4 modelSpacePos = vec4(inPosition, 1.0);
    vec3 modelSpaceNorm = inNormal;
 
-   ec_pos = (modelSpacePos * g_WorldMatrix).xyz;
-//   ec_mat = inverse(g_WorldViewMatrix);
    
    #ifndef VERTEX_LIGHTING
         vec3 modelSpaceTan  = inTangent.xyz;
@@ -226,4 +223,6 @@ void main(){
     #ifdef USE_REFLECTION
         computeRef(modelSpacePos);
     #endif 
+ 
+   ec_pos = wvPosition.xyz;
 }

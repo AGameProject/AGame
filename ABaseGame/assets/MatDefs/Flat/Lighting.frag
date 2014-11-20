@@ -13,7 +13,6 @@ varying vec4 DiffuseSum;
 varying vec3 SpecularSum;
 
 varying vec3 ec_pos;
-varying mat4 ec_mat;
 
 #ifndef VERTEX_LIGHTING
   uniform vec4 g_LightDirection;
@@ -224,7 +223,6 @@ void main(){
       #endif      
     #elif !defined(VERTEX_LIGHTING)
       vec3 normal = normalize(cross(dFdx(ec_pos), dFdy(ec_pos)));
-//      normal = normalize((vec4(normal, 1.0) * ec_mat).xyz);
       #if !defined(LOW_QUALITY) && !defined(V_TANGENT)
          normal = normalize(normal);
       #endif

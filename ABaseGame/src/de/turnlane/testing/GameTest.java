@@ -1,6 +1,12 @@
 package de.turnlane.testing;
 
+import com.bulletphysics.dynamics.RigidBody;
+import com.bulletphysics.linearmath.MotionState;
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -10,6 +16,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.LodControl;
+import de.agame.controls.BetterLodControl;
 
 /**
  * Ein Test mit meinem Baum. Generiert einen grünen Wald.
@@ -33,7 +40,7 @@ public class GameTest extends SimpleApplication {
     }
     
     private LodControl createLodControl() {
-        LodControl lc = new LodControl();
+        LodControl lc = new BetterLodControl();
         lc.setDistTolerance(10f);
         lc.setTrisPerPixel(0.02f);
         lc.setEnabled(true);
@@ -44,8 +51,16 @@ public class GameTest extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {       
+        BulletAppState physics = new BulletAppState();
+        stateManager.attach(physics);
+        
         terrain = assetManager.loadModel("Scenes/testing/world.j3o");
+        RigidBodyControl terrainshape = new RigidBodyControl(CollisionShapeFactory.createMeshShape(terrain), 0);
+        terrainshape.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
+        terrain.addControl(terrainshape);
+        
         rootNode.attachChild(terrain);
+        physics.getPhysicsSpace().add(terrain);
         
         flyCam.setMoveSpeed(10);
 
@@ -66,7 +81,7 @@ public class GameTest extends SimpleApplication {
             treeModels[0] = (Node) loadModel("vegetation/Dreiastbaum/Dreiastbaum_1");
             treeModels[1] = (Node) loadModel("vegetation/Dreiastbaum/Dreiastbaum_2");
         }
-        Node trees = new SpatialDistributor(forestBounds,0.0625f,treeModels).distribute();
+        Node trees = new SpatialDistributor(forestBounds,0.0625f,treeModels).distribute(physics.getPhysicsSpace());
         
         rootNode.attachChild(trees);
         

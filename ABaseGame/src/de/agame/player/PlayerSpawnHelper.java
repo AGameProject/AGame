@@ -12,6 +12,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EntitySpawnHelper;
@@ -27,13 +28,10 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
 
     public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         Box box = new Box(new Vector3f(0.0f, 0.9f, 0.0f), 0.5f, 0.9f, 0.5f);
-        Geometry geom = new Geometry("PlayerBody", box);
-        Material mat = new Material(assets, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
+        Spatial model = assets.loadModel("Models/characters/Test Charakter/Test Charakter_ready.j3o");
         
         Node wrapper = new Node();
-        wrapper.attachChild(geom);
+        wrapper.attachChild(model);
         
         BetterCharacterControl control = new BetterCharacterControl(0.5f, 1.8f, 1.0f);
         control.setJumpForce(new Vector3f(0.0f, 10.0f, 0.0f));

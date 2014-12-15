@@ -4,6 +4,8 @@
  */
 package de.agame.player;
 
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.LoopMode;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -26,12 +28,18 @@ public class EntityPlayer extends Entity implements ActionListener{
     private boolean m_forward = false;
     private boolean m_backward = false;
     
+    private boolean m_laststanding = true;
+    private boolean m_jumping = false;
+    private AnimChannel m_channel;
+    
     private Vector3f m_walkdirection = new Vector3f();
     
     private float m_walkspeed = 1000f;
     
     public EntityPlayer(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
+        
+        m_channel = spatialcontrolset.getAnimationControl().createChannel();
     }
     
     public void setWalkSpeed(float speed) {
@@ -83,12 +91,32 @@ public class EntityPlayer extends Entity implements ActionListener{
         else if(name.equals("backward")) m_backward = isPressed;
         else if(name.equals("left")) m_left = isPressed;
         else if(name.equals("right")) m_right = isPressed;
-        else if(name.equals("jump") && isPressed) m_spatialcontrolset.getMovementControl().jump();
+        else if(name.equals("jump") && isPressed) {
+            m_spatialcontrolset.getMovementControl().jump();
+            m_channel.setAnim("Springen");
+            m_channel.setSpeed(0.5f);
+            m_channel.setLoopMode(LoopMode.DontLoop);
+            m_jumping = true;
+        }
     }
     
     @Override
     public void controlUpdate(float tpf) {
         super.controlUpdate(tpf);
+        
+        if(m_jumping && m_spatialcontrolset.getMovementControl().isOnGround()) {
+            m_jumping = false;
+            
+            if(m_laststanding) {
+                m_channel.setAnim("Stehen", 0.5f);
+                m_channel.setSpeed(1.0f);
+                m_channel.setLoopMode(LoopMode.Loop);
+            } else {
+                m_channel.setAnim("Laufen", 0.5f);
+                m_channel.setSpeed(2.0f);
+                m_channel.setLoopMode(LoopMode.Loop);
+            }
+        }
         
         Vector3f camDir = m_userinterfaceset.getCam().getDirection();
         Vector3f camLeft = m_userinterfaceset.getCam().getLeft();
@@ -105,7 +133,22 @@ public class EntityPlayer extends Entity implements ActionListener{
         if(m_backward) m_walkdirection.addLocal(camDir.negate());
         
         m_walkdirection.multLocal(m_walkspeed).multLocal(tpf);
-        m_spatialcontrolset.getMovementControl().setWalkDirection(m_walkdirection);
-        m_spatialcontrolset.getMovementControl().setViewDirection(m_walkdirection);
+        if(!m_jumping) m_spatialcontrolset.getMovementControl().setWalkDirection(m_walkdirection);
+        
+        if(m_walkdirection.length() != 0) {
+            m_spatialcontrolset.getMovementControl().setViewDirection(m_walkdirection.normalize());
+            
+            if(m_laststanding && !m_jumping) {
+                m_laststanding = false;
+                m_channel.setAnim("Laufen", 0.5f);
+                m_channel.setSpeed(2.0f);
+                m_channel.setLoopMode(LoopMode.Loop);
+            }
+        } else if(!m_laststanding && !m_jumping) {
+            m_laststanding = true;
+            m_channel.setAnim("Stehen", 0.5f);
+            m_channel.setSpeed(1.0f);
+            m_channel.setLoopMode(LoopMode.Loop);
+        }
     }
 }

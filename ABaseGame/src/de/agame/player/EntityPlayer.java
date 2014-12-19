@@ -30,6 +30,7 @@ public class EntityPlayer extends Entity implements ActionListener{
     
     private boolean m_laststanding = true;
     private boolean m_jumping = false;
+    private boolean m_sprinting = false;
     private AnimChannel m_channel;
     
     private Vector3f m_walkdirection = new Vector3f();
@@ -66,6 +67,7 @@ public class EntityPlayer extends Entity implements ActionListener{
         inputmanager.addMapping("left", new KeyTrigger(KeyInput.KEY_A));
         inputmanager.addMapping("right", new KeyTrigger(KeyInput.KEY_D));
         inputmanager.addMapping("jump", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputmanager.addMapping("sprint", new KeyTrigger(KeyInput.KEY_LSHIFT));
         
         inputmanager.addListener(this, "forward", "backward", "left", "right", "jump");
         
@@ -81,6 +83,8 @@ public class EntityPlayer extends Entity implements ActionListener{
         inputmanager.deleteMapping("backward");
         inputmanager.deleteMapping("left");
         inputmanager.deleteMapping("right");
+        inputmanager.deleteMapping("jump");
+        inputmanager.deleteMapping("sprint");
         
         inputmanager.removeListener(this);
         
@@ -97,7 +101,7 @@ public class EntityPlayer extends Entity implements ActionListener{
             m_channel.setSpeed(0.5f);
             m_channel.setLoopMode(LoopMode.DontLoop);
             m_jumping = true;
-        }
+        } else if(name.equals("sprint")) m_sprinting = isPressed;
     }
     
     @Override

@@ -10,7 +10,6 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import de.agame.entitys.EntityLivingAnimated;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
@@ -28,18 +27,8 @@ public class EntityPlayer extends EntityLivingAnimated implements ActionListener
     
     private Vector3f m_walkdirection = new Vector3f();
     
-    private float m_walkspeed = 1000f;
-    
     public EntityPlayer(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
-    }
-    
-    public void setWalkSpeed(float speed) {
-        m_walkspeed = speed;
-    }
-    
-    public float getWalkSpeed() {
-        return m_walkspeed;
     }
     
     @Override
@@ -108,7 +97,6 @@ public class EntityPlayer extends EntityLivingAnimated implements ActionListener
         if(m_forward) m_walkdirection.addLocal(camDir);
         if(m_backward) m_walkdirection.addLocal(camDir.negate());
         
-        m_walkdirection.multLocal(m_walkspeed).multLocal(tpf);
         setWalkDirection(m_walkdirection);
     }
 }

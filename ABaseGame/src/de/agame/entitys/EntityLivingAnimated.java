@@ -90,10 +90,12 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     public void setWalkDirection(Vector3f dir) {
         boolean shouldwalk = dir.lengthSquared() != 0;
         
-        dir.normalizeLocal().multLocal(m_ltpf * m_wslerp.getCurrentValue());
-        m_spatialcontrolset.getMovementControl().setWalkDirection(dir);
         
-        if(shouldwalk) m_spatialcontrolset.getMovementControl().setViewDirection(dir.normalize());
+        if(shouldwalk) {
+            m_spatialcontrolset.getMovementControl().setViewDirection(dir.normalize());
+            dir.normalizeLocal().multLocal(m_ltpf * m_wslerp.getCurrentValue());
+            m_spatialcontrolset.getMovementControl().setWalkDirection(dir);
+        }
         
         if(!m_walking && shouldwalk) {
             if(m_sprinting) {
@@ -104,8 +106,8 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
                 if(!m_caplaying) m_walkanim.play(m_animchannel);
             }
         } else if(m_walking && !shouldwalk) {
-            if(m_sprinting) m_wslerp.setGoal(0, 1.0f);
-            else m_wslerp.setGoal(0, 0.3f);
+            if(m_sprinting) m_wslerp.setGoal(0, 0.3f);
+            else m_wslerp.setGoal(0, 0.15f);
             if(!m_caplaying) m_idleanim.play(m_animchannel);
         }
         
@@ -160,7 +162,8 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     public void simpleUpdate(float tpf) {
         m_wslerp.update(tpf);
         m_isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
-        m_spatialcontrolset.getMovementControl().getWalkDirection().normalizeLocal().mult(tpf * m_wslerp.getCurrentValue());
+        Vector3f wdir = m_spatialcontrolset.getMovementControl().getWalkDirection().normalizeLocal().mult(tpf * m_wslerp.getCurrentValue());
+        m_spatialcontrolset.getMovementControl().setWalkDirection(wdir);
         
         m_ltpf = tpf;
     }

@@ -104,10 +104,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
                 if(!m_caplaying) m_walkanim.play(m_animchannel);
             }
         } else if(m_walking && !shouldwalk) {
-            if(m_sprinting) {
-                m_wslerp.setGoal(0, 1.0f);
-                System.out.println("Goal is zero");
-            }
+            if(m_sprinting) m_wslerp.setGoal(0, 1.0f);
             else m_wslerp.setGoal(0, 0.3f);
             if(!m_caplaying) m_idleanim.play(m_animchannel);
         }

@@ -5,7 +5,6 @@
 package de.agame.entitys;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
 
 /**

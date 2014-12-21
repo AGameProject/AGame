@@ -12,6 +12,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import de.agame.misc.FloatInterpolator;
 import java.util.HashMap;
 
 /**
@@ -28,10 +29,14 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private AnimLink m_jumpanim;
     
     private boolean m_walking = false;
+    private float m_walkspeed = 1000.0f;
     private boolean m_sprinting = false;
-    private float m_sprintfactor = 2.0f;
+    private float m_sprintspeed = 2000.0f;
     private boolean m_isinAir = false;
     private boolean m_caplaying = false;
+    
+    private float m_ltpf;
+    private FloatInterpolator m_wslerp = new FloatInterpolator();
     
     private AnimChannel m_animchannel;
     
@@ -83,19 +88,28 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     public void setWalkDirection(Vector3f dir) {
-        if(m_sprinting) dir.multLocal(m_sprintfactor);
+        boolean shouldwalk = dir.lengthSquared() != 0;
+        
+        dir.normalizeLocal().multLocal(m_ltpf * m_wslerp.getCurrentValue());
         m_spatialcontrolset.getMovementControl().setWalkDirection(dir);
         
-        boolean shouldwalk = dir.lengthSquared() != 0;
         if(shouldwalk) m_spatialcontrolset.getMovementControl().setViewDirection(dir.normalize());
         
-        if(!m_caplaying) {
-            if(!m_walking && shouldwalk) {
-                if(m_sprinting) m_sprintanim.play(m_animchannel);
-                else m_walkanim.play(m_animchannel);
-            } else if(m_walking && !shouldwalk) {
-                m_idleanim.play(m_animchannel);
+        if(!m_walking && shouldwalk) {
+            if(m_sprinting) {
+                m_wslerp.setGoal(m_sprintspeed, 1.0f);
+                if(!m_caplaying) m_sprintanim.play(m_animchannel);
+            } else {
+                m_wslerp.setGoal(m_walkspeed, 0.4f);
+                if(!m_caplaying) m_walkanim.play(m_animchannel);
             }
+        } else if(m_walking && !shouldwalk) {
+            if(m_sprinting) {
+                m_wslerp.setGoal(0, 1.0f);
+                System.out.println("Goal is zero");
+            }
+            else m_wslerp.setGoal(0, 0.3f);
+            if(!m_caplaying) m_idleanim.play(m_animchannel);
         }
         
         m_walking = shouldwalk;
@@ -106,12 +120,34 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         m_spatialcontrolset.getMovementControl().jump();
     }
     
+    public void setWalkSpeed(float speed) {
+        m_walkspeed = speed;
+    }
+    
+    public float getWalkSpeed() {
+        return m_walkspeed;
+    }
+    
+    public void setSprintSpeed(float speed) {
+        m_sprintspeed = speed;
+    }
+    
+    public float getSprintSpeed() {
+        return m_sprintspeed;
+    }
+    
     public void setSprinting(boolean sprint) {
         m_sprinting = sprint;
         
         if(m_walking) {
-            if(m_sprinting) m_sprintanim.play(m_animchannel);
-            else m_walkanim.play(m_animchannel);
+            if(m_sprinting) {
+                m_sprintanim.play(m_animchannel);
+                m_wslerp.setGoal(m_sprintspeed, 0.5f);
+            } else {
+                m_walkanim.play(m_animchannel);
+                m_wslerp.setGoal(m_walkspeed, 0.5f);
+            }
+            
         }
     }
     
@@ -125,8 +161,11 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
 
     @Override
     public void simpleUpdate(float tpf) {
+        m_wslerp.update(tpf);
         m_isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
+        m_spatialcontrolset.getMovementControl().getWalkDirection().normalizeLocal().mult(tpf * m_wslerp.getCurrentValue());
         
+        m_ltpf = tpf;
     }
 
     public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {

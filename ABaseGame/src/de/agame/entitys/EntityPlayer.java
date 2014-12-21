@@ -91,8 +91,8 @@ public class EntityPlayer extends EntityLivingAnimated implements ActionListener
     }
     
     @Override
-    public void controlUpdate(float tpf) {
-        super.controlUpdate(tpf);
+    public void simpleUpdate(float tpf) {
+        super.simpleUpdate(tpf);
         
         Vector3f camDir = m_userinterfaceset.getCam().getDirection();
         Vector3f camLeft = m_userinterfaceset.getCam().getLeft();

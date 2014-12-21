@@ -4,6 +4,8 @@
  */
 package de.agame.entitys;
 
+import de.agame.entitys.sets.UserInterfaceSet;
+import de.agame.entitys.sets.EnviromentObservationSet;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.input.ChaseCamera;
@@ -11,7 +13,7 @@ import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
-import de.agame.player.PlayerSpawnHelper;
+import de.agame.entitys.spawnhelpers.PlayerSpawnHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.player;
+package de.agame.entitys.spawnhelpers;
 
+import de.agame.entitys.EntityPlayer;
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.BetterCharacterControl;
@@ -13,9 +14,9 @@ import com.jme3.scene.shape.Box;
 import de.agame.entitys.AnimLink;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EntitySpawnHelper;
-import de.agame.entitys.EnviromentObservationSet;
-import de.agame.entitys.SpatialControlSet;
-import de.agame.entitys.UserInterfaceSet;
+import de.agame.entitys.sets.EnviromentObservationSet;
+import de.agame.entitys.sets.SpatialControlSet;
+import de.agame.entitys.sets.UserInterfaceSet;
 
 /**
  *

@@ -2,10 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.entitys;
+package de.agame.entitys.sets;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.scene.Node;
+import de.agame.entitys.EntityManager;
 
 /**
  *

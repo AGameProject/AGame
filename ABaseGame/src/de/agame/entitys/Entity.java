@@ -4,6 +4,9 @@
  */
 package de.agame.entitys;
 
+import de.agame.entitys.sets.UserInterfaceSet;
+import de.agame.entitys.sets.SpatialControlSet;
+import de.agame.entitys.sets.EnviromentObservationSet;
 import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;

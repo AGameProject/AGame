@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.player;
+package de.agame.entitys;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -11,9 +11,9 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.EntityLivingAnimated;
-import de.agame.entitys.EnviromentObservationSet;
-import de.agame.entitys.SpatialControlSet;
-import de.agame.entitys.UserInterfaceSet;
+import de.agame.entitys.sets.EnviromentObservationSet;
+import de.agame.entitys.sets.SpatialControlSet;
+import de.agame.entitys.sets.UserInterfaceSet;
 
 /**
  *

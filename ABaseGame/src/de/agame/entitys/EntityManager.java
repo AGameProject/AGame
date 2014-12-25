@@ -4,6 +4,7 @@
  */
 package de.agame.entitys;
 
+import de.agame.entitys.spawnhelpers.EntitySpawnHelper;
 import de.agame.entitys.sets.UserInterfaceSet;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import com.jme3.asset.AssetManager;
@@ -13,6 +14,7 @@ import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
+import de.agame.entitys.spawnhelpers.CompanionSpawnHelper;
 import de.agame.entitys.spawnhelpers.PlayerSpawnHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +49,7 @@ public class EntityManager {
         
         //register SpawnHelpers
         m_spawnhelpers.put("Player", new PlayerSpawnHelper());
+        m_spawnhelpers.put("Companion", new CompanionSpawnHelper());
     }
     
     public Entity getEntity(int i) {

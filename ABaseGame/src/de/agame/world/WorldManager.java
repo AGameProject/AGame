@@ -80,6 +80,8 @@ public class WorldManager {
     public void spawnFreshPlayer() {
         Entity e = m_entitymanager.spawnEntityAt("Player", Vector3f.ZERO);
         m_chasecam.setSpatial(e.getWrapperSpatial());
+        
+        m_entitymanager.spawnEntityAt("Companion", Vector3f.ZERO);
     }
     
     /**

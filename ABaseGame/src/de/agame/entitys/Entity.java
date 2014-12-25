@@ -7,12 +7,12 @@ package de.agame.entitys;
 import de.agame.entitys.sets.UserInterfaceSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.EnviromentObservationSet;
-import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
+import java.util.Random;
 
 /**
  *
@@ -26,6 +26,8 @@ public class Entity extends AbstractControl{
     protected SpatialControlSet m_spatialcontrolset;
     protected EnviromentObservationSet m_enviromentobservationset;
     protected UserInterfaceSet m_userinterfaceset;
+    
+    protected Random m_random = new Random();
     
     protected float m_timeexisted = 0;
     

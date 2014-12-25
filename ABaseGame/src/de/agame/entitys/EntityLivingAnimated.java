@@ -92,8 +92,9 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         
         
         if(shouldwalk) {
-            m_spatialcontrolset.getMovementControl().setViewDirection(dir.normalize());
-            dir.normalizeLocal().multLocal(m_ltpf * m_wslerp.getCurrentValue());
+            dir.normalizeLocal();
+            m_spatialcontrolset.getMovementControl().setViewDirection(dir);
+            dir.multLocal(m_ltpf * m_wslerp.getCurrentValue());
             m_spatialcontrolset.getMovementControl().setWalkDirection(dir);
         }
         
@@ -161,7 +162,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     @Override
     public void simpleUpdate(float tpf) {
         m_wslerp.update(tpf);
-        m_isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
+//        m_isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
         Vector3f wdir = m_spatialcontrolset.getMovementControl().getWalkDirection().normalizeLocal().mult(tpf * m_wslerp.getCurrentValue());
         m_spatialcontrolset.getMovementControl().setWalkDirection(wdir);
         

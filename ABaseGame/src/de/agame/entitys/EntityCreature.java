@@ -20,8 +20,43 @@ public class EntityCreature extends EntityLivingAnimated {
     private boolean m_arrived = true;
     private float m_dtolerance = 3.0f;
     
+    private float m_health = 10.0f;
+    
+    private AnimLink m_attackAnim;
+    private AnimLink m_damageAnim;
+    private AnimLink m_knockBackAnim;
+    private AnimLink m_deathAnim;
+    
     public EntityCreature(Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
         super(spatial, scset, esset, uiset);
+    }
+    
+    public void setAttackAnim(AnimLink anim) {
+        m_attackAnim = anim;
+    }
+    
+    public void setDamageAnim(AnimLink anim) {
+        m_damageAnim = anim;
+    }
+    
+    public void setKnockBackAnim(AnimLink anim) {
+        m_knockBackAnim = anim;
+    }
+    
+    public void setDeathAnim(AnimLink anim) {
+        m_deathAnim = anim;
+    }
+    
+    public float getHealth() {
+        return m_health;
+    }
+    
+    public void setHealth(float health) {
+        m_health = health;
+    }
+    
+    public void attackEntity(Entity attacker, float damage) {
+        m_health -= damage;
     }
     
     public void walkTo(Vector3f location) {

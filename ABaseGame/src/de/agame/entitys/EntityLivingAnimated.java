@@ -10,10 +10,11 @@ import de.agame.entitys.sets.EnviromentObservationSet;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import de.agame.misc.DegreeInterpolator;
 import de.agame.misc.FloatInterpolator;
-import java.util.HashMap;
 
 /**
  *
@@ -21,7 +22,8 @@ import java.util.HashMap;
  */
 public class EntityLivingAnimated extends EntityLiving implements AnimEventListener{
 
-    private HashMap<String, AnimLink> m_camap = new HashMap<String, AnimLink>();
+    private Vector3f m_xforward = new Vector3f(1, 0, 0);
+    private Vector3f m_zforward = new Vector3f(0, 0, 1);
     
     private AnimLink m_walkanim;
     private AnimLink m_sprintanim;
@@ -35,8 +37,12 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private boolean m_isinAir = false;
     private boolean m_caplaying = false;
     
+    private boolean m_viewfwalk = true;
+    
     private float m_ltpf;
     private FloatInterpolator m_wslerp = new FloatInterpolator();
+    private float m_turnspeed = 1.0f;
+    private DegreeInterpolator m_wdlerp = new DegreeInterpolator();
     
     private AnimChannel m_animchannel;
     
@@ -45,6 +51,16 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         
         m_animchannel = scset.getAnimationControl().createChannel();
         scset.getAnimationControl().addListener(this);
+    }
+    
+    private Vector3f calcWalkDirection() {
+        Quaternion rot = new Quaternion();
+        rot.fromAngles(0, m_wdlerp.getCurrentValue(), 0);
+        return rot.mult(m_xforward).multLocal(m_ltpf * m_wslerp.getCurrentValue());
+    }
+    
+    public void playCustomAnim(AnimLink anim) {
+        anim.play(m_animchannel);
     }
     
     public void setWalkAnim(AnimLink anim) {
@@ -79,12 +95,9 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         return m_sprintanim;
     }
     
-    public void setCustomAnim(AnimLink anim) {
-        m_camap.put(anim.getName(), anim);
-    }
-    
-    public void removeCustomAnim(AnimLink anim) {
-        m_camap.remove(anim.getName());
+    public void setViewDirection(Vector3f dir) {
+        m_viewfwalk = dir == null;
+        if(!m_viewfwalk) m_spatialcontrolset.getMovementControl().setViewDirection(dir.normalizeLocal());
     }
     
     public void setWalkDirection(Vector3f dir) {
@@ -93,8 +106,13 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         
         if(shouldwalk) {
             dir.normalizeLocal();
-            m_spatialcontrolset.getMovementControl().setViewDirection(dir);
-            dir.multLocal(m_ltpf * m_wslerp.getCurrentValue());
+            float angle = (float) Math.acos(dir.dot(m_xforward));
+            angle = dir.dot(m_zforward) > 0 ? -angle : angle;
+            m_wdlerp.setGoal(angle, angle / m_turnspeed);
+            
+            dir = calcWalkDirection();
+            
+            if(m_viewfwalk) m_spatialcontrolset.getMovementControl().setViewDirection(dir);
             m_spatialcontrolset.getMovementControl().setWalkDirection(dir);
         }
         
@@ -162,9 +180,11 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     @Override
     public void simpleUpdate(float tpf) {
         m_wslerp.update(tpf);
+        m_wdlerp.update(tpf);
 //        m_isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
-        Vector3f wdir = m_spatialcontrolset.getMovementControl().getWalkDirection().normalizeLocal().mult(tpf * m_wslerp.getCurrentValue());
-        m_spatialcontrolset.getMovementControl().setWalkDirection(wdir);
+        Vector3f walkdir = calcWalkDirection();
+        m_spatialcontrolset.getMovementControl().setWalkDirection(walkdir);
+        if(m_viewfwalk && walkdir.lengthSquared() != 0) m_spatialcontrolset.getMovementControl().setViewDirection(walkdir);
         
         m_ltpf = tpf;
     }

@@ -1,6 +1,12 @@
 package de.turnlane.testing;
 
+import com.bulletphysics.dynamics.RigidBody;
+import com.bulletphysics.linearmath.MotionState;
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -9,6 +15,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.LodControl;
+import de.agame.controls.BetterLodControl;
 
 /**
  * Ein Test mit meinem Baum. Generiert einen grünen Wald.
@@ -31,18 +39,50 @@ public class GameTest extends SimpleApplication {
         return model;
     }
     
+    private LodControl createLodControl() {
+        LodControl lc = new BetterLodControl();
+        lc.setDistTolerance(10f);
+        lc.setTrisPerPixel(0.02f);
+        lc.setEnabled(true);
+        
+        return lc;
+    }
+    
     
     @Override
     public void simpleInitApp() {       
-        terrain = assetManager.loadModel("Scenes/world.j3o");
+        BulletAppState physics = new BulletAppState();
+        stateManager.attach(physics);
+        
+        terrain = assetManager.loadModel("Scenes/testing/world.j3o");
+        RigidBodyControl terrainshape = new RigidBodyControl(CollisionShapeFactory.createMeshShape(terrain), 0);
+        terrainshape.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
+        terrain.addControl(terrainshape);
+        
         rootNode.attachChild(terrain);
+        physics.getPhysicsSpace().add(terrain);
+        
+        flyCam.setMoveSpeed(10);
 
         Vector2f forestBounds = new Vector2f(200f,200f);
         
-        Spatial[] treeModels = new Spatial[2];
-        treeModels[0] = loadModel("vegetation/Dreiastbaum/Dreiastbaum_1");
-        treeModels[1] = loadModel("vegetation/Dreiastbaum/Dreiastbaum_2");
-        Node trees = new SpatialDistributor(forestBounds,0.25f,treeModels).distribute();
+        Node[] treeModels = new Node[2];
+        boolean optimized = true;
+        
+        if(optimized) {
+            treeModels[0] = (Node) loadModel("vegetation/Dreiastbaum/optimiert/Dreiastbaum_1");
+            treeModels[0].getChild("Cube1").addControl(createLodControl());
+            treeModels[0].getChild("Cube2").addControl(createLodControl());
+            
+            treeModels[1] = (Node) loadModel("vegetation/Dreiastbaum/optimiert/Dreiastbaum_2");
+            treeModels[1].getChild("Cube.0011").addControl(createLodControl());
+            treeModels[1].getChild("Cube.0012").addControl(createLodControl());
+        } else {
+            treeModels[0] = (Node) loadModel("vegetation/Dreiastbaum/Dreiastbaum_1");
+            treeModels[1] = (Node) loadModel("vegetation/Dreiastbaum/Dreiastbaum_2");
+        }
+        Node trees = new SpatialDistributor(forestBounds,0.0625f,treeModels).distribute(physics.getPhysicsSpace());
+        
         rootNode.attachChild(trees);
         
         // Spatial windmühle = loadModel("buildings/Windmühle");

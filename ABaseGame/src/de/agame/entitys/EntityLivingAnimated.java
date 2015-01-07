@@ -13,7 +13,7 @@ import com.jme3.animation.AnimEventListener;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import de.agame.misc.DegreeInterpolator;
+import de.agame.misc.QuarternionInterpolator;
 import de.agame.misc.FloatInterpolator;
 
 /**
@@ -42,7 +42,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private float m_ltpf;
     private FloatInterpolator m_wslerp = new FloatInterpolator();
     private float m_turnspeed = 1.0f;
-    private DegreeInterpolator m_wdlerp = new DegreeInterpolator();
+    private QuarternionInterpolator m_wdlerp = new QuarternionInterpolator();
     
     private AnimChannel m_animchannel;
     
@@ -54,9 +54,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     private Vector3f calcWalkDirection() {
-        Quaternion rot = new Quaternion();
-        rot.fromAngles(0, m_wdlerp.getCurrentValue(), 0);
-        return rot.mult(m_xforward).multLocal(m_ltpf * m_wslerp.getCurrentValue());
+        return m_wdlerp.getCurrentValue().mult(m_xforward).multLocal(m_ltpf * m_wslerp.getCurrentValue());
     }
     
     public void playCustomAnim(AnimLink anim) {
@@ -106,9 +104,14 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         
         if(shouldwalk) {
             dir.normalizeLocal();
-            float angle = (float) Math.acos(dir.dot(m_xforward));
-            angle = dir.dot(m_zforward) > 0 ? -angle : angle;
-            m_wdlerp.setGoal(angle, angle / m_turnspeed);
+            float angleabs = (float) Math.acos(dir.dot(m_xforward));
+            float angle = dir.dot(m_zforward) > 0 ? -angleabs : angleabs;
+            
+            Quaternion q = new Quaternion();
+            q.loadIdentity();
+            q.fromAngles(0, angle, 0);
+            
+            m_wdlerp.setGoal(q, angleabs / m_turnspeed);
             
             dir = calcWalkDirection();
             
@@ -155,18 +158,17 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     public void setSprinting(boolean sprint) {
-        m_sprinting = sprint;
-        
         if(m_walking) {
-            if(m_sprinting) {
+            if(!m_sprinting && sprint) {
                 m_sprintanim.play(m_animchannel);
                 m_wslerp.setGoal(m_sprintspeed, 0.5f);
-            } else {
+            } else if(m_sprinting && !sprint){
                 m_walkanim.play(m_animchannel);
                 m_wslerp.setGoal(m_walkspeed, 0.5f);
             }
-            
         }
+
+        m_sprinting = sprint;
     }
     
     public boolean isSprinting() {

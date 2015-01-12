@@ -18,7 +18,7 @@ public class QuarternionInterpolator {
     private float m_lerpstep = 0;
     
     public Quaternion getCurrentValue() {
-        return m_goal;
+        return m_current;
     }
     
     public void setGoal(Quaternion goal, float time) {

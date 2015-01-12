@@ -41,7 +41,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     
     private float m_ltpf;
     private FloatInterpolator m_wslerp = new FloatInterpolator();
-    private float m_turnspeed = 1.0f;
+    private float m_turnspeed = 2.0f;
     private QuarternionInterpolator m_wdlerp = new QuarternionInterpolator();
     
     private AnimChannel m_animchannel;
@@ -104,6 +104,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         
         if(shouldwalk) {
             dir.normalizeLocal();
+            float rangle = m_wdlerp.getCurrentValue().mult(m_xforward).angleBetween(dir);
             float angleabs = (float) Math.acos(dir.dot(m_xforward));
             float angle = dir.dot(m_zforward) > 0 ? -angleabs : angleabs;
             
@@ -111,7 +112,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
             q.loadIdentity();
             q.fromAngles(0, angle, 0);
             
-            m_wdlerp.setGoal(q, angleabs / m_turnspeed);
+            m_wdlerp.setGoal(q, rangle / m_turnspeed);
             
             dir = calcWalkDirection();
             

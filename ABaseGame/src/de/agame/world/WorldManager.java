@@ -14,7 +14,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import de.agame.StaticLocations;
+import de.agame.data.StaticLocations;
 import de.agame.data.LevelIO;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EntityManager;
@@ -80,6 +80,8 @@ public class WorldManager {
     public void spawnFreshPlayer() {
         Entity e = m_entitymanager.spawnEntityAt("Player", Vector3f.ZERO);
         m_chasecam.setSpatial(e.getWrapperSpatial());
+        
+        m_entitymanager.spawnEntityAt("Companion", Vector3f.ZERO);
     }
     
     /**

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.player;
+package de.agame.entitys;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -10,10 +10,9 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import de.agame.entitys.EntityLivingAnimated;
-import de.agame.entitys.EnviromentObservationSet;
-import de.agame.entitys.SpatialControlSet;
-import de.agame.entitys.UserInterfaceSet;
+import de.agame.entitys.sets.EnviromentObservationSet;
+import de.agame.entitys.sets.SpatialControlSet;
+import de.agame.entitys.sets.UserInterfaceSet;
 
 /**
  *
@@ -28,18 +27,8 @@ public class EntityPlayer extends EntityLivingAnimated implements ActionListener
     
     private Vector3f m_walkdirection = new Vector3f();
     
-    private float m_walkspeed = 1000f;
-    
     public EntityPlayer(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
-    }
-    
-    public void setWalkSpeed(float speed) {
-        m_walkspeed = speed;
-    }
-    
-    public float getWalkSpeed() {
-        return m_walkspeed;
     }
     
     @Override
@@ -91,8 +80,8 @@ public class EntityPlayer extends EntityLivingAnimated implements ActionListener
     }
     
     @Override
-    public void controlUpdate(float tpf) {
-        super.controlUpdate(tpf);
+    public void simpleUpdate(float tpf) {
+        super.simpleUpdate(tpf);
         
         Vector3f camDir = m_userinterfaceset.getCam().getDirection();
         Vector3f camLeft = m_userinterfaceset.getCam().getLeft();
@@ -108,7 +97,6 @@ public class EntityPlayer extends EntityLivingAnimated implements ActionListener
         if(m_forward) m_walkdirection.addLocal(camDir);
         if(m_backward) m_walkdirection.addLocal(camDir.negate());
         
-        m_walkdirection.multLocal(m_walkspeed).multLocal(tpf);
         setWalkDirection(m_walkdirection);
     }
 }

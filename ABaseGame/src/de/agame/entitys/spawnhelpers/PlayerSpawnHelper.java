@@ -2,20 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.player;
+package de.agame.entitys.spawnhelpers;
 
+import de.agame.entitys.EntityPlayer;
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.shape.Box;
 import de.agame.entitys.AnimLink;
 import de.agame.entitys.Entity;
-import de.agame.entitys.EntitySpawnHelper;
-import de.agame.entitys.EnviromentObservationSet;
-import de.agame.entitys.SpatialControlSet;
-import de.agame.entitys.UserInterfaceSet;
+import de.agame.entitys.sets.EnviromentObservationSet;
+import de.agame.entitys.sets.SpatialControlSet;
+import de.agame.entitys.sets.UserInterfaceSet;
 
 /**
  *
@@ -24,7 +23,6 @@ import de.agame.entitys.UserInterfaceSet;
 public class PlayerSpawnHelper implements EntitySpawnHelper{
 
     public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
-        Box box = new Box(new Vector3f(0.0f, 0.9f, 0.0f), 0.5f, 0.9f, 0.5f);
         Node model = (Node) assets.loadModel("Models/characters/Test Charakter/Test Charakter_ready.j3o");
         
         BetterCharacterControl control = new BetterCharacterControl(0.5f, 1.8f, 1.0f);

@@ -25,13 +25,13 @@ import de.agame.entitys.sets.UserInterfaceSet;
 public class CompanionSpawnHelper implements EntitySpawnHelper{
 
     public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
-        Node model = (Node) assets.loadModel("Models/characters/Rasnof/Rasnof (13)Spieltest.j3o");
+        Node model = (Node) assets.loadModel("Models/characters/Test Charakter/Test Charakter_ready.j3o");
         
         CapsuleCollisionShape shape = new CapsuleCollisionShape(0.3f, 1.8f);
         CharacterControl control = new CharacterControl(shape, 0.2f);
         model.addControl(control);
         
-        AnimControl animcontrol = model.getChild("Rasnof").getControl(AnimControl.class);
+        AnimControl animcontrol = model.getChild("Cube").getControl(AnimControl.class);
         
         
         SpatialControlSet spatset = new SpatialControlSet();
@@ -39,11 +39,11 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
         spatset.setAnimationControl(animcontrol);
         
         EntityCompanion companion = new EntityCompanion(model, spatset, enviromentobservationset, userinterfaceset);
-        companion.setIdleAnim(new AnimLink("Laufen.", true, 1.0f, 0.2f));
-        companion.setWalkAnim(new AnimLink("Laufen.", true, 2.0f, 0.2f));
-        companion.setSprintAnim(new AnimLink("Laufen.", true, 2.0f, 0.2f));
-        companion.setJumpAnim(new AnimLink("Laufen.", false, 2.0f, 0.05f));
-        companion.setFallAnim(new AnimLink("Laufen.", false, 2.0f, 0.05f));
+        companion.setIdleAnim(new AnimLink("Stehen", true, 1.0f, 0.2f));
+        companion.setWalkAnim(new AnimLink("Laufen", true, 2.0f, 0.2f));
+        companion.setSprintAnim(new AnimLink("Sprinten", true, 2.0f, 0.2f));
+        companion.setJumpAnim(new AnimLink("Springen", false, 2.0f, 0.05f));
+        companion.setFallAnim(new AnimLink("Fallen", false, 2.0f, 0.05f));
 
         model.addControl(companion);
         

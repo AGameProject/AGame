@@ -22,6 +22,8 @@ public class AnimLink {
         m_loop = loop;
         m_tweak = tweak;
         m_fade = fade;
+        
+        if(m_name == null) m_name = "-1";
     }
     
     public String getName() {
@@ -29,6 +31,8 @@ public class AnimLink {
     }
     
     public void play(AnimChannel channel) {
+        if(m_name == "-1") return;
+        
         channel.setAnim(m_name, m_fade);
         channel.setSpeed(m_tweak);
         if(m_loop) channel.setLoopMode(LoopMode.Loop);

@@ -18,7 +18,7 @@ import de.agame.entitys.sets.UserInterfaceSet;
  *
  * @author Fredie
  */
-public class EntityPlayer extends EntityLivingAnimated implements ActionListener{
+public class EntityPlayer extends EntityCharacter implements ActionListener{
     
     private boolean m_left = false;
     private boolean m_right = false;

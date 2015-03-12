@@ -3,6 +3,7 @@ package de.agame;
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
 import de.agame.appstates.GameState;
+import de.agame.appstates.MainMenuState;
 
 /**
  * test
@@ -19,6 +20,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         // enable gamestate for debug purpose
         stateManager.attach(new GameState(rootNode));
+//        stateManager.attach(new MainMenuState());
     }
 
     @Override

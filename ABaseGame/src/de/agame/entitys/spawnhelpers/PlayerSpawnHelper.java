@@ -7,7 +7,8 @@ package de.agame.entitys.spawnhelpers;
 import de.agame.entitys.EntityPlayer;
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.control.BetterCharacterControl;
+import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import de.agame.entitys.AnimLink;
@@ -25,13 +26,16 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
     public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         Node model = (Node) assets.loadModel("Models/characters/Test Charakter/Test Charakter_ready.j3o");
         
-        BetterCharacterControl control = new BetterCharacterControl(0.5f, 1.8f, 1.0f);
-        control.setJumpForce(new Vector3f(0.0f, 4.0f, 0.0f));
-        control.setGravity(new Vector3f(0, 1.0f, 0));
+        Node rightitem = (Node) ((Node) ((Node) model.getChild("Armature")).getChild("righthand")).getChild("item");
+        Node leftitem = (Node) ((Node) ((Node) model.getChild("Armature")).getChild("lefthand")).getChild("item");
+        
+        CapsuleCollisionShape shape = new CapsuleCollisionShape(0.3f, 1.8f);
+        CharacterControl control = new CharacterControl(shape, 0.2f);
+        control.setJumpSpeed(15);
+        model.addControl(control);
         
         AnimControl animcontrol = model.getChild("Cube").getControl(AnimControl.class);
         
-        model.addControl(control);
         
         SpatialControlSet spatset = new SpatialControlSet();
         spatset.setMovementControll(control);
@@ -42,13 +46,18 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         player.setWalkAnim(new AnimLink("Laufen", true, 2.0f, 0.2f));
         player.setSprintAnim(new AnimLink("Sprinten", true, 2.0f, 0.2f));
         player.setJumpAnim(new AnimLink("Springen", false, 2.0f, 0.05f));
+        player.setFallAnim(new AnimLink("Fallen", true, 7.0f, 0.2f));
         model.addControl(player);
+        
+        player.setAnimChannel(animcontrol.createChannel(), 0);
+        player.setRightHand(rightitem);
+        player.setLeftHand(leftitem);
         
         return player;
     }
 
     public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
-        entity.teleportTo(spawnpoint.addLocal(0, 10, 0));
+        entity.teleportTo(spawnpoint.addLocal(0, 20, 0));
         entity.onAttach();
     }
     

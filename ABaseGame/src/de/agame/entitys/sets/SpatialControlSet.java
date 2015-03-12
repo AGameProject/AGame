@@ -5,7 +5,7 @@
 package de.agame.entitys.sets;
 
 import com.jme3.animation.AnimControl;
-import com.jme3.bullet.control.BetterCharacterControl;
+import com.jme3.bullet.control.CharacterControl;
 
 /**
  *
@@ -13,13 +13,13 @@ import com.jme3.bullet.control.BetterCharacterControl;
  */
 public class SpatialControlSet {
     private AnimControl m_animations;
-    private BetterCharacterControl m_movementcontrol;
+    private CharacterControl m_movementcontrol;
     
     public void setAnimationControl(AnimControl animations) {
         m_animations = animations;
     }
     
-    public void setMovementControll(BetterCharacterControl movementcontrol) {
+    public void setMovementControll(CharacterControl movementcontrol) {
         m_movementcontrol = movementcontrol;
     }
     
@@ -27,7 +27,7 @@ public class SpatialControlSet {
         return m_animations;
     }
     
-    public BetterCharacterControl getMovementControl() {
+    public CharacterControl getMovementControl() {
         return m_movementcontrol;
     }
 }

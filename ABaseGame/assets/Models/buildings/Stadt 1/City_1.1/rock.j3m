@@ -1,4 +1,4 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Flat/Lighting.j3md {
      MaterialParameters {
         UseMaterialColors : true
         GlowColor : 0.6 0.6 0.6 1.0

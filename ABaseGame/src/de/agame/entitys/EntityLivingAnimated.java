@@ -33,9 +33,9 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private AnimLink m_fallanim;
     
     private boolean m_walking = false;
-    private float m_walkspeed = 20.0f;
+    private float m_walkspeed = 4.0f;
     private boolean m_sprinting = false;
-    private float m_sprintspeed = 30.0f;
+    private float m_sprintspeed = 10.0f;
     private boolean m_isinAir = false;
     private float m_timeinAir = 0;
     
@@ -56,7 +56,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     private Vector3f calcWalkDirection() {
-        return m_wdlerp.getCurrentValue().mult(m_xforward).multLocal(m_ltpf * m_wslerp.getCurrentValue());
+        return m_wdlerp.getCurrentValue().mult(m_xforward).multLocal(m_wslerp.getCurrentValue());
     }
     
     public void playMinorAnim(AnimLink anim, boolean log) {
@@ -192,7 +192,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     public void setSprinting(boolean sprint) {
-        if(m_walking) {
+        if(m_walking && !m_isinAir) {
             if(!m_sprinting && sprint) {
                 playMinorAnim(m_sprintanim, true);
                 m_wslerp.setGoal(m_sprintspeed, 0.5f);
@@ -218,7 +218,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         m_wslerp.update(tpf);
         m_wdlerp.update(tpf);
         
-        boolean isinAir = !m_spatialcontrolset.getMovementControl().onGround();
+        boolean isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
         if(m_isinAir && !isinAir) {
             if(m_walking) {
                 if(!m_sprinting) playMinorAnim(m_walkanim, true);

@@ -4,6 +4,7 @@
  */
 package de.agame.world;
 
+import com.jme3.app.Application;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -11,7 +12,9 @@ import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.Camera;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import de.agame.data.StaticLocations;
@@ -32,6 +35,7 @@ public class WorldManager {
     private EntityManager m_entitymanager;
     private ChaseCamera m_chasecam;
     private boolean m_paused = false;
+    private Application m_app;
     
     //levelrelated members
     private DayTimeManager m_time;
@@ -42,10 +46,11 @@ public class WorldManager {
     private Node m_gui;
     
     
-    public void initialize(AssetManager assets, InputManager inputManager, Camera cam, PhysicsSpace physicsspace) {
+    public void initialize(AssetManager assets, InputManager inputManager, Camera cam, PhysicsSpace physicsspace, Application app) {
         m_input = inputManager;
         m_assets = assets;
         m_whole = new Node("world");
+        m_whole.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         m_dynamics = new Node("dynamics");
         m_gui = new Node("gui");
         m_physicsspace = physicsspace;
@@ -55,6 +60,8 @@ public class WorldManager {
         
         m_entitymanager = new EntityManager();
         m_entitymanager.finishInit(m_physicsspace, m_dynamics, m_gui, cam, m_chasecam, m_input, m_assets);
+        
+        m_app = app;
     }
     
     /**
@@ -66,12 +73,17 @@ public class WorldManager {
         RigidBodyControl scenecontroll = new RigidBodyControl(CollisionShapeFactory.createMeshShape(m_statics), 0);
         m_statics.addControl(scenecontroll);
         m_physicsspace.add(m_statics);
-        m_time = new DayTimeManager();
+        m_time = new DayTimeManager(m_assets);
         
         //attach all leveldata to this worlds content
         m_whole.attachChild(m_statics);
         m_whole.attachChild(m_dynamics);
         m_whole.addLight(m_time.getSun());
+        m_whole.addLight(m_time.getAmbient());
+        
+        FilterPostProcessor shadowfilter = new FilterPostProcessor();
+        shadowfilter.addFilter(m_time.getSunShadows());
+        m_app.getViewPort().addProcessor(shadowfilter);
     }
     
     /**
@@ -80,6 +92,8 @@ public class WorldManager {
     public void spawnFreshPlayer() {
         Entity e = m_entitymanager.spawnEntityAt("Player", Vector3f.ZERO);
         m_chasecam.setSpatial(e.getWrapperSpatial());
+        m_chasecam.setSmoothMotion(false);
+        m_chasecam.setLookAtOffset(new Vector3f(0, 1.7f, 0));
         
         m_entitymanager.spawnEntityAt("Companion", Vector3f.ZERO);
     }

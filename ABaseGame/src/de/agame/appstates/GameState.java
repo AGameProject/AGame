@@ -74,7 +74,7 @@ public class GameState extends AbstractAppState {
         
         //init worldmanager
         this.m_worldManager = new WorldManager();
-        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager(), m_app.getCamera(), m_physics.getPhysicsSpace());
+        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager(), m_app.getCamera(), m_physics.getPhysicsSpace(), m_app);
         
         //init level and game data
         m_worldManager.freshLevel();

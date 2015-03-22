@@ -6,9 +6,7 @@ package de.agame.entitys.spawnhelpers;
 
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import de.agame.entitys.AnimLink;
@@ -25,13 +23,12 @@ import de.agame.entitys.sets.UserInterfaceSet;
 public class CompanionSpawnHelper implements EntitySpawnHelper{
 
     public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
-        Node model = (Node) assets.loadModel("Models/characters/Test Charakter/Test Charakter_ready.j3o");
+        Node model = (Node) assets.loadModel("Models/characters/Parkour Test Character/Character_ready.j3o");
         
-        CapsuleCollisionShape shape = new CapsuleCollisionShape(0.3f, 1.8f);
-        CharacterControl control = new CharacterControl(shape, 0.2f);
+        BetterCharacterControl control = new BetterCharacterControl(0.5f, 1.8f, 1);
         model.addControl(control);
         
-        AnimControl animcontrol = model.getChild("Cube").getControl(AnimControl.class);
+        AnimControl animcontrol = model.getChild("Character").getControl(AnimControl.class);
         
         
         SpatialControlSet spatset = new SpatialControlSet();
@@ -53,7 +50,7 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
     }
 
     public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
-        entity.teleportTo(spawnpoint.addLocal(0, 100, 0));
+        entity.teleportTo(spawnpoint.addLocal(0, 1, 0));
         entity.onAttach();
     }
     

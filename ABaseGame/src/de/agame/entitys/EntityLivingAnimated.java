@@ -31,6 +31,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private AnimLink m_idleanim;
     private AnimLink m_jumpanim;
     private AnimLink m_fallanim;
+    private AnimLink m_rollanim;
     
     private boolean m_walking = false;
     private float m_walkspeed = 4.0f;
@@ -38,6 +39,9 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private float m_sprintspeed = 10.0f;
     private boolean m_isinAir = false;
     private float m_timeinAir = 0;
+    private boolean m_crouching = false;
+    private float m_crouchspeed = 2.0f;
+    private boolean m_rolling = false;
     
     private boolean m_viewfwalk = true;
     
@@ -192,12 +196,12 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     public void setSprinting(boolean sprint) {
-        if(m_walking && !m_isinAir) {
+        if(m_walking) {
             if(!m_sprinting && sprint) {
-                playMinorAnim(m_sprintanim, true);
+                if(!m_isinAir) playMinorAnim(m_sprintanim, true);
                 m_wslerp.setGoal(m_sprintspeed, 0.5f);
             } else if(m_sprinting && !sprint){
-                playMinorAnim(m_walkanim, true);
+                if(!m_isinAir) playMinorAnim(m_walkanim, true);
                 m_wslerp.setGoal(m_walkspeed, 0.5f);
             }
         }
@@ -207,6 +211,27 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     
     public boolean isSprinting() {
         return m_sprinting;
+    }
+    
+    public void setCrouching(boolean crouch) {
+        
+    }
+    
+    public boolean isCrouching() {
+        return m_crouching;
+    }
+    
+    public void setRolling(boolean rolling) {
+        if(!m_isinAir && rolling) return;
+        if(m_rolling == rolling) return;
+        
+        if(m_isinAir && !m_rolling) {
+            playMinorAnim(m_rollanim, true);
+        }
+    }
+    
+    public boolean isRolling() {
+        return m_rolling;
     }
     
     @Override

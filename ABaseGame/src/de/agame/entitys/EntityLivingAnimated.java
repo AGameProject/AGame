@@ -240,10 +240,13 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
 
     @Override
     public void simpleUpdate(float tpf) {
-        m_wslerp.update(tpf);
-        m_wdlerp.update(tpf);
-        
         boolean isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
+        
+        if(!isinAir) {
+            m_wslerp.update(tpf);
+            m_wdlerp.update(tpf);
+        }
+        
         if(m_isinAir && !isinAir) {
             if(m_walking) {
                 if(!m_sprinting) playMinorAnim(m_walkanim, true);

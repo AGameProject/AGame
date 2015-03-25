@@ -33,7 +33,7 @@ public class DayTimeManager {
         m_sun = new DirectionalLight();
         m_sun.setColor(new ColorRGBA(0.9f, 1.0f, 0.6f, 1.0f));
         m_sun.setDirection(new Vector3f(0.5f, -0.5f, 0.5f).normalizeLocal());
-        m_sunshadows = new DirectionalLightShadowFilter(assets, 2048, 1);
+        m_sunshadows = new DirectionalLightShadowFilter(assets, 4096, 3);
         m_sunshadows.setLight(m_sun);
         
         m_ambient = new AmbientLight();

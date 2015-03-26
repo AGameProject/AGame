@@ -38,6 +38,18 @@ public class Entity extends AbstractControl{
         m_userinterfaceset = userinterfaceset;
     }
     
+    public SpatialControlSet getSpatialControl() {
+        return m_spatialcontrolset;
+    }
+    
+    public EnviromentObservationSet getObservationSet() {
+        return m_enviromentobservationset;
+    }
+    
+    public UserInterfaceSet getUISet() {
+        return m_userinterfaceset;
+    }
+    
     @Override
     protected void controlUpdate(float tpf) {
         m_timeexisted += tpf;

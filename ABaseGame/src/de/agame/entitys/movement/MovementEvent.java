@@ -18,6 +18,12 @@ public interface MovementEvent {
     public void setAnims(AnimLink... anims);
 
     public String getName();
+    
+    /**
+     * Puts all the params into the given HashMap to make sure they are available at runtime
+     * @param params 
+     */
+    public void ensureParams(HashMap<String, Boolean> params);
 
     /**
      * checks if the movementevent should be executed for a given set of params
@@ -38,16 +44,16 @@ public interface MovementEvent {
      * @param entity
      * @param spatial
      */
-    public void onUpdate(EntityLivingAnimated entity, Spatial spatial);
+    public void onUpdate(float dt, EntityLivingAnimated entity, Spatial spatial);
     
     /**
      * Called when movementevent is started
      */
-    public void onStartEvent();
+    public void onStartEvent(HashMap<String, Boolean> params, Spatial spatial, EntityLivingAnimated living);
     
     /**
      * Called when movement event is concluded
      * @return the following event (e.g. stumbling if roll was not successful)
      */
-    public MovementEvent onEndEvent();
+    public MovementEvent onEndEvent(HashMap<String, Boolean> params, Spatial spatial, EntityLivingAnimated living);
 }

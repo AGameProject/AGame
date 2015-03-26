@@ -39,7 +39,6 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
         companion.setIdleAnim(new AnimLink("Stehen", true, 1.0f, 0.2f));
         companion.setWalkAnim(new AnimLink("Laufen", true, 2.0f, 0.2f));
         companion.setSprintAnim(new AnimLink("Sprinten", true, 2.0f, 0.2f));
-        companion.setJumpAnim(new AnimLink("Springen", false, 2.0f, 0.05f));
         companion.setFallAnim(new AnimLink("Fallen", false, 2.0f, 0.05f));
 
         model.addControl(companion);

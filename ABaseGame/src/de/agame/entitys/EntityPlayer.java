@@ -29,6 +29,7 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
     
     public EntityPlayer(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
+        
     }
     
     @Override

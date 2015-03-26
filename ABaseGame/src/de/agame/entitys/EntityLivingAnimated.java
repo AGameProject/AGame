@@ -13,6 +13,8 @@ import com.jme3.animation.AnimEventListener;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import de.agame.entitys.movement.BasicMovementParams;
+import de.agame.entitys.movement.MovementManager;
 import de.agame.misc.QuarternionInterpolator;
 import de.agame.misc.FloatInterpolator;
 import java.util.ArrayList;
@@ -29,9 +31,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private AnimLink m_walkanim;
     private AnimLink m_sprintanim;
     private AnimLink m_idleanim;
-    private AnimLink m_jumpanim;
     private AnimLink m_fallanim;
-    private AnimLink m_rollanim;
     
     private boolean m_walking = false;
     private float m_walkspeed = 4.0f;
@@ -41,11 +41,9 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private float m_timeinAir = 0;
     private boolean m_crouching = false;
     private float m_crouchspeed = 2.0f;
-    private boolean m_rolling = false;
     
     private boolean m_viewfwalk = true;
     
-    private float m_ltpf;
     private FloatInterpolator m_wslerp = new FloatInterpolator();
     private float m_turnspeed = 2.0f;
     private QuarternionInterpolator m_wdlerp = new QuarternionInterpolator();
@@ -54,9 +52,30 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     private ArrayList<AnimChannel> m_animchannels = new ArrayList<AnimChannel>();
     private ArrayList<Boolean> m_caplaying = new ArrayList<Boolean>();
     
+    private MovementManager m_movementManager;
+    
     public EntityLivingAnimated(Spatial spatial, SpatialControlSet scset, EnviromentObservationSet eoset, UserInterfaceSet uiset) {
         super(spatial, scset, eoset, uiset);
         scset.getAnimationControl().addListener(this);
+        
+        m_movementManager = new MovementManager(spatial, this);
+        
+        try {
+            m_movementManager.ensureParams(new String[] {
+                BasicMovementParams.PARAM_IS_CROUCHING,
+                BasicMovementParams.PARAM_IS_SPRINTING,
+                BasicMovementParams.PARAM_IS_IN_AIR,
+                BasicMovementParams.PARAM_SHOULD_JUMP,
+                BasicMovementParams.PARAM_IS_WALKING
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        m_movementManager.lockParams();
+    }
+    
+    public MovementManager getMovementManager() {
+        return m_movementManager;
     }
     
     private Vector3f calcWalkDirection() {
@@ -110,10 +129,6 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     
     public AnimLink getIdleAnim() {
         return m_idleanim;
-    }
-    
-    public void setJumpAnim(AnimLink anim) {
-        m_jumpanim = anim;
     }
     
     public AnimLink getJumpAnim() {
@@ -170,13 +185,11 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         }
         
         m_walking = shouldwalk;
+        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_WALKING, m_walking);
     }
     
     public void jump() {
-        if(m_isinAir) return;
-        
-        playMinorAnim(m_jumpanim, false);
-        m_spatialcontrolset.getMovementControl().jump();
+        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_SHOULD_JUMP, true);
     }
     
     public void setWalkSpeed(float speed) {
@@ -207,6 +220,8 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         }
 
         m_sprinting = sprint;
+        
+        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_SPRINTING, m_sprinting);
     }
     
     public boolean isSprinting() {
@@ -214,24 +229,15 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     public void setCrouching(boolean crouch) {
+        m_crouching = crouch;
+        if(m_crouching) m_sprinting = false;
         
+        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_CROUCHING, m_crouching);
+        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_SPRINTING, m_sprinting);
     }
     
     public boolean isCrouching() {
         return m_crouching;
-    }
-    
-    public void setRolling(boolean rolling) {
-        if(!m_isinAir && rolling) return;
-        if(m_rolling == rolling) return;
-        
-        if(m_isinAir && !m_rolling) {
-            playMinorAnim(m_rollanim, true);
-        }
-    }
-    
-    public boolean isRolling() {
-        return m_rolling;
     }
     
     @Override
@@ -253,12 +259,15 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
                 else playMinorAnim(m_sprintanim, true);
             } else playMinorAnim(m_idleanim, true);
             m_timeinAir = 0;
+            
         } else if(!m_isinAir && isinAir) {
             m_timeinAir = 0;
             playMinorAnim(m_fallanim, true);
         }
         
         m_isinAir = isinAir;
+        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_IN_AIR, m_isinAir);
+        
         if(m_isinAir) {
             m_timeinAir += tpf;
             for(AnimChannel channel : m_animchannels) {
@@ -272,7 +281,7 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         m_spatialcontrolset.getMovementControl().setWalkDirection(walkdir);
         if(m_viewfwalk && walkdir.lengthSquared() != 0) m_spatialcontrolset.getMovementControl().setViewDirection(walkdir);
         
-        m_ltpf = tpf;
+        m_movementManager.onUpdate(tpf);
     }
 
     @Override

@@ -12,6 +12,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import de.agame.entitys.AnimLink;
 import de.agame.entitys.Entity;
+import de.agame.entitys.movement.MovementJump;
+import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
@@ -44,8 +46,20 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         player.setIdleAnim(new AnimLink("Stehen", true, 1.0f, 0.2f));
         player.setWalkAnim(new AnimLink("Laufen", true, 2.0f, 0.2f));
         player.setSprintAnim(new AnimLink("Sprinten", true, 1.5f, 0.2f));
-        player.setJumpAnim(new AnimLink("Springen", false, 2.0f, 0.05f));
         player.setFallAnim(new AnimLink("Fallen", true, 7.0f, 0.2f));
+        
+        MovementJump jump = new MovementJump();
+        jump.setAnims(new AnimLink[] { new AnimLink("Springen", false, 2.0f, 0.2f) });
+        
+        try {
+            MovementManager playermovement = player.getMovementManager();
+            playermovement.unlockParams();
+            playermovement.addEvent(jump);
+            playermovement.lockParams();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         model.addControl(player);
         
         player.setAnimChannel(animcontrol.createChannel(), 0);

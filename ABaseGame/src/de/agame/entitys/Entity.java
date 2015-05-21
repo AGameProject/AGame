@@ -27,6 +27,8 @@ public class Entity extends AbstractControl{
     protected EnviromentObservationSet m_enviromentobservationset;
     protected UserInterfaceSet m_userinterfaceset;
     
+    protected float m_mass = 80.0f;
+    
     protected Random m_random = new Random();
     
     protected float m_timeexisted = 0;
@@ -36,6 +38,10 @@ public class Entity extends AbstractControl{
         m_spatialcontrolset = spatialcontrolset;
         m_enviromentobservationset = enviromentobservationset;
         m_userinterfaceset = userinterfaceset;
+    }
+    
+    public float getMass() {
+        return m_mass;
     }
     
     public SpatialControlSet getSpatialControl() {

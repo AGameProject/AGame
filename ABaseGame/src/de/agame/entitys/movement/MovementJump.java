@@ -5,8 +5,9 @@
 package de.agame.entitys.movement;
 
 import com.jme3.scene.Spatial;
-import de.agame.entitys.AnimLink;
+import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.EntityLivingAnimated;
+import de.agame.misc.Value;
 import java.util.HashMap;
 
 /**
@@ -25,21 +26,21 @@ public class MovementJump implements MovementEvent {
         return "jump";
     }
 
-    public void ensureParams(HashMap<String, Boolean> params) {
-        params.put(BasicMovementParams.PARAM_SHOULD_JUMP, false);
-        params.put(BasicMovementParams.PARAM_IS_IN_AIR, false);
+    public void ensureParams(HashMap<String, Value> params) {
+        params.put(BasicMovementParams.PARAM_SHOULD_JUMP, new Value<Boolean>(false));
+        params.put(BasicMovementParams.PARAM_IS_IN_AIR, new Value<Boolean>(false));
     }
 
-    public boolean executeEvent(HashMap<String, Boolean> params) {
-        if(params.get(BasicMovementParams.PARAM_SHOULD_JUMP) && !params.get(BasicMovementParams.PARAM_IS_IN_AIR)) {
-            params.put(BasicMovementParams.PARAM_SHOULD_JUMP, false);
+    public boolean executeEvent(HashMap<String, Value> params) {
+        if((Boolean) params.get(BasicMovementParams.PARAM_SHOULD_JUMP).getValue() && !((Boolean) params.get(BasicMovementParams.PARAM_IS_IN_AIR).getValue())) {
+            params.put(BasicMovementParams.PARAM_SHOULD_JUMP, new Value<Boolean>(false));
             return true;
         }
         
         return false;
     }
 
-    public boolean onMovementChanged(HashMap<String, Boolean> params) {
+    public boolean onMovementChanged(HashMap<String, Value> params) {
         return false;
     }
 
@@ -47,12 +48,12 @@ public class MovementJump implements MovementEvent {
         //do nothing here
     }
 
-    public void onStartEvent(HashMap<String, Boolean> params, Spatial spatial, EntityLivingAnimated living) {
+    public void onStartEvent(HashMap<String, Value> params, Spatial spatial, EntityLivingAnimated living) {
         living.getSpatialControl().getMovementControl().jump();
-        living.playMinorAnim(m_jumpAnim, false);
+        living.playMinorAnim(m_jumpAnim, true);
     }
 
-    public MovementEvent onEndEvent(HashMap<String, Boolean> params, Spatial spatial, EntityLivingAnimated living) {
+    public MovementEvent onEndEvent(HashMap<String, Value> params, Spatial spatial, EntityLivingAnimated living) {
         return null;
     }
     

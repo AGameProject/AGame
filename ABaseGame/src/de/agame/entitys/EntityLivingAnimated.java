@@ -4,19 +4,18 @@
  */
 package de.agame.entitys;
 
+import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.sets.UserInterfaceSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.movement.BasicMovementParams;
 import de.agame.entitys.movement.MovementManager;
-import de.agame.misc.QuarternionInterpolator;
-import de.agame.misc.FloatInterpolator;
+import de.agame.misc.Value;
 import java.util.ArrayList;
 
 /**
@@ -25,28 +24,12 @@ import java.util.ArrayList;
  */
 public class EntityLivingAnimated extends EntityLiving implements AnimEventListener{
 
-    private Vector3f m_xforward = new Vector3f(1, 0, 0);
-    private Vector3f m_zforward = new Vector3f(0, 0, 1);
-    
     private AnimLink m_walkanim;
     private AnimLink m_sprintanim;
     private AnimLink m_idleanim;
     private AnimLink m_fallanim;
     
-    private boolean m_walking = false;
-    private float m_walkspeed = 4.0f;
-    private boolean m_sprinting = false;
-    private float m_sprintspeed = 10.0f;
-    private boolean m_isinAir = false;
-    private float m_timeinAir = 0;
-    private boolean m_crouching = false;
-    private float m_crouchspeed = 2.0f;
-    
     private boolean m_viewfwalk = true;
-    
-    private FloatInterpolator m_wslerp = new FloatInterpolator();
-    private float m_turnspeed = 2.0f;
-    private QuarternionInterpolator m_wdlerp = new QuarternionInterpolator();
     
     private AnimLink m_cminoranim;
     private ArrayList<AnimChannel> m_animchannels = new ArrayList<AnimChannel>();
@@ -58,28 +41,12 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
         super(spatial, scset, eoset, uiset);
         scset.getAnimationControl().addListener(this);
         
-        m_movementManager = new MovementManager(spatial, this);
-        
-        try {
-            m_movementManager.ensureParams(new String[] {
-                BasicMovementParams.PARAM_IS_CROUCHING,
-                BasicMovementParams.PARAM_IS_SPRINTING,
-                BasicMovementParams.PARAM_IS_IN_AIR,
-                BasicMovementParams.PARAM_SHOULD_JUMP,
-                BasicMovementParams.PARAM_IS_WALKING
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        m_movementManager = new MovementManager(getSpatial(), this);
         m_movementManager.lockParams();
     }
     
     public MovementManager getMovementManager() {
         return m_movementManager;
-    }
-    
-    private Vector3f calcWalkDirection() {
-        return m_wdlerp.getCurrentValue().mult(m_xforward).multLocal(m_wslerp.getCurrentValue());
     }
     
     public void playMinorAnim(AnimLink anim, boolean log) {
@@ -149,95 +116,11 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     }
     
     public void setWalkDirection(Vector3f dir) {
-        boolean shouldwalk = dir.lengthSquared() != 0;
-        
-        
-        if(shouldwalk) {
-            dir.normalizeLocal();
-            float rangle = m_wdlerp.getCurrentValue().mult(m_xforward).angleBetween(dir);
-            float angleabs = (float) Math.acos(dir.dot(m_xforward));
-            float angle = dir.dot(m_zforward) > 0 ? -angleabs : angleabs;
-            
-            Quaternion q = new Quaternion();
-            q.loadIdentity();
-            q.fromAngles(0, angle, 0);
-            
-            m_wdlerp.setGoal(q, rangle / m_turnspeed);
-            
-            dir = calcWalkDirection();
-            
-            if(m_viewfwalk) m_spatialcontrolset.getMovementControl().setViewDirection(dir);
-            m_spatialcontrolset.getMovementControl().setWalkDirection(dir);
-        }
-        
-        if(!m_walking && shouldwalk) {
-            if(m_sprinting) {
-                m_wslerp.setGoal(m_sprintspeed, 1.0f);
-                if(!m_isinAir) playMinorAnim(m_sprintanim, true);
-            } else {
-                m_wslerp.setGoal(m_walkspeed, 0.4f);
-                if(!m_isinAir) playMinorAnim(m_walkanim, true);
-            }
-        } else if(m_walking && !shouldwalk) {
-            if(m_sprinting) m_wslerp.setGoal(0, 0.3f);
-            else m_wslerp.setGoal(0, 0.15f);
-            if(!m_isinAir) playMinorAnim(m_idleanim, true);
-        }
-        
-        m_walking = shouldwalk;
-        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_WALKING, m_walking);
+        m_movementManager.setMovementDirection(dir);
     }
     
     public void jump() {
-        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_SHOULD_JUMP, true);
-    }
-    
-    public void setWalkSpeed(float speed) {
-        m_walkspeed = speed;
-    }
-    
-    public float getWalkSpeed() {
-        return m_walkspeed;
-    }
-    
-    public void setSprintSpeed(float speed) {
-        m_sprintspeed = speed;
-    }
-    
-    public float getSprintSpeed() {
-        return m_sprintspeed;
-    }
-    
-    public void setSprinting(boolean sprint) {
-        if(m_walking) {
-            if(!m_sprinting && sprint) {
-                if(!m_isinAir) playMinorAnim(m_sprintanim, true);
-                m_wslerp.setGoal(m_sprintspeed, 0.5f);
-            } else if(m_sprinting && !sprint){
-                if(!m_isinAir) playMinorAnim(m_walkanim, true);
-                m_wslerp.setGoal(m_walkspeed, 0.5f);
-            }
-        }
-
-        m_sprinting = sprint;
-        
-        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_SPRINTING, m_sprinting);
-    }
-    
-    public boolean isSprinting() {
-        return m_sprinting;
-    }
-    
-    public void setCrouching(boolean crouch) {
-        m_crouching = crouch;
-        if(m_crouching) m_sprinting = false;
-        
-        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_CROUCHING, m_crouching);
-        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_SPRINTING, m_sprinting);
-    }
-    
-    public boolean isCrouching() {
-        return m_crouching;
+        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_SHOULD_JUMP, new Value<Boolean>(true));
     }
     
     @Override
@@ -248,40 +131,13 @@ public class EntityLivingAnimated extends EntityLiving implements AnimEventListe
     public void simpleUpdate(float tpf) {
         boolean isinAir = !m_spatialcontrolset.getMovementControl().isOnGround();
         
-        if(!isinAir) {
-            m_wslerp.update(tpf);
-            m_wdlerp.update(tpf);
-        }
-        
-        if(m_isinAir && !isinAir) {
-            if(m_walking) {
-                if(!m_sprinting) playMinorAnim(m_walkanim, true);
-                else playMinorAnim(m_sprintanim, true);
-            } else playMinorAnim(m_idleanim, true);
-            m_timeinAir = 0;
-            
-        } else if(!m_isinAir && isinAir) {
-            m_timeinAir = 0;
-            playMinorAnim(m_fallanim, true);
-        }
-        
-        m_isinAir = isinAir;
-        m_movementManager.onParamUpdated(BasicMovementParams.PARAM_IS_IN_AIR, m_isinAir);
-        
-        if(m_isinAir) {
-            m_timeinAir += tpf;
-            for(AnimChannel channel : m_animchannels) {
-                if(channel.getAnimationName().equals(m_fallanim.getName()))
-                    channel.setSpeed(Math.min(m_timeinAir * 4.0f, 7.0f));
-            }
-        }
-        
-        
-        Vector3f walkdir = calcWalkDirection();
-        m_spatialcontrolset.getMovementControl().setWalkDirection(walkdir);
-        if(m_viewfwalk && walkdir.lengthSquared() != 0) m_spatialcontrolset.getMovementControl().setViewDirection(walkdir);
+        m_movementManager.setIsInAir(isinAir);
         
         m_movementManager.onUpdate(tpf);
+        
+        Vector3f walkdir = m_movementManager.getCurrentWalkDirection();
+        m_spatialcontrolset.getMovementControl().setWalkDirection(walkdir);
+        if(m_viewfwalk && walkdir.lengthSquared() != 0) m_spatialcontrolset.getMovementControl().setViewDirection(walkdir.normalize());
     }
 
     @Override

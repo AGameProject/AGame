@@ -49,8 +49,9 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.addMapping("right", new KeyTrigger(KeyInput.KEY_D));
         inputmanager.addMapping("jump", new KeyTrigger(KeyInput.KEY_SPACE));
         inputmanager.addMapping("sprint", new KeyTrigger(KeyInput.KEY_LSHIFT));
+        inputmanager.addMapping("crouch", new KeyTrigger(KeyInput.KEY_LCONTROL));
         
-        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint");
+        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint", "crouch");
         
     }
     
@@ -66,6 +67,7 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.deleteMapping("right");
         inputmanager.deleteMapping("jump");
         inputmanager.deleteMapping("sprint");
+        inputmanager.deleteMapping("crouch");
         
         inputmanager.removeListener(this);
         
@@ -76,8 +78,17 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         else if(name.equals("backward")) m_backward = isPressed;
         else if(name.equals("left")) m_left = isPressed;
         else if(name.equals("right")) m_right = isPressed;
+        
+        else if(name.equals("sprint")) {
+            if(isPressed) getMovementManager().sprint();
+            else getMovementManager().walk();
+        }
+        else if(name.equals("crouch")) {
+            if(isPressed) getMovementManager().crouch();
+            else getMovementManager().walk();
+        }
+        
         else if(name.equals("jump") && isPressed) jump();
-        else if(name.equals("sprint")) setSprinting(isPressed);
     }
     
     @Override

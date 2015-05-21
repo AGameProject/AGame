@@ -65,6 +65,9 @@ public class EntityCompanion extends EntityCreature {
             walkTo(findNewDestination());
         }
         
-        if(m_master != null && getDestination() != null) setSprinting(getDestination().distanceSquared(getPosition()) > 128.0f);
+        if(m_master != null && getDestination() != null) {
+            if(getDestination().distanceSquared(getPosition()) > 128.0f) getMovementManager().sprint();
+            else getMovementManager().walk();
+        }
     }
 }

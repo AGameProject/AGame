@@ -4,6 +4,7 @@
  */
 package de.agame.entitys;
 
+import de.agame.entitys.animation.AnimLink;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.sets.EnviromentObservationSet;

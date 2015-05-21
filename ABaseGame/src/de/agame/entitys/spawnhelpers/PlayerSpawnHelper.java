@@ -10,8 +10,9 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import de.agame.entitys.AnimLink;
+import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.Entity;
+import de.agame.entitys.movement.MovementFlip;
 import de.agame.entitys.movement.MovementJump;
 import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
@@ -51,10 +52,17 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         MovementJump jump = new MovementJump();
         jump.setAnims(new AnimLink[] { new AnimLink("Springen", false, 2.0f, 0.2f) });
         
+        MovementFlip flip = new MovementFlip();
+        flip.setAnims(new AnimLink[] { new AnimLink("Roll", true, 1.0f, 0.2f) });
+        
         try {
+            
             MovementManager playermovement = player.getMovementManager();
             playermovement.unlockParams();
+            
             playermovement.addEvent(jump);
+            playermovement.addEvent(flip);
+            
             playermovement.lockParams();
         } catch (Exception e) {
             e.printStackTrace();

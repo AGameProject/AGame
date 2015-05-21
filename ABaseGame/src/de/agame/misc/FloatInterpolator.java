@@ -19,6 +19,10 @@ public class FloatInterpolator {
         return m_currentval;
     }
     
+    public float getGoal() {
+        return m_goalval;
+    }
+    
     public void setGoal(float goal, float time) {
         m_lastval = m_currentval;
         m_goalval = goal;

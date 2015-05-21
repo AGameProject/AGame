@@ -9,7 +9,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import de.agame.entitys.AnimLink;
+import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EntityCompanion;
 import de.agame.entitys.sets.EnviromentObservationSet;

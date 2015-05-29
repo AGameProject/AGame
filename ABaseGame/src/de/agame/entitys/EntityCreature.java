@@ -7,6 +7,7 @@ package de.agame.entitys;
 import de.agame.entitys.animation.AnimLink;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
@@ -28,8 +29,8 @@ public class EntityCreature extends EntityLivingAnimated {
     private AnimLink m_knockBackAnim;
     private AnimLink m_deathAnim;
     
-    public EntityCreature(Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
-        super(spatial, scset, esset, uiset);
+    public EntityCreature(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
+        super(provider, spatial, scset, esset, uiset);
     }
     
     public void setAttackAnim(AnimLink anim) {

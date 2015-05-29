@@ -7,6 +7,7 @@ package de.agame.entitys;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import de.agame.Items.Item;
+import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
@@ -22,8 +23,8 @@ public class EntityCharacter extends EntityCreature {
     
     private Item m_weapon;
     
-    public EntityCharacter(Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
-        super(spatial, scset, esset, uiset);
+    public EntityCharacter(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
+        super(provider, spatial, scset, esset, uiset);
     }
     
     public void setLeftHand(Node node) {

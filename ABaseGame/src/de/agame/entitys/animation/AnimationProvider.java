@@ -4,10 +4,15 @@
  */
 package de.agame.entitys.animation;
 
+import de.agame.entitys.movement.MovementState;
+
 /**
  *
  * @author Fredie
  */
-public class AnimationProvider {
+public interface AnimationProvider {
+    public void setMovementState(MovementState state);
+    public MovementState getMovementState();
     
+    public AnimLink getBaseAnim(boolean holding, boolean bothhanded);
 }

@@ -11,4 +11,6 @@ package de.agame.entitys.movement;
 public interface MovementStateChangeListener {
     
     public void onMovementStateChanged(MovementState state);
+    
+    public void setBaseAnimSpeedCoefficient(float coefficient);
 }

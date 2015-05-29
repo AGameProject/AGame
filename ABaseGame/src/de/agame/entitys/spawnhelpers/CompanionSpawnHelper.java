@@ -12,6 +12,8 @@ import com.jme3.scene.Node;
 import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EntityCompanion;
+import de.agame.entitys.animation.AnimationManager;
+import de.agame.entitys.animation.HumanoidAnimationProvider;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
@@ -30,20 +32,30 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
         
         AnimControl animcontrol = model.getChild("Character").getControl(AnimControl.class);
         
-        
         SpatialControlSet spatset = new SpatialControlSet();
         spatset.setMovementControll(control);
         spatset.setAnimationControl(animcontrol);
         
-        EntityCompanion companion = new EntityCompanion(model, spatset, enviromentobservationset, userinterfaceset);
-        companion.setIdleAnim(new AnimLink("Stehen", true, 1.0f, 0.2f));
-        companion.setWalkAnim(new AnimLink("Laufen", true, 2.0f, 0.2f));
-        companion.setSprintAnim(new AnimLink("Sprinten", true, 2.0f, 0.2f));
-        companion.setFallAnim(new AnimLink("Fallen", false, 2.0f, 0.05f));
-
-        model.addControl(companion);
+        //init animlinks
+        AnimLink idle = new AnimLink("Stehen", true, 1.0f, 0.2f);
+        AnimLink walk = new AnimLink("Laufen", true, 2.0f, 0.2f);
+        AnimLink sprint = new AnimLink("Sprinten", true, 1.5f, 0.2f);
+        AnimLink fall = new AnimLink("Fallen", true, 1.0f, 0.2f);
         
-        companion.setAnimChannel(animcontrol.createChannel(), 0);
+        //init animprovider
+        HumanoidAnimationProvider animprovider = new HumanoidAnimationProvider();
+        animprovider.setFallAnims(new AnimLink[]{fall, fall, fall});
+        animprovider.setIdleAnims(new AnimLink[]{idle, idle, idle});
+        animprovider.setWalkingAnims(new AnimLink[]{walk, walk, walk});
+        animprovider.setSprintingAnims(new AnimLink[]{sprint, sprint, sprint});
+        
+        EntityCompanion companion = new EntityCompanion(animprovider, model, spatset, enviromentobservationset, userinterfaceset);
+
+        //init animchannels
+        AnimationManager animmanager = companion.getAnimationManager();
+        animmanager.addChannel(animcontrol.createChannel(), "LEGS", true);
+        
+        model.addControl(companion);
         
         return companion;
     }

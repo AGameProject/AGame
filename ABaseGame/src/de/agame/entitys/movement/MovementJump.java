@@ -4,9 +4,10 @@
  */
 package de.agame.entitys.movement;
 
-import com.jme3.scene.Spatial;
+import com.jme3.bullet.control.BetterCharacterControl;
 import de.agame.entitys.animation.AnimLink;
-import de.agame.entitys.EntityLivingAnimated;
+import de.agame.entitys.animation.AnimRequest;
+import de.agame.entitys.animation.AnimationManager;
 import de.agame.misc.Value;
 import java.util.HashMap;
 
@@ -14,9 +15,13 @@ import java.util.HashMap;
  *
  * @author Fredie
  */
-public class MovementJump implements MovementEvent {
+public class MovementJump extends MovementEvent {
 
     private AnimLink m_jumpAnim;
+    
+    public MovementJump(AnimationManager animmanager) {
+        super(animmanager, new String[]{"LEGS"});
+    }
     
     public void setAnims(AnimLink... anims) {
         m_jumpAnim = anims[0];
@@ -44,16 +49,13 @@ public class MovementJump implements MovementEvent {
         return false;
     }
 
-    public void onUpdate(float dt, EntityLivingAnimated entity, Spatial spatial) {
-        //do nothing here
+    public AnimRequest onStartEvent(HashMap<String, Value> params, BetterCharacterControl control) {
+        control.jump();
+        
+        return new AnimRequest(m_jumpAnim, getChannels());
     }
 
-    public void onStartEvent(HashMap<String, Value> params, Spatial spatial, EntityLivingAnimated living) {
-        living.getSpatialControl().getMovementControl().jump();
-        living.playMinorAnim(m_jumpAnim, true);
-    }
-
-    public MovementEvent onEndEvent(HashMap<String, Value> params, Spatial spatial, EntityLivingAnimated living) {
+    public MovementEvent onEndEvent(HashMap<String, Value> params) {
         return null;
     }
     

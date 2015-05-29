@@ -30,6 +30,10 @@ public class AnimLink {
         return m_name;
     }
     
+    public float getTweak() {
+        return m_tweak;
+    }
+    
     public void play(AnimChannel channel) {
         if(m_name == "-1") return;
         

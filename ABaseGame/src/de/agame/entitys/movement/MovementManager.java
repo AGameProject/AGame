@@ -8,6 +8,8 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.EntityLivingAnimated;
+import de.agame.entitys.animation.AnimRequest;
+import de.agame.entitys.animation.AnimationManager;
 import de.agame.misc.FloatInterpolator;
 import de.agame.misc.QuarternionInterpolator;
 import de.agame.misc.Value;
@@ -71,15 +73,19 @@ public class MovementManager {
     
     //the interpolator to interpolate quarternions
     private QuarternionInterpolator m_directionInterpolater;
+    
+    private AnimationManager m_animmanager;
 
-    public MovementManager(Spatial spatial, EntityLivingAnimated living) {
+    public MovementManager(AnimationManager animmanager, Spatial spatial, EntityLivingAnimated living) {
         m_spatial = spatial;
         m_living = living;
+        
+        m_animmanager = animmanager;
         
         m_speedInterpolater = new FloatInterpolator();
         m_directionInterpolater = new QuarternionInterpolator();
         
-        //add all parameters used py default
+        //add all parameters used by default
         m_params.put(BasicMovementParams.PARAM_IS_CROUCHING, new Value<Boolean>(false));
         m_params.put(BasicMovementParams.PARAM_IS_CRAWLING, new Value<Boolean>(false));
         m_params.put(BasicMovementParams.PARAM_IS_WALKING, new Value<Boolean>(false));
@@ -153,17 +159,21 @@ public class MovementManager {
             else if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) speed = m_sprintspeed;
             
             if(m_speedInterpolater.getGoal() != speed) {
-                float time = Math.abs(speed - m_speedInterpolater.getCurrentValue());
+                float time = Math.abs(speed - m_speedInterpolater.getCurrentValue()) / 10.0f;
                 m_speedInterpolater.setGoal(speed, time);
             }
             
         } else {
-            if(m_speedInterpolater.getCurrentValue() != 0) m_speedInterpolater.setGoal(0, m_speedInterpolater.getCurrentValue() / 10.0f);
+            if(m_speedInterpolater.getCurrentValue() != 0) m_speedInterpolater.setGoal(0, m_speedInterpolater.getCurrentValue() / 15.0f);
         }
     }
     
     public Vector3f getCurrentWalkDirection() {
         return m_directionInterpolater.getCurrentValue().mult(m_xforward).multLocal(m_speedInterpolater.getCurrentValue());
+    }
+    
+    public Vector3f getCurrentViewDirection() {
+        return m_directionInterpolater.getCurrentValue().mult(m_xforward);
     }
     
     public void setSprintSpeed(float speed) {
@@ -199,6 +209,8 @@ public class MovementManager {
     }
     
     public void sprint() {
+        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) return;
+        
         m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.sprinting);
         updateParams(m_state);
         
@@ -207,6 +219,8 @@ public class MovementManager {
     }
     
     public void walk() {
+        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.walking) return;
+        
         m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.walking);
         updateParams(m_state);
                
@@ -215,6 +229,8 @@ public class MovementManager {
     }
     
     public void crouch() {
+        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return;
+        
         m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.crouching);
         updateParams(m_state);
                
@@ -223,11 +239,17 @@ public class MovementManager {
     }
     
     public void crawl() {
+        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) return;
+        
         m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.crawling);
         updateParams(m_state);
                
         if(m_listener != null)
             m_listener.onMovementStateChanged(m_state);
+    }
+    
+    public void jump() {
+        onParamUpdated(BasicMovementParams.PARAM_SHOULD_JUMP, new Value<Boolean>(true));
     }
     
     public void setIsInAir(boolean flag) {
@@ -296,12 +318,13 @@ public class MovementManager {
 
             //get new event if current cannot be executed, as long as one can be executed or none is chosen
             while (!m_currentEvent.onMovementChanged(m_params)) {
-                m_currentEvent = m_currentEvent.onEndEvent(m_params, m_spatial, m_living);
+                m_currentEvent = m_currentEvent.onEndEvent(m_params);
                 if (m_currentEvent == null) {
                     break;
                 }
 
-                m_currentEvent.onStartEvent(m_params, m_spatial, m_living);
+                AnimRequest request = m_currentEvent.onStartEvent(m_params, m_living.getSpatialControl().getMovementControl());
+                m_animmanager.handleRequest(request);
             }
 
             //if there is already a new active event chosen skip choosing one from the list
@@ -314,21 +337,25 @@ public class MovementManager {
         for (MovementEvent event : m_events) {
             if (event.executeEvent(m_params)) {
                 m_currentEvent = event;
-                m_currentEvent.onStartEvent(m_params, m_spatial, m_living);
+                AnimRequest request = m_currentEvent.onStartEvent(m_params, m_living.getSpatialControl().getMovementControl());
+                m_animmanager.handleRequest(request);
                 break;
             }
         }
     }
 
     public void onUpdate(float dt) {
+        //update speed and direction
         if(m_state.onGround()) {
+            if(m_state.getAction() != MovementState.MovementAction.idle)
+                m_directionInterpolater.update(dt);
             m_speedInterpolater.update(dt);
-            m_directionInterpolater.update(dt);
             m_timeInAir = 0;
         } else {
             m_timeInAir += dt;
         }
         
+        //update movement state
         if(m_speedInterpolater.getCurrentValue() != 0 && m_state.getAction() == MovementState.MovementAction.idle) {
             m_state.setAction(MovementState.MovementAction.moving);
             updateParams(m_state);
@@ -344,8 +371,23 @@ public class MovementManager {
                 m_listener.onMovementStateChanged(m_state);
         }
         
-        if (m_currentEvent != null) {
-            m_currentEvent.onUpdate(dt, m_living, m_spatial);
+        //update anim speed coefficient
+        if(m_state.getAction() == MovementState.MovementAction.moving && m_state.onGround()) {
+            float prevspeed = 0.0f;
+            
+            if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) prevspeed = m_crawlspeed;
+            if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) prevspeed = m_crouchspeed;
+            if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.walking) prevspeed = m_walkspeed;
+            if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) prevspeed = m_sprintspeed;
+            
+            if(prevspeed != 0.0f) {
+                float coefficient = m_speedInterpolater.getCurrentValue() / prevspeed;
+                coefficient = coefficient > 0.5f ? coefficient : 0.5f;
+                
+                m_listener.setBaseAnimSpeedCoefficient(coefficient);
+            }
+        } else {
+            m_listener.setBaseAnimSpeedCoefficient(1.0f);
         }
     }
 }

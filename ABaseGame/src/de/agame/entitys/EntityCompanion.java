@@ -60,7 +60,7 @@ public class EntityCompanion extends EntityCreature {
         
         if(m_master == null) {
             m_master = findMaster();
-        } else if(reachedDestination() && m_random.nextFloat() < 0.01f) {
+        } else if(reachedDestination() && m_random.nextFloat() < 0.03f) {
             walkTo(findNewDestination());
         } else if(getDestination() == null) {
             walkTo(findNewDestination());

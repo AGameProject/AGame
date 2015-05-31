@@ -38,16 +38,30 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
         
         //init animlinks
         AnimLink idle = new AnimLink("Stehen", true, 1.0f, 0.2f);
+        AnimLink idle1 = new AnimLink("Stehen1", true, 1.0f, 0.2f);
+        AnimLink idle2 = new AnimLink("Stehen2", true, 1.0f, 0.2f);
         AnimLink walk = new AnimLink("Laufen", true, 2.0f, 0.2f);
+        AnimLink walk1 = new AnimLink("Laufen1", true, 2.0f, 0.2f);
+        AnimLink walk2 = new AnimLink("Laufen2", true, 2.0f, 0.2f);
         AnimLink sprint = new AnimLink("Sprinten", true, 1.5f, 0.2f);
+        AnimLink sprint1 = new AnimLink("Sprinten1", true, 1.5f, 0.2f);
+        AnimLink sprint2 = new AnimLink("Sprinten2", true, 1.5f, 0.2f);
+        AnimLink crouch = new AnimLink("Crouch", true, 1.0f, 0.2f);
+        AnimLink crouch1 = new AnimLink("Crouch1", true, 1.0f, 0.2f);
+        AnimLink crouch2 = new AnimLink("Crouch2", true, 1.0f, 0.2f);
+        AnimLink crouchwalk = new AnimLink("CrouchWalk", true, 2.0f, 0.2f);
+        AnimLink crouchwalk1 = new AnimLink("CrouchWalk1", true, 2.0f, 0.2f);
+        AnimLink crouchwalk2 = new AnimLink("CrouchWalk2", true, 2.0f, 0.2f);
         AnimLink fall = new AnimLink("Fallen", true, 1.0f, 0.2f);
         
         //init animprovider
         HumanoidAnimationProvider animprovider = new HumanoidAnimationProvider();
         animprovider.setFallAnims(new AnimLink[]{fall, fall, fall});
-        animprovider.setIdleAnims(new AnimLink[]{idle, idle, idle});
-        animprovider.setWalkingAnims(new AnimLink[]{walk, walk, walk});
-        animprovider.setSprintingAnims(new AnimLink[]{sprint, sprint, sprint});
+        animprovider.setIdleAnims(new AnimLink[]{idle, idle1, idle2});
+        animprovider.setWalkingAnims(new AnimLink[]{walk, walk1, walk2});
+        animprovider.setSprintingAnims(new AnimLink[]{sprint, sprint1, sprint2});
+        animprovider.setCrouchingAnims(new AnimLink[]{crouch, crouch1, crouch2});
+        animprovider.setCrouchWalkingAnims(new AnimLink[]{crouchwalk, crouchwalk1, crouchwalk2});
         
         EntityCompanion companion = new EntityCompanion(animprovider, model, spatset, enviromentobservationset, userinterfaceset);
 

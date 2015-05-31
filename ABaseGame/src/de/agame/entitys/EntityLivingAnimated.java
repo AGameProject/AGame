@@ -4,20 +4,14 @@
  */
 package de.agame.entitys;
 
-import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.sets.UserInterfaceSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.EnviromentObservationSet;
-import com.jme3.animation.AnimChannel;
-import com.jme3.animation.AnimControl;
-import com.jme3.animation.AnimEventListener;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.animation.AnimationManager;
 import de.agame.entitys.animation.AnimationProvider;
-import de.agame.entitys.movement.BasicMovementParams;
 import de.agame.entitys.movement.MovementManager;
-import de.agame.misc.Value;
 
 /**
  *
@@ -25,8 +19,8 @@ import de.agame.misc.Value;
  */
 public class EntityLivingAnimated extends EntityLiving {
 
-    private MovementManager m_movementManager;
-    private AnimationManager m_animationmanager;
+    protected MovementManager m_movementManager;
+    protected AnimationManager m_animationmanager;
     
     public EntityLivingAnimated(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet eoset, UserInterfaceSet uiset) {
         super(spatial, scset, eoset, uiset);

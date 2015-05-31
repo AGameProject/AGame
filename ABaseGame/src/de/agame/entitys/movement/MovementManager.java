@@ -28,6 +28,12 @@ public class MovementManager {
     
     //the curret movementstate of the entity
     private MovementState m_state;
+    
+    //if the entity should be moving
+    private boolean m_prevWalk = false;
+    
+    //how fast the entity should be moving
+    private float m_prevSpeed = 0;
 
     //the listener listening to the movementstate
     private MovementStateChangeListener m_listener;
@@ -42,10 +48,10 @@ public class MovementManager {
     private float m_sprintspeed = 10.0f;
     
     //how fast the entity can crouch
-    private float m_crouchspeed = 3.0f;
+    private float m_crouchspeed = 2.0f;
     
     //how fast the entity can crawl
-    private float m_crawlspeed = 2.0f;
+    private float m_crawlspeed = 1.0f;
     
     //the time the entity has been in air
     private float m_timeInAir = 0;
@@ -98,6 +104,9 @@ public class MovementManager {
         m_state = new MovementState();
         m_state.setAction(MovementState.MovementAction.idle);
         m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.walking);
+        
+        //set default movement action
+        walk();
     }
 
     private void updateParams(MovementState state) {
@@ -130,8 +139,16 @@ public class MovementManager {
             onParamUpdated(BasicMovementParams.PARAM_IS_IN_AIR, new Value<Boolean>(inAir));
     }
     
+    public MovementState getCurrentState() {
+        return m_state;
+    }
+    
     public void setMovementStateChangeListener(MovementStateChangeListener listener) {
         m_listener = listener;
+    }
+    
+    public void setTargetSpeed(float speed) {
+        m_prevSpeed = speed;
     }
     
     public void setMovementDirection(Vector3f direction) {
@@ -150,22 +167,7 @@ public class MovementManager {
             m_directionInterpolater.setGoal(q, rangle / m_turnspeed);
         }
         
-        if(shouldwalk) {
-            float speed = 0;
-            
-            if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) speed = m_crawlspeed;
-            else if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) speed = m_crouchspeed;
-            else if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.walking) speed = m_walkspeed;
-            else if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) speed = m_sprintspeed;
-            
-            if(m_speedInterpolater.getGoal() != speed) {
-                float time = Math.abs(speed - m_speedInterpolater.getCurrentValue()) / 10.0f;
-                m_speedInterpolater.setGoal(speed, time);
-            }
-            
-        } else {
-            if(m_speedInterpolater.getCurrentValue() != 0) m_speedInterpolater.setGoal(0, m_speedInterpolater.getCurrentValue() / 15.0f);
-        }
+        m_prevWalk = shouldwalk;
     }
     
     public Vector3f getCurrentWalkDirection() {
@@ -209,27 +211,21 @@ public class MovementManager {
     }
     
     public void sprint() {
-        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) return;
-        
-        m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.sprinting);
-        updateParams(m_state);
-        
-        if(m_listener != null)
-            m_listener.onMovementStateChanged(m_state);
+        if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crawling)
+            if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crouching)
+                setTargetSpeed(m_sprintspeed);
     }
     
     public void walk() {
-        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.walking) return;
-        
-        m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.walking);
-        updateParams(m_state);
-               
-        if(m_listener != null)
-            m_listener.onMovementStateChanged(m_state);
+        if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crawling)
+            if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crouching)
+                setTargetSpeed(m_walkspeed);
     }
     
     public void crouch() {
         if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return;
+        
+        setTargetSpeed(m_crouchspeed);
         
         m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.crouching);
         updateParams(m_state);
@@ -238,14 +234,40 @@ public class MovementManager {
             m_listener.onMovementStateChanged(m_state);
     }
     
+    public void unCrouch() {
+        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) {
+            setTargetSpeed(m_walkspeed);
+
+            m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.walking);
+            updateParams(m_state);
+
+            if(m_listener != null)
+                m_listener.onMovementStateChanged(m_state);
+        }
+    }
+    
     public void crawl() {
         if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) return;
+        
+        setTargetSpeed(m_crawlspeed);
         
         m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.crawling);
         updateParams(m_state);
                
         if(m_listener != null)
             m_listener.onMovementStateChanged(m_state);
+    }
+    
+    public void unCrawl() {
+        if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) {
+            setTargetSpeed(m_walkspeed);
+
+            m_state.setAdditionalArgument(MovementState.AdditionalMovementArg.walking);
+            updateParams(m_state);
+
+            if(m_listener != null)
+                m_listener.onMovementStateChanged(m_state);
+        }
     }
     
     public void jump() {
@@ -355,6 +377,18 @@ public class MovementManager {
             m_timeInAir += dt;
         }
         
+        //update movement
+        if(!m_prevWalk && m_speedInterpolater.getGoal() != 0) {
+            float time = m_speedInterpolater.getCurrentValue() / 15.0f;
+            m_speedInterpolater.setGoal(0, time);
+        } else if(m_prevWalk && m_speedInterpolater.getGoal() != m_prevSpeed) {
+            float time = m_prevSpeed - m_speedInterpolater.getCurrentValue();
+            time = time > 0 ? time / 10.0f : time / 15.0f;
+            time = Math.abs(time);
+            
+            m_speedInterpolater.setGoal(m_prevSpeed, time);
+        }
+        
         //update movement state
         if(m_speedInterpolater.getCurrentValue() != 0 && m_state.getAction() == MovementState.MovementAction.idle) {
             m_state.setAction(MovementState.MovementAction.moving);
@@ -369,6 +403,24 @@ public class MovementManager {
                    
             if(m_listener != null)
                 m_listener.onMovementStateChanged(m_state);
+        }
+        
+        if(m_state.getAction() == MovementState.MovementAction.moving) {
+            if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crawling) {
+                if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crouching) {
+                    MovementState.AdditionalMovementArg prevArg = MovementState.AdditionalMovementArg.walking;
+                    if(m_speedInterpolater.getCurrentValue() > m_walkspeed) prevArg = MovementState.AdditionalMovementArg.sprinting;
+                    
+                    if(m_state.getAdditionalArg() != prevArg) {
+                        m_state.setAdditionalArgument(prevArg);
+                        updateParams(m_state);
+                        
+                        if(m_listener != null)
+                            m_listener.onMovementStateChanged(m_state);
+                    }
+                }
+            }
+            
         }
         
         //update anim speed coefficient

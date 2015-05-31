@@ -4,6 +4,7 @@
  */
 package de.agame.entitys.animation;
 
+import de.agame.Items.Item;
 import de.agame.entitys.movement.MovementState;
 
 /**
@@ -14,5 +15,8 @@ public interface AnimationProvider {
     public void setMovementState(MovementState state);
     public MovementState getMovementState();
     
-    public AnimLink getBaseAnim(boolean holding, boolean bothhanded);
+    public void setHeldItem(Item item);
+    public Item getHeldItem();
+    
+    public AnimLink getBaseAnim();
 }

@@ -7,10 +7,12 @@ package de.agame.entitys;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.animation.AnimationProvider;
+import de.agame.entitys.movement.MovementState;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  *
@@ -18,18 +20,18 @@ import java.util.Iterator;
  */
 public class EntityCompanion extends EntityCreature {
     
-    private Entity m_master = null;
+    private EntityPlayer m_master = null;
     
     public EntityCompanion(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
         super(provider, spatial, scset, esset, uiset);
     }
     
-    private Entity findMaster() {
+    private EntityPlayer findMaster() {
         Iterator<Entity> eiterator = m_enviromentobservationset.getEntityManager().getEntitys();
         while(eiterator.hasNext()) {
             Entity e = eiterator.next();
             if(e instanceof EntityPlayer) {
-                return e;
+                return (EntityPlayer) e;
             }
         }
         
@@ -69,6 +71,18 @@ public class EntityCompanion extends EntityCreature {
         if(m_master != null && getDestination() != null) {
             if(getDestination().distanceSquared(getPosition()) > 128.0f) getMovementManager().sprint();
             else getMovementManager().walk();
+        }
+        
+        if(m_master.getMovementManager().getCurrentState().getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) {
+            if(m_movementManager.getCurrentState().getAdditionalArg() != MovementState.AdditionalMovementArg.crouching) {
+                if(new Random().nextFloat() > 0.95f) m_movementManager.crouch();
+            }
+        }
+        
+        if(m_master.getMovementManager().getCurrentState().getAdditionalArg() != MovementState.AdditionalMovementArg.crouching) {
+            if(m_movementManager.getCurrentState().getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) {
+                if(new Random().nextFloat() > 0.95f) m_movementManager.unCrouch();
+            }
         }
     }
 }

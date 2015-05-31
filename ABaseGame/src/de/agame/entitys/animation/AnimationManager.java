@@ -7,6 +7,7 @@ package de.agame.entitys.animation;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
+import de.agame.Items.Item;
 import de.agame.entitys.movement.MovementState;
 import de.agame.entitys.movement.MovementStateChangeListener;
 import java.util.ArrayList;
@@ -55,18 +56,18 @@ public class AnimationManager implements AnimEventListener, MovementStateChangeL
         playThird(request.getAnim(), request.getChannels());
     }
     
+    public void setHeldItem(Item item) {
+        m_provider.setHeldItem(item);
+    }
+    
     public void updateBaseAnim() {
-        AnimLink anim = m_provider.getBaseAnim(false, false);
+        AnimLink anim = m_provider.getBaseAnim();
         
         if(anim == m_base) return;
         
         m_base = anim;
         
         if(m_base == null) {
-            for(AnimChannel channel : m_realChannels) {
-                channel.setAnim(null);
-            }
-            
             return;
         }
         
@@ -144,10 +145,12 @@ public class AnimationManager implements AnimEventListener, MovementStateChangeL
         if(m_speedCoefficient == coefficient) return;
         
         m_speedCoefficient = coefficient;
-        
-        for(int i = 0; i < m_realChannels.size(); i++) {
-            if(!m_thirdsPlaying.get(i)) {
-                m_realChannels.get(i).setSpeed(m_base.getTweak() * m_speedCoefficient);
+
+        if(m_base != null) {
+            for(int i = 0; i < m_realChannels.size(); i++) {
+                if(!m_thirdsPlaying.get(i)) {
+                    m_realChannels.get(i).setSpeed(m_base.getTweak() * m_speedCoefficient);
+                }
             }
         }
     }

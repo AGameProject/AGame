@@ -86,7 +86,7 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         }
         else if(name.equals("crouch")) {
             if(isPressed) getMovementManager().crouch();
-            else getMovementManager().walk();
+            else getMovementManager().unCrouch();
         }
         
         else if(name.equals("jump") && isPressed) getMovementManager().jump();

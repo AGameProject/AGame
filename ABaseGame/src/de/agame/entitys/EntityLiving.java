@@ -8,6 +8,7 @@ import de.agame.entitys.sets.UserInterfaceSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import com.jme3.scene.Spatial;
+import de.agame.entitys.movement.MovementManager;
 
 /**
  * BaseClass for all AI driven Characters in the Game
@@ -24,8 +25,13 @@ public abstract class EntityLiving extends Entity{
     private float m_complexElapse = 1.0f / (float) COMPLEX_UPDATES_PER_SECOND;
     private float m_accu = 0;
     
+    protected MovementManager m_movementManager;
+    
     public EntityLiving(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
+        
+        m_movementManager = new MovementManager(getSpatial(), this);
+        m_movementManager.lockParams();
     }
     
     @Override

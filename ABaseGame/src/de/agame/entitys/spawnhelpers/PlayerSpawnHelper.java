@@ -4,6 +4,7 @@
  */
 package de.agame.entitys.spawnhelpers;
 
+import com.jme3.animation.AnimChannel;
 import de.agame.entitys.EntityPlayer;
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
@@ -15,6 +16,8 @@ import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.Entity;
 import de.agame.entitys.animation.AnimationManager;
 import de.agame.entitys.animation.HumanoidAnimationProvider;
+import de.agame.entitys.combat.AttackPunch;
+import de.agame.entitys.combat.CombatManager;
 import de.agame.entitys.movement.MovementJump;
 import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
@@ -65,6 +68,10 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         AnimLink crouchwalk2 = new AnimLink("CrouchWalk2", true, 2.0f, 0.2f);
         AnimLink fall = new AnimLink("Fallen", true, 1.0f, 0.2f);
         
+        AnimLink punch0 = new AnimLink("AttackPunch0", true, 1.0f, 0.05f);
+        AnimLink punch1 = new AnimLink("AttackPunch1", true, 1.0f, 0.05f);
+        AnimLink punch2 = new AnimLink("AttackPunch2", true, 1.0f, 0.05f);
+        
         //init animprovider
         HumanoidAnimationProvider animprovider = new HumanoidAnimationProvider();
         animprovider.setFallAnims(new AnimLink[]{fall, fall, fall});
@@ -73,13 +80,34 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         animprovider.setSprintingAnims(new AnimLink[]{sprint, sprint1, sprint2});
         animprovider.setCrouchingAnims(new AnimLink[]{crouch, crouch1, crouch2});
         animprovider.setCrouchWalkingAnims(new AnimLink[]{crouchwalk, crouchwalk1, crouchwalk2});
+        animprovider.addCombatCombo("PUNCH", new AnimLink[]{punch0, punch1, punch2});
         
         //create player
         EntityPlayer player = new EntityPlayer(animprovider, model, spatset, enviromentobservationset, userinterfaceset);
         
         //init animchannels
         AnimationManager animmanager = player.getAnimationManager();
-        animmanager.addChannel(animcontrol.createChannel(), "LEGS", true);
+
+        AnimChannel head = animcontrol.createChannel();
+        head.addBone("Neck");
+        head.addBone("Head");
+        animmanager.addChannel(head, "HEAD", true);
+        
+        AnimChannel arms = animcontrol.createChannel();
+        arms.addFromRootBone("Shoulder.r");
+        arms.addFromRootBone("Shoulder.l");
+        animmanager.addChannel(arms, "ARMS", true);
+        
+        AnimChannel torso = animcontrol.createChannel();
+        torso.addBone("LowerBack");
+        torso.addBone("MiddleBack");
+        torso.addBone("UpperBack");
+        animmanager.addChannel(torso, "TORSO", true);
+        
+        AnimChannel legs = animcontrol.createChannel();
+        legs.addFromRootBone("Hip.r");
+        legs.addFromRootBone("Hip.l");
+        animmanager.addChannel(legs, "LEGS", true);
         
         MovementJump jump = new MovementJump(player.getAnimationManager());
         jump.setAnims(new AnimLink[] { new AnimLink("Springen", false, 2.0f, 0.2f) });
@@ -96,15 +124,19 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
             e.printStackTrace();
         }
         
+        CombatManager combat = player.getCombatManager();
+        combat.initChannels(animmanager);
+        combat.addAttack("PUNCH", new AttackPunch(animprovider));
+        
         model.addControl(player);
         
         player.setRightHand(rightitem);
         player.setLeftHand(leftitem);
         
         Node sword = (Node) assets.loadModel("Models/Items/Kurz_Schwert_1/Kurz_Schwert_1.j3o");
-        Item item = new Item(sword, 1, 30.0f, false, false);
+        Item item = new Item(sword, 1, 30.0f, true, null, null);
         
-        player.setHeldItem(item);
+//        player.setHeldItem(item);
         
         return player;
     }
@@ -113,5 +145,4 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         entity.teleportTo(spawnpoint.addLocal(0, 1, 0));
         entity.onAttach();
     }
-    
 }

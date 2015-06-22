@@ -6,6 +6,9 @@ package de.agame.entitys.animation;
 
 import de.agame.Items.Item;
 import de.agame.entitys.movement.MovementState;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  *
@@ -16,6 +19,9 @@ public class HumanoidAnimationProvider implements AnimationProvider{
     private MovementState m_currentState = null;
     
     private Item m_heldItem = null;
+    
+    private HashMap<String, AnimLink> m_combatAnims = new HashMap<String, AnimLink>();
+    private HashMap<String, Integer> m_combatComboCounts = new HashMap<String, Integer>();
     
     private AnimLink m_falling[] = new AnimLink[3];
     private AnimLink m_idle[] = new AnimLink[3];
@@ -57,6 +63,20 @@ public class HumanoidAnimationProvider implements AnimationProvider{
         m_sprinting = anims;
     }
     
+    public void addCombatCombo(String tag, AnimLink anims[]) {
+        if(!m_combatComboCounts.containsKey(tag)) m_combatComboCounts.put(tag, 1);
+        else {
+            int count = m_combatComboCounts.get(tag);
+            m_combatComboCounts.put(tag, count + 1);
+        }
+        
+        int index = m_combatComboCounts.get(tag) - 1;
+        
+        for(int i = 0; i < anims.length; i++) {
+            m_combatAnims.put(tag + index + "." + i, anims[i]);
+        }
+    }
+    
     public AnimLink getBaseAnim() {
         if(m_currentState == null) return null;
         
@@ -91,5 +111,30 @@ public class HumanoidAnimationProvider implements AnimationProvider{
 
     public Item getHeldItem() {
         return m_heldItem;
+    }
+
+    public AnimLink[] getRandomComboSet(String tag) {
+        if(!m_combatComboCounts.containsKey(tag)) return null;
+        int index = new Random().nextInt(m_combatComboCounts.get(tag));
+        
+        ArrayList<AnimLink> anims = new ArrayList<AnimLink>();
+        
+        int count = 0;
+        boolean stop = false;
+        do {
+            AnimLink anim = m_combatAnims.get(tag + index + "." + count);
+            if(anim != null)
+                anims.add(anim);
+            else {
+                stop = true;
+            }
+            
+            count++;
+        } while(!stop);
+        
+        AnimLink animarray[] = new AnimLink[anims.size()];
+        for(int i = 0; i < anims.size(); i++) animarray[i] = anims.get(i);
+        
+        return animarray;
     }
 }

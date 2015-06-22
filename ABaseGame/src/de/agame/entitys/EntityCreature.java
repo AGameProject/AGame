@@ -8,6 +8,7 @@ import de.agame.entitys.animation.AnimLink;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.animation.AnimationProvider;
+import de.agame.entitys.combat.CombatManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
@@ -24,29 +25,16 @@ public class EntityCreature extends EntityLivingAnimated {
     
     private float m_health = 10.0f;
     
-    private AnimLink m_attackAnim;
-    private AnimLink m_damageAnim;
-    private AnimLink m_knockBackAnim;
-    private AnimLink m_deathAnim;
+    protected CombatManager m_combatManager;
     
     public EntityCreature(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
         super(provider, spatial, scset, esset, uiset);
+        
+        m_combatManager = new CombatManager(provider, m_animationmanager, esset);
     }
     
-    public void setAttackAnim(AnimLink anim) {
-        m_attackAnim = anim;
-    }
-    
-    public void setDamageAnim(AnimLink anim) {
-        m_damageAnim = anim;
-    }
-    
-    public void setKnockBackAnim(AnimLink anim) {
-        m_knockBackAnim = anim;
-    }
-    
-    public void setDeathAnim(AnimLink anim) {
-        m_deathAnim = anim;
+    public CombatManager getCombatManager() {
+        return m_combatManager;
     }
     
     public float getHealth() {
@@ -57,8 +45,8 @@ public class EntityCreature extends EntityLivingAnimated {
         m_health = health;
     }
     
-    public void attackEntity(Entity attacker, float damage) {
-        m_health -= damage;
+    public void attack() {
+        m_combatManager.attack();
     }
     
     public void walkTo(Vector3f location) {

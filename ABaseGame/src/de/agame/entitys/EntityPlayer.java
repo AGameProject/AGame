@@ -6,8 +6,10 @@ package de.agame.entitys;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.animation.AnimationProvider;
@@ -51,8 +53,9 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.addMapping("jump", new KeyTrigger(KeyInput.KEY_SPACE));
         inputmanager.addMapping("sprint", new KeyTrigger(KeyInput.KEY_LSHIFT));
         inputmanager.addMapping("crouch", new KeyTrigger(KeyInput.KEY_LCONTROL));
+        inputmanager.addMapping("attack", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         
-        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint", "crouch");
+        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint", "crouch", "attack");
         
     }
     
@@ -69,6 +72,7 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.deleteMapping("jump");
         inputmanager.deleteMapping("sprint");
         inputmanager.deleteMapping("crouch");
+        inputmanager.deleteMapping("attack");
         
         inputmanager.removeListener(this);
         
@@ -90,6 +94,8 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         }
         
         else if(name.equals("jump") && isPressed) getMovementManager().jump();
+        
+        else if(name.equals("attack") && isPressed) attack();
     }
     
     @Override

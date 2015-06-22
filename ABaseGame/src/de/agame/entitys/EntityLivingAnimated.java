@@ -19,7 +19,6 @@ import de.agame.entitys.movement.MovementManager;
  */
 public class EntityLivingAnimated extends EntityLiving {
 
-    protected MovementManager m_movementManager;
     protected AnimationManager m_animationmanager;
     
     public EntityLivingAnimated(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet eoset, UserInterfaceSet uiset) {
@@ -27,10 +26,7 @@ public class EntityLivingAnimated extends EntityLiving {
         
         m_animationmanager = new AnimationManager(provider);
         m_spatialcontrolset.getAnimationControl().addListener(m_animationmanager);
-        
-        m_movementManager = new MovementManager(m_animationmanager, getSpatial(), this);
         m_movementManager.setMovementStateChangeListener(m_animationmanager);
-        m_movementManager.lockParams();
     }
     
     public MovementManager getMovementManager() {

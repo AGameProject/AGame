@@ -7,9 +7,8 @@ package de.agame.entitys.movement;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import de.agame.entitys.EntityLivingAnimated;
+import de.agame.entitys.EntityLiving;
 import de.agame.entitys.animation.AnimRequest;
-import de.agame.entitys.animation.AnimationManager;
 import de.agame.misc.FloatInterpolator;
 import de.agame.misc.QuarternionInterpolator;
 import de.agame.misc.Value;
@@ -72,7 +71,7 @@ public class MovementManager {
     private Spatial m_spatial;
     
     //the entity being animated by this movementmanager
-    private EntityLivingAnimated m_living;
+    private EntityLiving m_living;
     
     //the interpolator used to interpolate speed
     private FloatInterpolator m_speedInterpolater;
@@ -80,13 +79,9 @@ public class MovementManager {
     //the interpolator to interpolate quarternions
     private QuarternionInterpolator m_directionInterpolater;
     
-    private AnimationManager m_animmanager;
-
-    public MovementManager(AnimationManager animmanager, Spatial spatial, EntityLivingAnimated living) {
+    public MovementManager(Spatial spatial, EntityLiving living) {
         m_spatial = spatial;
         m_living = living;
-        
-        m_animmanager = animmanager;
         
         m_speedInterpolater = new FloatInterpolator();
         m_directionInterpolater = new QuarternionInterpolator();
@@ -346,7 +341,9 @@ public class MovementManager {
                 }
 
                 AnimRequest request = m_currentEvent.onStartEvent(m_params, m_living.getSpatialControl().getMovementControl());
-                m_animmanager.handleRequest(request);
+                
+                if(m_listener != null)
+                    m_listener.handleAnimRequest(request);
             }
 
             //if there is already a new active event chosen skip choosing one from the list
@@ -360,7 +357,10 @@ public class MovementManager {
             if (event.executeEvent(m_params)) {
                 m_currentEvent = event;
                 AnimRequest request = m_currentEvent.onStartEvent(m_params, m_living.getSpatialControl().getMovementControl());
-                m_animmanager.handleRequest(request);
+                
+                if(m_listener != null)
+                    m_listener.handleAnimRequest(request);
+                
                 break;
             }
         }

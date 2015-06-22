@@ -19,4 +19,5 @@ public interface AnimationProvider {
     public Item getHeldItem();
     
     public AnimLink getBaseAnim();
+    public AnimLink[] getRandomComboSet(String tag);
 }

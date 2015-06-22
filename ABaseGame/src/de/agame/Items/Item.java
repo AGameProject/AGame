@@ -16,18 +16,22 @@ public class Item {
 
     private float m_hitdamage;
     
-    private boolean m_canblock;
-    
     private boolean m_isTwoHanded;
     
     private Node m_itemmodel;
+
+    private String m_attacktag;
     
-    public Item(Node itemmodel, int maxstacksize, float hitdamage, boolean canblock, boolean istwohanded) {
+    private String m_blocktag;
+    
+    public Item(Node itemmodel, int maxstacksize, float hitdamage, boolean istwohanded, String attacktag, String blocktag) {
         m_itemmodel = itemmodel;
         m_maxstacksize = maxstacksize;
         m_hitdamage = hitdamage;
-        m_canblock = canblock;
         m_isTwoHanded = istwohanded;
+        
+        m_attacktag = attacktag;
+        m_blocktag = blocktag;
     }
     
     public int getMaxStackSize() {
@@ -38,8 +42,12 @@ public class Item {
         return m_hitdamage * strength;
     }
     
-    public boolean canBlock() {
-        return m_canblock;
+    public String getAttackTag() {
+        return m_attacktag;
+    }
+    
+    public String getBlockTag() {
+        return m_blocktag;
     }
     
     public boolean isTwoHanded() {

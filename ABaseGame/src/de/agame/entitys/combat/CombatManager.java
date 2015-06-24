@@ -8,6 +8,7 @@ import de.agame.Items.Item;
 import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimationManager;
 import de.agame.entitys.animation.AnimationProvider;
+import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import java.util.HashMap;
 
@@ -41,15 +42,19 @@ public class CombatManager {
     //the animprovider used by this combatmanager
     private AnimationProvider m_provider;
     
+    //the movementmanager controling the entitys movement
+    private MovementManager m_movementManager;
+    
     //the needed channels to play animations
     private int m_channels[];
     
-    public CombatManager(AnimationProvider provider, CombatStateListener listener, EnviromentObservationSet enviroment) {
+    public CombatManager(MovementManager movementmanager, AnimationProvider provider, CombatStateListener listener, EnviromentObservationSet enviroment) {
         m_attacks = new HashMap<String, Attack>();
         m_blocks = new HashMap<String, Block>();
         m_listener = listener;
         m_enviroment = enviroment;
         m_provider = provider;
+        m_movementManager = movementmanager;
     }
 
     public void initChannels(AnimationManager animmanager) {
@@ -81,18 +86,35 @@ public class CombatManager {
             m_prevAttack = m_attacks.get(item.getAttackTag());
             m_prevBlock = m_blocks.get(item.getBlockTag());
         } else {
-            m_prevAttack = m_attacks.get("PUNCH");
-            m_prevBlock = null;
+            m_prevAttack = m_attacks.get("ATTACK_PUNCH");
+            m_prevBlock = m_blocks.get("BLOCK_FIST");
         }
     }
     
     public boolean attack() {
         if(m_prevAttack != null) {
-            AnimRequest request = m_prevAttack.execute(m_enviroment, m_provider);
+            AnimRequest request = m_prevAttack.execute(m_enviroment, m_provider, m_movementManager);
             
             if(request == null) return false;
             
             if(m_listener != null) m_listener.handleAnimRequest(request);
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean block() {
+        //if there is no block to be executed, return
+        if(m_prevBlock == null) return false;
+        
+        //attack is more important than block
+        if((m_prevAttack == null || !m_prevAttack.isExecuting()) && !m_prevBlock.isBlocking()) {
+            //abort the attack to stop combos
+            if(m_prevAttack != null) m_prevAttack.abort();
+            
+            if(m_listener != null) m_listener.handleAnimRequest(m_prevBlock.getBlockAnim(m_provider));
             
             return true;
         }

@@ -79,6 +79,13 @@ public class MovementManager {
     //the interpolator to interpolate quarternions
     private QuarternionInterpolator m_directionInterpolater;
     
+    //the vector the entity is knocked in
+    private Vector3f m_knock = null;
+    
+    //the duration this knock still used
+    private float m_knockduration = -1;
+    private float m_knockmaxduration = -1;
+    
     public MovementManager(Spatial spatial, EntityLiving living) {
         m_spatial = spatial;
         m_living = living;
@@ -142,6 +149,12 @@ public class MovementManager {
         m_listener = listener;
     }
     
+    public void knock(Vector3f knock, float duration) {
+        m_knock = knock;
+        m_knockduration = duration;
+        m_knockmaxduration = duration;
+    }
+    
     public void setTargetSpeed(float speed) {
         m_prevSpeed = speed;
     }
@@ -166,6 +179,8 @@ public class MovementManager {
     }
     
     public Vector3f getCurrentWalkDirection() {
+        if(m_knock != null && m_knockduration > 0.0f) return m_knock;
+        
         return m_directionInterpolater.getCurrentValue().mult(m_xforward).multLocal(m_speedInterpolater.getCurrentValue());
     }
     
@@ -367,6 +382,16 @@ public class MovementManager {
     }
 
     public void onUpdate(float dt) {
+        //update knock if necessary
+        if(m_knock != null) {
+            m_knockduration -= dt;
+            if(m_knockduration <= 0.0f) {
+                m_knock = null;
+                m_knockduration = -1;
+                m_knockmaxduration = -1;
+            }
+        }
+        
         //update speed and direction
         if(m_state.onGround()) {
             if(m_state.getAction() != MovementState.MovementAction.idle)
@@ -433,7 +458,8 @@ public class MovementManager {
             if(m_state.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) prevspeed = m_sprintspeed;
             
             if(prevspeed != 0.0f) {
-                float coefficient = m_speedInterpolater.getCurrentValue() / prevspeed;
+                float speed = m_knock != null ? m_knock.length() : m_speedInterpolater.getCurrentValue();
+                float coefficient = speed / prevspeed;
                 coefficient = coefficient > 0.5f ? coefficient : 0.5f;
                 
                 m_listener.setBaseAnimSpeedCoefficient(coefficient);

@@ -137,4 +137,12 @@ public class HumanoidAnimationProvider implements AnimationProvider{
         
         return animarray;
     }
+
+    public AnimLink getRandomBlock(String tag) {
+        if(!m_combatComboCounts.containsKey(tag)) return null;
+        
+        int index = new Random().nextInt(m_combatComboCounts.get(tag));
+        
+        return m_combatAnims.get(tag + index);
+    }
 }

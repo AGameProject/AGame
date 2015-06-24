@@ -4,7 +4,6 @@
  */
 package de.agame.entitys;
 
-import de.agame.entitys.animation.AnimLink;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.animation.AnimationProvider;
@@ -30,7 +29,7 @@ public class EntityCreature extends EntityLivingAnimated {
     public EntityCreature(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
         super(provider, spatial, scset, esset, uiset);
         
-        m_combatManager = new CombatManager(provider, m_animationmanager, esset);
+        m_combatManager = new CombatManager(getMovementManager(), provider, m_animationmanager, esset);
     }
     
     public CombatManager getCombatManager() {
@@ -47,6 +46,10 @@ public class EntityCreature extends EntityLivingAnimated {
     
     public void attack() {
         m_combatManager.attack();
+    }
+    
+    public void attackFrom(Vector3f from) {
+        
     }
     
     public void walkTo(Vector3f location) {

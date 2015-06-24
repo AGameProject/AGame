@@ -67,6 +67,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         AnimLink crouchwalk1 = new AnimLink("CrouchWalk1", true, 2.0f, 0.2f);
         AnimLink crouchwalk2 = new AnimLink("CrouchWalk2", true, 2.0f, 0.2f);
         AnimLink fall = new AnimLink("Fallen", true, 1.0f, 0.2f);
+        AnimLink jump = new AnimLink("Springen", false, 2.0f, 0.2f);
         
         AnimLink punch0 = new AnimLink("AttackPunch0", true, 1.0f, 0.05f);
         AnimLink punch1 = new AnimLink("AttackPunch1", true, 1.0f, 0.05f);
@@ -80,7 +81,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         animprovider.setSprintingAnims(new AnimLink[]{sprint, sprint1, sprint2});
         animprovider.setCrouchingAnims(new AnimLink[]{crouch, crouch1, crouch2});
         animprovider.setCrouchWalkingAnims(new AnimLink[]{crouchwalk, crouchwalk1, crouchwalk2});
-        animprovider.addCombatCombo("PUNCH", new AnimLink[]{punch0, punch1, punch2});
+        animprovider.addCombatCombo("ATTACK_PUNCH", new AnimLink[]{punch0, punch1, punch2});
         
         //create player
         EntityPlayer player = new EntityPlayer(animprovider, model, spatset, enviromentobservationset, userinterfaceset);
@@ -109,15 +110,15 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         legs.addFromRootBone("Hip.l");
         animmanager.addChannel(legs, "LEGS", true);
         
-        MovementJump jump = new MovementJump(player.getAnimationManager());
-        jump.setAnims(new AnimLink[] { new AnimLink("Springen", false, 2.0f, 0.2f) });
+        MovementJump movjump = new MovementJump(player.getAnimationManager());
+        movjump.setAnims(new AnimLink[] {jump});
         
         try {
             
             MovementManager playermovement = player.getMovementManager();
             playermovement.unlockParams();
             
-            playermovement.addEvent(jump);
+            playermovement.addEvent(movjump);
             
             playermovement.lockParams();
         } catch (Exception e) {
@@ -126,7 +127,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         
         CombatManager combat = player.getCombatManager();
         combat.initChannels(animmanager);
-        combat.addAttack("PUNCH", new AttackPunch(animprovider));
+        combat.addAttack("ATTACK_PUNCH", new AttackPunch(animprovider));
         
         model.addControl(player);
         

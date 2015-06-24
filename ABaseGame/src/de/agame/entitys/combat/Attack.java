@@ -7,6 +7,7 @@ package de.agame.entitys.combat;
 import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimStatusListener;
 import de.agame.entitys.animation.AnimationProvider;
+import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.movement.MovementState;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import java.util.Arrays;
@@ -67,8 +68,8 @@ public abstract class Attack implements AnimStatusListener{
         return m_executing;
     }
     
-    public AnimRequest execute(EnviromentObservationSet enviroment, AnimationProvider animprovider) {
-        if(System.currentTimeMillis() / 1000.0d > m_lastHit) m_executing = false;
+    public AnimRequest execute(EnviromentObservationSet enviroment, AnimationProvider animprovider, MovementManager movementmanager) {
+        if(m_executing && m_combo < m_maxCombo && System.currentTimeMillis() / 1000.0d > m_lastHit) m_executing = false;
         
         if(!m_executing) {
             m_executing = true;
@@ -77,7 +78,7 @@ public abstract class Attack implements AnimStatusListener{
             
             if(m_combo == 0) prepareComboSet(m_provider);
             
-            AnimRequest anim = executeCombo(m_combo);
+            AnimRequest anim = executeCombo(m_combo, movementmanager);
             m_combo++;
             
             return anim;
@@ -86,7 +87,7 @@ public abstract class Attack implements AnimStatusListener{
         return null;
     }
     
-    public abstract AnimRequest executeCombo(int combo);
+    public abstract AnimRequest executeCombo(int combo, MovementManager movementmanager);
     
     public abstract void prepareComboSet(AnimationProvider animprovider);
     
@@ -101,13 +102,13 @@ public abstract class Attack implements AnimStatusListener{
     }
 
     public void onAnimDone(boolean aborted) {
-        m_executing = false;
-        if(!aborted) m_combo = 0;
+        if(!aborted) {
+            m_combo = 0;
+            m_executing = false;
+        }
     }
 
     public void setEstimatedDuration(float duration) {
-        m_lastHit = System.currentTimeMillis() / 1000.0d + duration / 2.0f;
-        
-        System.out.println(duration);
+        m_lastHit = (System.currentTimeMillis() / 1000.0d) + (double) (duration / 2.0f);
     }
 }

@@ -7,6 +7,7 @@ package de.agame.entitys.combat;
 import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.movement.MovementManager;
+import de.agame.entitys.movement.MovementState;
 
 /**
  *
@@ -20,7 +21,10 @@ public class BlockFist extends Block{
     
     @Override
     public AnimRequest getBlockAnim(AnimationProvider animprovider) {
-        AnimRequest request = new AnimRequest(animprovider.getRandomBlock(getTag()), getChannels(true));
+        if(getMovState().getAdditionalArg() != MovementState.AdditionalMovementArg.walking) return null;
+        
+        boolean useLegs = getMovState().getAction() == MovementState.MovementAction.idle;
+        AnimRequest request = new AnimRequest(animprovider.getRandomBlock(getTag()), getChannels(useLegs));
         request.setStatusListener(this);
         
         return request;

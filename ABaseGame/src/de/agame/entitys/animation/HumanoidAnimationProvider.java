@@ -17,6 +17,7 @@ import java.util.Random;
 public class HumanoidAnimationProvider implements AnimationProvider{
     
     private MovementState m_currentState = null;
+    private boolean m_inCombat = false;
     
     private Item m_heldItem = null;
     
@@ -30,6 +31,14 @@ public class HumanoidAnimationProvider implements AnimationProvider{
     private AnimLink m_crouching[] = new AnimLink[3];
     private AnimLink m_crouchwalking[] = new AnimLink[3];
     private AnimLink m_sprinting[] = new AnimLink[3];
+    
+    private AnimLink m_fallingCombat[] = new AnimLink[3];
+    private AnimLink m_idleCombat[] = new AnimLink[3];
+    private AnimLink m_walkingCombat[] = new AnimLink[3];
+    private AnimLink m_crawlingCombat[] = new AnimLink[3];
+    private AnimLink m_crouchingCombat[] = new AnimLink[3];
+    private AnimLink m_crouchwalkingCombat[] = new AnimLink[3];
+    private AnimLink m_sprintingCombat[] = new AnimLink[3];
     
     public void setMovementState(MovementState state) {
         m_currentState = state;
@@ -63,6 +72,34 @@ public class HumanoidAnimationProvider implements AnimationProvider{
         m_sprinting = anims;
     }
     
+    public void setCombatFallAnims(AnimLink anims[]) {
+        m_fallingCombat = anims;
+    }
+    
+    public void setCombatIdleAnims(AnimLink anims[]) {
+        m_idleCombat = anims;
+    }
+    
+    public void setCombatWalkingAnims(AnimLink anims[]) {
+        m_walkingCombat = anims;
+    }
+    
+    public void setCombatCrawlingAnims(AnimLink anims[]) {
+        m_crawlingCombat = anims;
+    }
+    
+    public void setCombatCrouchingAnims(AnimLink anims[]) {
+        m_crouchingCombat = anims;
+    }
+    
+    public void setCombatCrouchWalkingAnims(AnimLink anims[]) {
+        m_crouchwalkingCombat = anims;
+    }
+    
+    public void setCombatSprintingAnims(AnimLink anims[]) {
+        m_sprintingCombat = anims;
+    }
+    
     public void addCombatCombo(String tag, AnimLink anims[]) {
         if(!m_combatComboCounts.containsKey(tag)) m_combatComboCounts.put(tag, 1);
         else {
@@ -77,6 +114,17 @@ public class HumanoidAnimationProvider implements AnimationProvider{
         }
     }
     
+    public void addCombatBlock(String tag, AnimLink anim) {
+        if(!m_combatComboCounts.containsKey(tag)) m_combatComboCounts.put(tag, 1);
+        else {
+            int count = m_combatComboCounts.get(tag);
+            m_combatComboCounts.put(tag, count + 1);
+        }
+        
+        int index = m_combatComboCounts.get(tag) - 1;
+        m_combatAnims.put(tag + index, anim);
+    }
+    
     public AnimLink getBaseAnim() {
         if(m_currentState == null) return null;
         
@@ -86,16 +134,30 @@ public class HumanoidAnimationProvider implements AnimationProvider{
             if(m_heldItem.isTwoHanded()) animIndex++;
         }
         
-        if(!m_currentState.onGround()) {
-            return m_falling[animIndex];
-        } else if(m_currentState.getAction() == MovementState.MovementAction.idle) {
-            if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return m_crouching[animIndex];
-            return m_idle[animIndex];
+        if(m_inCombat) {
+            if(!m_currentState.onGround()) {
+                return m_fallingCombat[animIndex];
+            } else if(m_currentState.getAction() == MovementState.MovementAction.idle) {
+                if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return m_crouchingCombat[animIndex];
+                return m_idleCombat[animIndex];
+            } else {
+                if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) return m_crawlingCombat[animIndex];
+                else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return m_crouchwalkingCombat[animIndex];
+                else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.walking) return m_walkingCombat[animIndex];
+                else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) return m_sprintingCombat[animIndex];
+            }
         } else {
-            if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) return m_crawling[animIndex];
-            else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return m_crouchwalking[animIndex];
-            else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.walking) return m_walking[animIndex];
-            else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) return m_sprinting[animIndex];
+            if(!m_currentState.onGround()) {
+                return m_falling[animIndex];
+            } else if(m_currentState.getAction() == MovementState.MovementAction.idle) {
+                if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return m_crouching[animIndex];
+                return m_idle[animIndex];
+            } else {
+                if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crawling) return m_crawling[animIndex];
+                else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.crouching) return m_crouchwalking[animIndex];
+                else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.walking) return m_walking[animIndex];
+                else if(m_currentState.getAdditionalArg() == MovementState.AdditionalMovementArg.sprinting) return m_sprinting[animIndex];
+            }
         }
         
         return null;
@@ -144,5 +206,13 @@ public class HumanoidAnimationProvider implements AnimationProvider{
         int index = new Random().nextInt(m_combatComboCounts.get(tag));
         
         return m_combatAnims.get(tag + index);
+    }
+
+    public void setInCombatMode(boolean flag) {
+        m_inCombat = flag;
+    }
+
+    public boolean isInCombatMode() {
+        return m_inCombat;
     }
 }

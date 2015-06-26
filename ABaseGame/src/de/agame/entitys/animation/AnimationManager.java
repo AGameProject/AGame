@@ -53,6 +53,14 @@ public class AnimationManager implements AnimEventListener, MovementStateChangeL
         
     }
     
+    public void setInCombatMode(boolean flag) {
+        //set the combat mode in the animprovider
+        m_provider.setInCombatMode(flag);
+        
+        //update the base animation accordingly
+        updateBaseAnim();
+    }
+    
     public void handleAnimRequest(AnimRequest request) {
         //play the request as a third
         playThird(request.getAnim(), request.getChannels(), request.getStatusListener());

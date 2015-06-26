@@ -48,6 +48,10 @@ public class EntityCreature extends EntityLivingAnimated {
         m_combatManager.attack();
     }
     
+    public void block() {
+        m_combatManager.block();
+    }
+    
     public void attackFrom(Vector3f from) {
         
     }
@@ -68,6 +72,13 @@ public class EntityCreature extends EntityLivingAnimated {
     
     public Vector3f getDestination() {
         return m_destination;
+    }
+    
+    @Override
+    public void simpleUpdate(float dt) {
+        super.simpleUpdate(dt);
+        
+        m_combatManager.onUpdate(dt);
     }
     
     @Override

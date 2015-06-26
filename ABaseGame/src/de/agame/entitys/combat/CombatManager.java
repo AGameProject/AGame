@@ -16,7 +16,7 @@ import java.util.HashMap;
  *
  * @author Fredie
  */
-public class CombatManager {
+public class CombatManager{
     
     //the enviroment this CombatManager is bound to act in
     private EnviromentObservationSet m_enviroment;
@@ -48,6 +48,12 @@ public class CombatManager {
     //the needed channels to play animations
     private int m_channels[];
     
+    //how long combat mode is still activated in seconds
+    private float m_combatMode = 0;
+    
+    //if the entity is currently in combat mode
+    private boolean m_isInCombatMode = false;
+    
     public CombatManager(MovementManager movementmanager, AnimationProvider provider, CombatStateListener listener, EnviromentObservationSet enviroment) {
         m_attacks = new HashMap<String, Attack>();
         m_blocks = new HashMap<String, Block>();
@@ -73,7 +79,10 @@ public class CombatManager {
     }
     
     public void addBlock(String tag, Block block) {
+        block.setChannels(m_channels);
         m_blocks.put(tag, block);
+        
+        setWeapon(m_currentWeapon);
     }
     
     public void removeBlock(String tag) {
@@ -99,6 +108,7 @@ public class CombatManager {
             
             if(m_listener != null) m_listener.handleAnimRequest(request);
             
+            m_combatMode = 30.0f;
             return true;
         }
         
@@ -114,11 +124,30 @@ public class CombatManager {
             //abort the attack to stop combos
             if(m_prevAttack != null) m_prevAttack.abort();
             
-            if(m_listener != null) m_listener.handleAnimRequest(m_prevBlock.getBlockAnim(m_provider));
+            AnimRequest request = m_prevBlock.getBlockAnim(m_provider);
+            if(request == null) return false;
             
+            if(m_listener != null) m_listener.handleAnimRequest(request);
+            
+            m_combatMode = 30.0f;
             return true;
         }
         
         return false;
+    }
+    
+    public void onUpdate(float dt) {
+        if(m_combatMode > 0.0f) {
+            m_combatMode -= dt;
+            m_combatMode = m_combatMode < 0.0f ? 0.0f : m_combatMode;
+        }
+        
+        if(m_combatMode > 0.0f && !m_isInCombatMode) {
+            m_isInCombatMode = true;
+            m_listener.setInCombatMode(m_isInCombatMode);
+        } else if(m_combatMode == 0.0f && m_isInCombatMode) {
+            m_isInCombatMode = false;
+            m_listener.setInCombatMode(m_isInCombatMode);
+        }
     }
 }

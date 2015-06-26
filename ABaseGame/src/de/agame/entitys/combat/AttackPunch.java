@@ -27,8 +27,7 @@ public class AttackPunch extends Attack{
     public AnimRequest executeCombo(int combo, MovementManager movementmanager) {
         if(getMovState().getAdditionalArg() != MovementState.AdditionalMovementArg.walking) return null;
         
-        boolean useLegs = false;
-        if(getMovState().getAction() == MovementState.MovementAction.idle) useLegs = true;
+        boolean useLegs = getMovState().getAction() == MovementState.MovementAction.idle;
         
         //create animrequest
         AnimRequest request = new AnimRequest(m_comboSet[combo], getChannels(useLegs));

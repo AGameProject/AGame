@@ -8,6 +8,7 @@ import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimStatusListener;
 import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.movement.MovementManager;
+import de.agame.entitys.movement.MovementState;
 import java.util.Arrays;
 
 /**
@@ -37,6 +38,10 @@ public abstract class Block implements AnimStatusListener{
         if(useLegs) return m_channels;
         
         return Arrays.copyOf(m_channels, m_channels.length - 1);
+    }
+    
+    public MovementState getMovState() {
+        return m_animprovider.getMovementState();
     }
     
     public abstract AnimRequest getBlockAnim(AnimationProvider animprovider);

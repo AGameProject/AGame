@@ -12,6 +12,10 @@ import de.agame.entitys.movement.MovementState;
  * @author Fredie
  */
 public interface AnimationProvider {
+    
+    public void setInCombatMode(boolean flag);
+    public boolean isInCombatMode();
+    
     public void setMovementState(MovementState state);
     public MovementState getMovementState();
     

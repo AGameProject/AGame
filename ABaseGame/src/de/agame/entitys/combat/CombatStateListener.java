@@ -12,4 +12,5 @@ import de.agame.entitys.animation.AnimRequest;
  */
 public interface CombatStateListener {
     public void handleAnimRequest(AnimRequest request);
+    public void setInCombatMode(boolean flag);
 }

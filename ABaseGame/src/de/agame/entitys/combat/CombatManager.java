@@ -1,0 +1,153 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.agame.entitys.combat;
+
+import de.agame.Items.Item;
+import de.agame.entitys.animation.AnimRequest;
+import de.agame.entitys.animation.AnimationManager;
+import de.agame.entitys.animation.AnimationProvider;
+import de.agame.entitys.movement.MovementManager;
+import de.agame.entitys.sets.EnviromentObservationSet;
+import java.util.HashMap;
+
+/**
+ *
+ * @author Fredie
+ */
+public class CombatManager{
+    
+    //the enviroment this CombatManager is bound to act in
+    private EnviromentObservationSet m_enviroment;
+    
+    //the item currently held by the Entity
+    private Item m_currentWeapon;
+    
+    //the attack used with the current item
+    private Attack m_prevAttack;
+    
+    //the block used to block incoming attacks
+    private Block m_prevBlock;
+    
+    //all Attacks this entity is capable of performing
+    private HashMap<String, Attack> m_attacks;
+    
+    //all Blocks this entity is capable of doing
+    private HashMap<String, Block> m_blocks;
+    
+    //the combatstatelistener used by this combat manager
+    private CombatStateListener m_listener;
+    
+    //the animprovider used by this combatmanager
+    private AnimationProvider m_provider;
+    
+    //the movementmanager controling the entitys movement
+    private MovementManager m_movementManager;
+    
+    //the needed channels to play animations
+    private int m_channels[];
+    
+    //how long combat mode is still activated in seconds
+    private float m_combatMode = 0;
+    
+    //if the entity is currently in combat mode
+    private boolean m_isInCombatMode = false;
+    
+    public CombatManager(MovementManager movementmanager, AnimationProvider provider, CombatStateListener listener, EnviromentObservationSet enviroment) {
+        m_attacks = new HashMap<String, Attack>();
+        m_blocks = new HashMap<String, Block>();
+        m_listener = listener;
+        m_enviroment = enviroment;
+        m_provider = provider;
+        m_movementManager = movementmanager;
+    }
+
+    public void initChannels(AnimationManager animmanager) {
+        m_channels = animmanager.getChannels(new String[]{"HEAD", "ARMS", "TORSO", "LEGS"});
+    }
+    
+    public void addAttack(String tag, Attack attack) {
+        attack.setChannels(m_channels);
+        m_attacks.put(tag, attack);
+        
+        setWeapon(m_currentWeapon);
+    }
+    
+    public void removeAttack(String tag) {
+        m_attacks.remove(tag);
+    }
+    
+    public void addBlock(String tag, Block block) {
+        block.setChannels(m_channels);
+        m_blocks.put(tag, block);
+        
+        setWeapon(m_currentWeapon);
+    }
+    
+    public void removeBlock(String tag) {
+        m_blocks.remove(tag);
+    }
+    
+    public void setWeapon(Item item) {
+        m_currentWeapon = item;
+        if(item != null) {
+            m_prevAttack = m_attacks.get(item.getAttackTag());
+            m_prevBlock = m_blocks.get(item.getBlockTag());
+        } else {
+            m_prevAttack = m_attacks.get("ATTACK_PUNCH");
+            m_prevBlock = m_blocks.get("BLOCK_FIST");
+        }
+    }
+    
+    public boolean attack() {
+        if(m_prevAttack != null) {
+            AnimRequest request = m_prevAttack.execute(m_enviroment, m_provider, m_movementManager);
+            
+            if(request == null) return false;
+            
+            if(m_listener != null) m_listener.handleAnimRequest(request);
+            
+            m_combatMode = 30.0f;
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean block() {
+        //if there is no block to be executed, return
+        if(m_prevBlock == null) return false;
+        
+        //attack is more important than block
+        if((m_prevAttack == null || !m_prevAttack.isExecuting()) && !m_prevBlock.isBlocking()) {
+            //abort the attack to stop combos
+            if(m_prevAttack != null) m_prevAttack.abort();
+            
+            AnimRequest request = m_prevBlock.getBlockAnim(m_provider);
+            if(request == null) return false;
+            
+            if(m_listener != null) m_listener.handleAnimRequest(request);
+            
+            m_combatMode = 30.0f;
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public void onUpdate(float dt) {
+        if(m_combatMode > 0.0f) {
+            m_combatMode -= dt;
+            m_combatMode = m_combatMode < 0.0f ? 0.0f : m_combatMode;
+        }
+        
+        if(m_combatMode > 0.0f && !m_isInCombatMode) {
+            m_isInCombatMode = true;
+            m_listener.setInCombatMode(m_isInCombatMode);
+        } else if(m_combatMode == 0.0f && m_isInCombatMode) {
+            m_isInCombatMode = false;
+            m_listener.setInCombatMode(m_isInCombatMode);
+        }
+    }
+}

@@ -6,10 +6,13 @@ package de.agame.entitys;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
@@ -27,8 +30,8 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
     
     private Vector3f m_walkdirection = new Vector3f();
     
-    public EntityPlayer(Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
-        super(spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
+    public EntityPlayer(AnimationProvider provider, Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
+        super(provider, spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
         
     }
     
@@ -49,8 +52,11 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.addMapping("right", new KeyTrigger(KeyInput.KEY_D));
         inputmanager.addMapping("jump", new KeyTrigger(KeyInput.KEY_SPACE));
         inputmanager.addMapping("sprint", new KeyTrigger(KeyInput.KEY_LSHIFT));
+        inputmanager.addMapping("crouch", new KeyTrigger(KeyInput.KEY_LCONTROL));
+        inputmanager.addMapping("attack", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputmanager.addMapping("block", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         
-        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint");
+        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint", "crouch", "attack", "block");
         
     }
     
@@ -66,6 +72,9 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.deleteMapping("right");
         inputmanager.deleteMapping("jump");
         inputmanager.deleteMapping("sprint");
+        inputmanager.deleteMapping("crouch");
+        inputmanager.deleteMapping("attack");
+        inputmanager.deleteMapping("block");
         
         inputmanager.removeListener(this);
         
@@ -76,8 +85,21 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         else if(name.equals("backward")) m_backward = isPressed;
         else if(name.equals("left")) m_left = isPressed;
         else if(name.equals("right")) m_right = isPressed;
-        else if(name.equals("jump") && isPressed) jump();
-        else if(name.equals("sprint")) setSprinting(isPressed);
+        
+        else if(name.equals("sprint")) {
+            if(isPressed) getMovementManager().sprint();
+            else getMovementManager().walk();
+        }
+        else if(name.equals("crouch")) {
+            if(isPressed) getMovementManager().crouch();
+            else getMovementManager().unCrouch();
+        }
+        
+        else if(name.equals("jump") && isPressed) getMovementManager().jump();
+        
+        else if(name.equals("attack") && isPressed) attack();
+        
+        else if(name.equals("block") && isPressed) block();
     }
     
     @Override

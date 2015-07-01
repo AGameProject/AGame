@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.entitys;
+package de.agame.entitys.animation;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.LoopMode;
@@ -28,6 +28,10 @@ public class AnimLink {
     
     public String getName() {
         return m_name;
+    }
+    
+    public float getTweak() {
+        return m_tweak;
     }
     
     public void play(AnimChannel channel) {

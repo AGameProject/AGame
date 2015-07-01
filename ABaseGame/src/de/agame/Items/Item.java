@@ -13,11 +13,25 @@ import com.jme3.scene.Node;
 public class Item {
     
     private int m_maxstacksize = 1;
+
+    private float m_hitdamage;
+    
+    private boolean m_isTwoHanded;
     
     private Node m_itemmodel;
+
+    private String m_attacktag;
     
-    public void setMaxStackSize(int mstacksize) {
-        m_maxstacksize = mstacksize;
+    private String m_blocktag;
+    
+    public Item(Node itemmodel, int maxstacksize, float hitdamage, boolean istwohanded, String attacktag, String blocktag) {
+        m_itemmodel = itemmodel;
+        m_maxstacksize = maxstacksize;
+        m_hitdamage = hitdamage;
+        m_isTwoHanded = istwohanded;
+        
+        m_attacktag = attacktag;
+        m_blocktag = blocktag;
     }
     
     public int getMaxStackSize() {
@@ -25,11 +39,19 @@ public class Item {
     }
     
     public float getHitDamage(float strength) {
-        return 0;
+        return m_hitdamage * strength;
+    }
+    
+    public String getAttackTag() {
+        return m_attacktag;
+    }
+    
+    public String getBlockTag() {
+        return m_blocktag;
     }
     
     public boolean isTwoHanded() {
-        return false;
+        return m_isTwoHanded;
     }
     
     public Node getItemModel() {

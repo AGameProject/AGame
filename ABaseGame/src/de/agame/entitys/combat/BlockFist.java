@@ -15,6 +15,8 @@ import de.agame.entitys.movement.MovementState;
  */
 public class BlockFist extends Block{
 
+    private float m_maxImpact = 10;
+    
     public BlockFist(AnimationProvider animprovider) {
         super("BLOCK_FIST", animprovider);
     }

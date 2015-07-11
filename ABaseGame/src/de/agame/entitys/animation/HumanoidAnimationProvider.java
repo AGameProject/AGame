@@ -40,8 +40,29 @@ public class HumanoidAnimationProvider implements AnimationProvider{
     private AnimLink m_crouchwalkingCombat[] = new AnimLink[3];
     private AnimLink m_sprintingCombat[] = new AnimLink[3];
     
+    private AnimLink m_stumbleBack[];
+    private AnimLink m_stumbleLeft[];
+    private AnimLink m_stumbleRight[];
+    private AnimLink m_stumbleFront[];
+    
     public void setMovementState(MovementState state) {
         m_currentState = state;
+    }
+    
+    public void setStumbleBackAnims(AnimLink anims[]) {
+        m_stumbleBack = anims;
+    }
+    
+    public void setStumbleLeftAnims(AnimLink anims[]) {
+        m_stumbleLeft = anims;
+    }
+        
+    public void setStumbleRightAnims(AnimLink anims[]) {
+        m_stumbleRight = anims;
+    }
+    
+    public void setStumbleFrontAnims(AnimLink anims[]) {
+        m_stumbleFront = anims;
     }
     
     public void setFallAnims(AnimLink anims[]) {
@@ -214,5 +235,20 @@ public class HumanoidAnimationProvider implements AnimationProvider{
 
     public boolean isInCombatMode() {
         return m_inCombat;
+    }
+    
+    public AnimLink getRandomStumbleAnim(float fronthemi, float lefthemi) {
+        float frontimp = Math.abs(lefthemi);
+        float leftimp = Math.abs(fronthemi);
+        
+        float quaterangle = (float) Math.cos(45);
+        
+        if(frontimp > quaterangle) {
+            if(fronthemi < 0)return m_stumbleBack[new Random().nextInt(m_stumbleBack.length)];
+            else return m_stumbleFront[new Random().nextInt(m_stumbleFront.length)];
+        } else {
+            if(lefthemi < 0) return m_stumbleRight[new Random().nextInt(m_stumbleRight.length)];
+            else return m_stumbleLeft[new Random().nextInt(m_stumbleLeft.length)];
+        }
     }
 }

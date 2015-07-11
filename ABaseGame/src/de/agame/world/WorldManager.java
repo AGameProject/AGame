@@ -57,6 +57,9 @@ public class WorldManager {
         m_chasecam = new ChaseCamera(cam, m_dynamics, m_input);
         m_chasecam.setDragToRotate(false);
         m_chasecam.setInvertVerticalAxis(true);
+        m_chasecam.setDefaultDistance(5.0f);
+        m_chasecam.setMaxDistance(7.0f);
+        m_chasecam.setMinDistance(3.0f);
         
         m_entitymanager = new EntityManager();
         m_entitymanager.finishInit(m_physicsspace, m_dynamics, m_gui, cam, m_chasecam, m_input, m_assets);

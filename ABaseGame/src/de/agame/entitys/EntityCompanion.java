@@ -18,7 +18,7 @@ import java.util.Random;
  *
  * @author Fredie
  */
-public class EntityCompanion extends EntityCreature {
+public class EntityCompanion extends EntityCharacter {
     
     private EntityPlayer m_master = null;
     

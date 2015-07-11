@@ -4,25 +4,27 @@
  */
 package de.agame.entitys.combat;
 
+import de.agame.entitys.EntityCreature;
 import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.movement.MovementState;
+import de.agame.entitys.sets.EnviromentObservationSet;
 
 /**
  *
  * @author puhzejo
  */
-public class SwingAttack extends Attack{
+public class AttackSwing extends Attack{
     private AnimLink m_comboset[] = new AnimLink[3];
 
-    public SwingAttack(AnimationProvider animprov){
+    public AttackSwing(AnimationProvider animprov){
         super("ATTACK_SWING", animprov);
     }
     
     @Override
-    public AnimRequest executeCombo(int combo, MovementManager movementmanager) {
+    public AnimRequest executeCombo(int combo, EntityCreature attacker, EnviromentObservationSet enviroment) {
         if(getMovState().getAdditionalArg() != MovementState.AdditionalMovementArg.walking) return null;
         
         boolean uselegs = getMovState().getAction() == MovementState.MovementAction.idle;
@@ -37,8 +39,6 @@ public class SwingAttack extends Attack{
         m_comboset = animprovider.getRandomComboSet(getTag());
         m_maxCombo = m_comboset.length;
     }
-    
-    
 }
 
 

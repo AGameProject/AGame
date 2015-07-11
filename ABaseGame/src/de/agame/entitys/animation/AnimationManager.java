@@ -177,8 +177,7 @@ public class AnimationManager implements AnimEventListener, MovementStateChangeL
         m_third = anim;
         m_thirdStatusListener = listener;
         if(m_thirdStatusListener != null) {
-            m_thirdStatusListener.onAnimStart();
-            m_thirdStatusListener.setEstimatedDuration(duration / anim.getTweak());
+            m_thirdStatusListener.onAnimStart(duration / anim.getTweak());
         }
     }
     

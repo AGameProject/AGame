@@ -6,6 +6,7 @@ package de.agame.entitys.animation;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.LoopMode;
+import java.util.HashMap;
 
 /**
  *
@@ -17,6 +18,8 @@ public class AnimLink {
     private boolean m_loop = false;
     private float m_fade = 0.5f;
     
+    private HashMap<String, Object> m_properties = new HashMap<String, Object>();
+    
     public AnimLink(String name, boolean loop, float tweak, float fade) {
         m_name = name;
         m_loop = loop;
@@ -24,6 +27,14 @@ public class AnimLink {
         m_fade = fade;
         
         if(m_name == null) m_name = "-1";
+    }
+    
+    public void putProperty(String name, Object value) {
+        m_properties.put(name, value);
+    }
+    
+    public Object getProperty(String name) {
+        return m_properties.get(name);
     }
     
     public String getName() {

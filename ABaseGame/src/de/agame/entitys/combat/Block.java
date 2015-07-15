@@ -56,14 +56,11 @@ public abstract class Block implements AnimStatusListener{
         return m_blocking;
     }
     
-    public void onAnimStart() {
+    public void onAnimStart(float duration) {
         m_blocking = true;
     }
 
     public void onAnimDone(boolean aborted) {
         m_blocking = false;
-    }
-
-    public void setEstimatedDuration(float duration) {
     }
 }

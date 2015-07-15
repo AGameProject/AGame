@@ -5,40 +5,41 @@
 package de.agame.entitys.combat;
 
 import com.jme3.math.Vector3f;
+import de.agame.entitys.EntityCreature;
 import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimationProvider;
-import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.movement.MovementState;
+import de.agame.entitys.sets.EnviromentObservationSet;
 
 /**
  *
  * @author Fredie
  */
-public class AttackPunch extends Attack{
+public class AttackPunch extends MeleeAttack{
     
     private AnimLink m_comboSet[] = new AnimLink[3];
     
     public AttackPunch(AnimationProvider animprovider) {
         super("ATTACK_PUNCH", animprovider);
+        
+        m_range = 1.5f;
     }
 
     @Override
-    public AnimRequest executeCombo(int combo, MovementManager movementmanager) {
+    public AnimRequest executeCombo(int combo, EntityCreature attacker, EnviromentObservationSet enviroment) {
+        super.executeCombo(combo, attacker, enviroment);
+        
         if(getMovState().getAdditionalArg() != MovementState.AdditionalMovementArg.walking) return null;
         
         boolean useLegs = getMovState().getAction() == MovementState.MovementAction.idle;
         
-        //create animrequest
-        AnimRequest request = new AnimRequest(m_comboSet[combo], getChannels(useLegs));
-        request.setStatusListener(this);
-        
         //handle movement
-        Vector3f knock = movementmanager.getCurrentViewDirection().normalize();
+        Vector3f knock = attacker.getMovementManager().getCurrentViewDirection().normalize();
         knock.multLocal(2.0f);
-        movementmanager.knock(knock, 0.4f);
+        attacker.getMovementManager().knock(knock, 0.4f);
         
-        return request;
+        return getRequest(m_comboSet[combo], useLegs);
     }
 
     @Override
@@ -46,5 +47,4 @@ public class AttackPunch extends Attack{
         m_comboSet = animprovider.getRandomComboSet(getTag());
         m_maxCombo = m_comboSet.length;
     }
-    
 }

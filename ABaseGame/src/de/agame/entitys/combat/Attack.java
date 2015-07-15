@@ -4,10 +4,12 @@
  */
 package de.agame.entitys.combat;
 
+import de.agame.Items.Item;
+import de.agame.entitys.EntityCreature;
+import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimStatusListener;
 import de.agame.entitys.animation.AnimationProvider;
-import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.movement.MovementState;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import java.util.Arrays;
@@ -38,6 +40,8 @@ public abstract class Attack implements AnimStatusListener{
     //the animprovider used by this attack
     private AnimationProvider m_provider;
     
+    protected AnimLink m_currentAnim = null;
+    
     //the channels to play the animation on
     private int m_channels[];
     
@@ -48,6 +52,10 @@ public abstract class Attack implements AnimStatusListener{
     
     public MovementState getMovState() {
         return m_provider.getMovementState();
+    }
+
+    public Item getHeldItem() {
+        return m_provider.getHeldItem();
     }
     
     public void setChannels(int channels[]) {
@@ -68,7 +76,16 @@ public abstract class Attack implements AnimStatusListener{
         return m_executing;
     }
     
-    public AnimRequest execute(EnviromentObservationSet enviroment, AnimationProvider animprovider, MovementManager movementmanager) {
+    public AnimRequest getRequest(AnimLink anim, boolean uselegs) {
+        AnimRequest request = new AnimRequest(anim, getChannels(uselegs));
+        request.setStatusListener(this);
+        
+        m_currentAnim = anim;
+        
+        return request;
+    }
+    
+    public AnimRequest execute(EnviromentObservationSet enviroment, AnimationProvider animprovider, EntityCreature attacker) {
         if(m_executing && m_combo < m_maxCombo && System.currentTimeMillis() / 1000.0d > m_lastHit) m_executing = false;
         
         if(!m_executing) {
@@ -78,7 +95,7 @@ public abstract class Attack implements AnimStatusListener{
             
             if(m_combo == 0) prepareComboSet(m_provider);
             
-            AnimRequest anim = executeCombo(m_combo, movementmanager);
+            AnimRequest anim = executeCombo(m_combo, attacker, enviroment);
             m_combo++;
             
             return anim;
@@ -87,7 +104,7 @@ public abstract class Attack implements AnimStatusListener{
         return null;
     }
     
-    public abstract AnimRequest executeCombo(int combo, MovementManager movementmanager);
+    public abstract AnimRequest executeCombo(int combo, EntityCreature attacker, EnviromentObservationSet enviroment);
     
     public abstract void prepareComboSet(AnimationProvider animprovider);
     
@@ -97,8 +114,8 @@ public abstract class Attack implements AnimStatusListener{
         m_executing = false;
     }
 
-    public void onAnimStart() {
-        //do nothing here
+    public void onAnimStart(float duration) {
+        m_lastHit = (System.currentTimeMillis() / 1000.0d) + (double) (duration / 2.0f);
     }
 
     public void onAnimDone(boolean aborted) {
@@ -106,9 +123,5 @@ public abstract class Attack implements AnimStatusListener{
             m_combo = 0;
             m_executing = false;
         }
-    }
-
-    public void setEstimatedDuration(float duration) {
-        m_lastHit = (System.currentTimeMillis() / 1000.0d) + (double) (duration / 2.0f);
     }
 }

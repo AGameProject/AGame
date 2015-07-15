@@ -10,8 +10,6 @@ package de.agame.entitys.animation;
  */
 public interface AnimStatusListener {
     
-    public void onAnimStart();
+    public void onAnimStart(float duration);
     public void onAnimDone(boolean aborted);
-    
-    public void setEstimatedDuration(float duration);
 }

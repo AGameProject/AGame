@@ -87,6 +87,11 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         AnimLink combatcrouchwalk2 = new AnimLink("CombatCrouchWalk2", true, 2.0f, 0.2f);
         AnimLink combatfall = new AnimLink("CombatFall", true, 1.0f, 0.2f);
         
+        AnimLink stumbleback0 = new AnimLink("StumbleBack", true, 1.0f, 0.1f);
+        AnimLink stumbleleft0 = new AnimLink("StumbleLeft", true, 1.0f, 0.1f);
+        AnimLink stumbleright0 = new AnimLink("StumbleRight", true, 1.0f, 0.1f);
+        AnimLink stumblefront0 = new AnimLink("StumbleFront", true, 1.0f, 0.1f);
+        
         AnimLink punch0 = new AnimLink("AttackPunch0", false, 1.0f, 0.05f);
         AnimLink punch1 = new AnimLink("AttackPunch1", false, 1.0f, 0.05f);
         AnimLink punch2 = new AnimLink("AttackPunch2", false, 1.0f, 0.05f);
@@ -108,6 +113,12 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         animprovider.setCombatSprintingAnims(new AnimLink[]{combatsprint, combatsprint1, combatsprint2});
         animprovider.setCombatCrouchingAnims(new AnimLink[]{combatcrouch, combatcrouch1, combatcrouch2});
         animprovider.setCombatCrouchWalkingAnims(new AnimLink[]{combatcrouchwalk, combatcrouchwalk1, combatcrouchwalk2});
+        
+        animprovider.setStumbleBackAnims(new AnimLink[] {stumbleback0});
+        animprovider.setStumbleFrontAnims(new AnimLink[] {stumblefront0});
+        animprovider.setStumbleLeftAnims(new AnimLink[] {stumbleleft0});
+        animprovider.setStumbleRightAnims(new AnimLink[] {stumbleright0});
+        
         
         animprovider.addCombatCombo("ATTACK_PUNCH", new AnimLink[]{punch0, punch1, punch2});
         animprovider.addCombatBlock("BLOCK_FIST", fistblock0);
@@ -165,7 +176,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         player.setLeftHand(leftitem);
         
         Node sword = (Node) assets.loadModel("Models/Items/Kurz_Schwert_1/Kurz_Schwert_1.j3o");
-        Item item = new Item(sword, 1, 30.0f, true, null, null);
+        Item item = new Item(sword, 1, 30.0f, 1.5f, 2.5f, true, true, null, null);
         
 //        player.setHeldItem(item);
         

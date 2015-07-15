@@ -16,6 +16,10 @@ public class Item {
 
     private float m_hitdamage;
     
+    private float m_mass = 1;
+    
+    private boolean m_isSharp = false;
+    
     private boolean m_isTwoHanded;
     
     private Node m_itemmodel;
@@ -24,22 +28,35 @@ public class Item {
     
     private String m_blocktag;
     
-    public Item(Node itemmodel, int maxstacksize, float hitdamage, boolean istwohanded, String attacktag, String blocktag) {
+    private float m_range;
+    
+    public Item(Node itemmodel, int maxstacksize, float hitdamage, float range, float mass, boolean istwohanded, boolean sharp, String attacktag, String blocktag) {
         m_itemmodel = itemmodel;
         m_maxstacksize = maxstacksize;
         m_hitdamage = hitdamage;
+        m_range = range;
         m_isTwoHanded = istwohanded;
+        m_isSharp = sharp;
+        m_mass = mass;
         
         m_attacktag = attacktag;
         m_blocktag = blocktag;
+    }
+    
+    public float getRange() {
+        return m_range;
     }
     
     public int getMaxStackSize() {
         return m_maxstacksize;
     }
     
-    public float getHitDamage(float strength) {
-        return m_hitdamage * strength;
+    public float getHitDamage() {
+        return m_hitdamage;
+    }
+    
+    public float getMass() {
+        return m_mass;
     }
     
     public String getAttackTag() {
@@ -52,6 +69,10 @@ public class Item {
     
     public boolean isTwoHanded() {
         return m_isTwoHanded;
+    }
+    
+    public boolean isSharp() {
+        return m_isSharp;
     }
     
     public Node getItemModel() {

@@ -4,11 +4,13 @@
  */
 package de.agame.entitys.combat;
 
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import de.agame.Items.Item;
+import de.agame.entitys.EntityCreature;
 import de.agame.entitys.animation.AnimRequest;
 import de.agame.entitys.animation.AnimationManager;
 import de.agame.entitys.animation.AnimationProvider;
-import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import java.util.HashMap;
 
@@ -42,8 +44,8 @@ public class CombatManager{
     //the animprovider used by this combatmanager
     private AnimationProvider m_provider;
     
-    //the movementmanager controling the entitys movement
-    private MovementManager m_movementManager;
+    //the entity using this combatmanager
+    private EntityCreature m_creature;
     
     //the needed channels to play animations
     private int m_channels[];
@@ -54,13 +56,13 @@ public class CombatManager{
     //if the entity is currently in combat mode
     private boolean m_isInCombatMode = false;
     
-    public CombatManager(MovementManager movementmanager, AnimationProvider provider, CombatStateListener listener, EnviromentObservationSet enviroment) {
+    public CombatManager(EntityCreature creature, AnimationProvider provider, CombatStateListener listener, EnviromentObservationSet enviroment) {
         m_attacks = new HashMap<String, Attack>();
         m_blocks = new HashMap<String, Block>();
         m_listener = listener;
         m_enviroment = enviroment;
         m_provider = provider;
-        m_movementManager = movementmanager;
+        m_creature = creature;
     }
 
     public void initChannels(AnimationManager animmanager) {
@@ -102,7 +104,7 @@ public class CombatManager{
     
     public boolean attack() {
         if(m_prevAttack != null) {
-            AnimRequest request = m_prevAttack.execute(m_enviroment, m_provider, m_movementManager);
+            AnimRequest request = m_prevAttack.execute(m_enviroment, m_provider, m_creature);
             
             if(request == null) return false;
             
@@ -134,6 +136,50 @@ public class CombatManager{
         }
         
         return false;
+    }
+    
+    public float attacked(EntityCreature attacker, Item weapon) {
+        m_combatMode = 30.0f;
+        
+        float damage = 1.0f;
+        float impact = attacker.getStrength();
+        boolean sharp = false;
+        
+        if(weapon != null) {
+            damage = weapon.getHitDamage();
+            impact *= weapon.getMass() + 1.0f;
+            sharp = weapon.isSharp();
+        }
+        
+        if(m_prevBlock != null && m_prevBlock.isBlocking()) {
+            damage *= m_prevBlock.block(impact, sharp, m_creature.getMovementManager());
+        } else {
+            Vector3f relative = m_creature.getPosition().subtract(attacker.getPosition());
+            relative.setY(0);
+            relative.normalizeLocal();
+            
+            Vector3f attackdir = attacker.getMovementManager().getCurrentViewDirection();
+            attackdir.normalizeLocal();
+            
+            Quaternion rot = new Quaternion();
+            rot.fromAngleAxis(-90.0f, Vector3f.UNIT_Y);
+            
+            Vector3f attackleft = rot.mult(attackdir);
+            
+            float fronthemi = relative.dot(attackdir);
+            float lefthemi = relative.dot(attackleft);
+            
+            AnimRequest request = new AnimRequest(m_provider.getRandomStumbleAnim(fronthemi, lefthemi), m_channels);
+            m_listener.handleAnimRequest(request);
+            
+            Vector3f knockback = m_creature.getPosition().subtract(attacker.getPosition());
+            knockback.normalizeLocal();
+            knockback.multLocal(impact);
+            
+            m_creature.getMovementManager().knock(knockback, 0.4f);
+        }
+        
+        return damage;
     }
     
     public void onUpdate(float dt) {

@@ -6,6 +6,7 @@ package de.agame.entitys;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import de.agame.Items.Item;
 import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.combat.CombatManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
@@ -24,12 +25,14 @@ public class EntityCreature extends EntityLivingAnimated {
     
     private float m_health = 10.0f;
     
+    private float m_strength = 3.0f;
+    
     protected CombatManager m_combatManager;
     
     public EntityCreature(AnimationProvider provider, Spatial spatial, SpatialControlSet scset, EnviromentObservationSet esset, UserInterfaceSet uiset) {
         super(provider, spatial, scset, esset, uiset);
         
-        m_combatManager = new CombatManager(getMovementManager(), provider, m_animationmanager, esset);
+        m_combatManager = new CombatManager(this, provider, m_animationmanager, esset);
     }
     
     public CombatManager getCombatManager() {
@@ -44,6 +47,14 @@ public class EntityCreature extends EntityLivingAnimated {
         m_health = health;
     }
     
+    public float getStrength() {
+        return m_strength;
+    }
+    
+    public void setStrength(float strength) {
+        m_strength = strength;
+    }
+    
     public void attack() {
         m_combatManager.attack();
     }
@@ -52,8 +63,8 @@ public class EntityCreature extends EntityLivingAnimated {
         m_combatManager.block();
     }
     
-    public void attackFrom(Vector3f from) {
-        
+    public void attackFrom(EntityCreature attacker, Item weapon) {
+        m_combatManager.attacked(attacker, weapon);
     }
     
     public void walkTo(Vector3f location) {

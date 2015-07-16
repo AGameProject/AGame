@@ -1,0 +1,21 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Models/buildings/Bergdorf/Götterbaum/Blatt_texture.png
+        UseAlpha : true
+        VertexLighting : true
+        Minnaert : false
+        UseVertexColor : false
+        SteepParallax : false
+        UseMaterialColors : false
+        EnvMapAsSphereMap : false
+        SeparateTexCoord : false
+        LowQuality : false
+        FilterMode : 0
+        Shininess : 0.0
+        AlphaMap : Models/buildings/Bergdorf/Götterbaum/Blatt_alpha.png
+        NormalMap : Models/buildings/Bergdorf/Götterbaum/Blatt_normal.png
+     }
+    AdditionalRenderState {
+      FaceCull Off
+    }
+}

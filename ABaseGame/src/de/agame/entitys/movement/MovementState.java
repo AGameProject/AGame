@@ -4,6 +4,8 @@
  */
 package de.agame.entitys.movement;
 
+import com.jme3.math.Vector3f;
+
 /**
  *
  * @author Fredie
@@ -20,6 +22,9 @@ public class MovementState {
     private MovementAction m_action;
     private AdditionalMovementArg m_arg;
     private boolean m_onGround = true;
+    
+    private Vector3f m_movdir;
+    private Vector3f m_facedir;
     
     public void setAction(MovementAction action) {
         m_action = action;
@@ -43,5 +48,21 @@ public class MovementState {
     
     public boolean onGround() {
         return m_onGround;
+    }
+    
+    public void setMovDir(Vector3f dir) {
+        m_movdir = dir;
+    }
+    
+    public Vector3f getMovDir() {
+        return m_movdir;
+    }
+    
+    public void setFaceDir(Vector3f dir) {
+        m_facedir = dir;
+    }
+    
+    public Vector3f getFaceDir() {
+        return m_facedir;
     }
 }

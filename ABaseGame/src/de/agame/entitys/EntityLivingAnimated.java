@@ -37,10 +37,6 @@ public class EntityLivingAnimated extends EntityLiving {
         return m_animationmanager;
     }
     
-    public void setWalkDirection(Vector3f dir) {
-        m_movementManager.setMovementDirection(dir);
-    }
-    
     @Override
     public void complexAIUpdate(float elapse) {
     }

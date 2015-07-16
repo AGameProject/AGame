@@ -75,11 +75,8 @@ public class MovementManager {
     //the interpolator to interpolate quarternions
     private QuarternionInterpolator m_directionInterpolater;
     
-    //the movementdirection used when viewdirection is locked
-    private Quaternion m_movementDirection = null;
-    
-    //if the viewdirection is locked
-    private boolean m_lockview = false;
+    //the movementdirection relative to the viewdirection
+    private Vector3f m_movementDirection = new Vector3f(0, 0, 0);
     
     //the vector the entity is knocked in
     private Vector3f m_knock = null;
@@ -162,35 +159,35 @@ public class MovementManager {
     }
     
     public void setMovementDirection(Vector3f direction) {
-        boolean shouldwalk = direction.lengthSquared() != 0;
+        boolean shouldwalk = direction.lengthSquared() > 0.0f;
         
         if(shouldwalk) {
             direction.normalizeLocal();
-            float rangle = m_directionInterpolater.getCurrentValue().mult(Vector3f.UNIT_X).angleBetween(direction);
-            float angleabs = (float) Math.acos(direction.dot(Vector3f.UNIT_X));
-            float angle = direction.dot(Vector3f.UNIT_Z) > 0 ? -angleabs : angleabs;
-            
-            Quaternion q = new Quaternion();
-            q.loadIdentity();
-            q.fromAngles(0, angle, 0);
-            
-            if(m_lockview) {
-                m_movementDirection = q;
-            } else {
-                m_directionInterpolater.setGoal(q, rangle / m_turnspeed);
-            }
+            m_movementDirection = direction;
         }
         
         m_prevWalk = shouldwalk;
     }
     
+    public void setViewDirection(Vector3f direction) {
+        if(direction.lengthSquared() == 0.0f) return;
+        
+        direction.normalizeLocal();
+        float rangle = m_directionInterpolater.getCurrentValue().mult(Vector3f.UNIT_X).angleBetween(direction);
+        float angleabs = (float) Math.acos(direction.dot(Vector3f.UNIT_X));
+        float angle = direction.dot(Vector3f.UNIT_Z) > 0 ? -angleabs : angleabs;
+            
+        Quaternion q = new Quaternion();
+        q.loadIdentity();
+        q.fromAngles(0, angle, 0);
+        
+        m_directionInterpolater.setGoal(q, rangle / m_turnspeed);
+    }
+    
     public Vector3f getCurrentWalkDirection() {
         if(m_knock != null && m_knockduration > 0.0f) return m_knock;
         
-        Quaternion q = m_movementDirection;
-        if(!m_lockview) q = m_directionInterpolater.getCurrentValue();
-        
-        return q.mult(Vector3f.UNIT_X).multLocal(m_speedInterpolater.getCurrentValue());
+        return m_directionInterpolater.getCurrentValue().mult(m_movementDirection).multLocal(m_speedInterpolater.getCurrentValue());
     }
     
     public Vector3f getCurrentViewDirection() {
@@ -232,7 +229,6 @@ public class MovementManager {
     public void sprint() {
         if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crawling)
             if(m_state.getAdditionalArg() != MovementState.AdditionalMovementArg.crouching)
-                if(!m_lockview)
                     setTargetSpeed(m_sprintspeed);
     }
     
@@ -288,20 +284,6 @@ public class MovementManager {
             if(m_listener != null)
                 m_listener.onMovementStateChanged(m_state);
         }
-    }
-    
-    public void lockView() {
-        if(m_lockview) return;
-        
-        m_lockview = true;
-        m_movementDirection = m_directionInterpolater.getCurrentValue();
-    }
-    
-    public void unlockView() {
-        if(!m_lockview) return;
-        
-        m_lockview = false;
-        m_movementDirection = null;
     }
     
     public void jump() {
@@ -418,7 +400,7 @@ public class MovementManager {
         
         //update speed and direction
         if(m_state.onGround()) {
-            if(m_state.getAction() != MovementState.MovementAction.idle && !m_lockview)
+            if(m_state.getAction() != MovementState.MovementAction.idle)
                 m_directionInterpolater.update(dt);
             m_speedInterpolater.update(dt);
             m_timeInAir = 0;
@@ -469,8 +451,13 @@ public class MovementManager {
                     }
                 }
             }
-            
         }
+        
+        m_state.setMovDir(getCurrentWalkDirection());
+        m_state.setFaceDir(getCurrentViewDirection());
+        
+        if(m_listener != null)
+            m_listener.onMovementStateChanged(m_state);
         
         //update anim speed coefficient
         if(m_state.getAction() == MovementState.MovementAction.moving && m_state.onGround()) {

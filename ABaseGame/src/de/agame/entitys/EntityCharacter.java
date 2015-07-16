@@ -45,6 +45,7 @@ public class EntityCharacter extends EntityCreature {
     
     public void setHeldItem(Item item) {
         m_heldItem = item;
+        m_combatManager.setWeapon(item);
         m_animationmanager.setHeldItem(item);
         
         m_righthand.detachAllChildren();

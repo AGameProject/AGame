@@ -41,7 +41,6 @@ public class DayTimeManager {
     private AmbientLight m_ambient;
     
     private DirectionalLightShadowFilter m_sunshadows;
-    private DirectionalLightShadowFilter m_moonshadows;
     
     public DayTimeManager(AssetManager assets) {
         m_suncolor = new ColorRGBA(1.0f, 0.8f, 0.5f, 1.0f);
@@ -58,9 +57,6 @@ public class DayTimeManager {
         m_moon = new DirectionalLight();
         m_moon.setColor(m_mooncolor);
         m_moon.setDirection(new Vector3f(0.5f, -0.5f, 0.5f).normalizeLocal());
-        m_moonshadows = new DirectionalLightShadowFilter(assets, 1024, 2);
-        m_moonshadows.setLight(m_moon);
-        m_moonshadows.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
         
         m_ambient = new AmbientLight();
         m_ambient.setColor(m_ambientcolor);
@@ -77,6 +73,7 @@ public class DayTimeManager {
         m_skymat.setColor("mooncolor", m_mooncolor);
         m_skymat.setColor("skycolor", new ColorRGBA(0.5f, 0.5f, 1.0f, 1.0f));
         m_skymat.setVector3("sundir", new Vector3f(0.5f, -0.5f, 0.5f));
+        m_skymat.setTexture("starmap", assets.loadTexture("Textures/starmap.png"));
         geom.setMaterial(m_skymat);
         
         m_sky = geom;
@@ -106,16 +103,12 @@ public class DayTimeManager {
         return m_sunshadows;
     }
     
-    public DirectionalLightShadowFilter getMoonShadows() {
-        return m_moonshadows;
-    }
-    
     /**
      * updates direction and rotation of light and sky
      * @param tpf time since last update
      */
     public void onUpdate(float tpf) {
-        m_currenttime += tpf;
+        m_currenttime += 20.0f * tpf;
         if(m_currenttime >= 1200) m_currenttime -= 1200;
         
         float rot = ((float) Math.PI / 600.0f) * m_currenttime;
@@ -145,13 +138,9 @@ public class DayTimeManager {
         m_moon.setColor(m_mooncolor.mult((1.0f - sunintens) * 0.4f));
         m_ambient.setColor(m_ambientcolor.mult(sunintens + 0.2f));
         
-        m_sunshadows.setShadowIntensity(1.0f - (sunintens + 0.3f) * 0.3f);
-        m_moonshadows.setShadowIntensity((sunintens + 0.3f) * 0.3f);
+        m_sunshadows.setShadowIntensity(1.0f - (sunintens + 0.4f) * 0.4f);
         
         if(m_sunshadows.isEnabled() && !isDay()) m_sunshadows.setEnabled(false);
         else if(!m_sunshadows.isEnabled() && isDay()) m_sunshadows.setEnabled(true);
-        
-        if(m_moonshadows.isEnabled() && m_currenttime > 100 && m_currenttime < 500) m_moonshadows.setEnabled(false);
-        else if(!m_moonshadows.isEnabled() && m_currenttime < 100 || m_currenttime > 500) m_moonshadows.setEnabled(true);
     }
 }

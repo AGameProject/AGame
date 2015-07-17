@@ -1,7 +1,10 @@
 MaterialDef Simple {
     MaterialParameters {
+        Texture2D starmap
+        
         Vector3 sundir
         Vector3 moondir
+
         Color suncolor
         Color mooncolor
         Color skycolor
@@ -10,6 +13,10 @@ MaterialDef Simple {
 
         VertexShader GLSL100:   MatDefs/Sky/sky.vert
         FragmentShader GLSL100: MatDefs/Sky/sky.frag
+
+        RenderState {
+            FaceCull Off
+        }
 
         WorldParameters {
             ViewMatrix

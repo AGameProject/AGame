@@ -89,7 +89,6 @@ public class WorldManager {
         
         FilterPostProcessor shadowfilter = new FilterPostProcessor();
         shadowfilter.addFilter(m_time.getSunShadows());
-        shadowfilter.addFilter(m_time.getMoonShadows());
         m_app.getViewPort().addProcessor(shadowfilter);
     }
     

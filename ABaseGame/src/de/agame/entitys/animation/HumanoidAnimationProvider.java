@@ -311,7 +311,7 @@ public class HumanoidAnimationProvider implements AnimationProvider{
             Vector3f facedir = m_currentState.getFaceDir().normalize();
 
             Quaternion rot = new Quaternion();
-            rot.fromAngleAxis(-90.0f, Vector3f.UNIT_Y);
+            rot.fromAngleAxis((float)Math.toRadians(-90.0f), Vector3f.UNIT_Y);
             Vector3f faceleft = rot.mult(facedir);
 
             float degree = (float) Math.toDegrees(movdir.angleBetween(facedir));

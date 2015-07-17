@@ -1,0 +1,20 @@
+MaterialDef Simple {
+    MaterialParameters {
+        Vector3 sundir
+        Vector3 moondir
+        Color suncolor
+        Color mooncolor
+        Color skycolor
+    }
+    Technique {
+
+        VertexShader GLSL100:   MatDefs/Sky/sky.vert
+        FragmentShader GLSL100: MatDefs/Sky/sky.frag
+
+        WorldParameters {
+            ViewMatrix
+            ProjectionMatrix
+            WorldMatrix
+        }
+    }
+}

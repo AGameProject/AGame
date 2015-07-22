@@ -1,0 +1,9 @@
+Material Stone : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.3882353 0.40784314 0.34117648 1.0
+        UseMaterialColors : true
+        Ambient : 0.3882353 0.40784314 0.34117648 1.0
+     }
+    AdditionalRenderState {
+    }
+}

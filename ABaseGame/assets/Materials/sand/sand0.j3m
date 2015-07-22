@@ -1,0 +1,23 @@
+Material Sand : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        UseMaterialColors : true
+        Diffuse : 0.91764706 0.7294118 0.49803922 1.0
+        Specular : 0.0 0.0 0.0 1.0
+        Shininess : 0.0
+        GlowColor : 1.0 0.6 0.0 1.0
+        ShadowIntensity : 0.0
+        PCFEdge : 0.0
+        WardIso : false
+        LowQuality : false
+        HighQuality : false
+        LATC : false
+        VTangent : false
+        VertexLighting : false
+        Minnaert : false
+        UseVertexColor : false
+        SteepParallax : false
+        Ambient : 0.91764706 0.7294118 0.49803922 1.0
+     }
+    AdditionalRenderState {
+    }
+}

@@ -1,0 +1,11 @@
+Material snow : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.7921569 0.7921569 0.8862745 1.0
+        Ambient : 0.7921569 0.7921569 0.8862745 1.0
+        GlowColor : 0.8 0.8 0.8 1.0
+        Shininess : 1.6
+        UseMaterialColors : true
+     }
+    AdditionalRenderState {
+    }
+}

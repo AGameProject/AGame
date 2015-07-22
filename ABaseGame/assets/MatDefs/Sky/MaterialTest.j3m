@@ -1,0 +1,7 @@
+Material My Material : MatDefs/Sky/DynamicSky.j3md {
+     MaterialParameters {
+     }
+    AdditionalRenderState {
+      FaceCull Off
+    }
+}

@@ -51,7 +51,7 @@ public abstract class MeleeAttack extends Attack{
                 float fronthemi = relative.dot(attackdir);
 
                 Quaternion rot = new Quaternion();
-                rot.fromAngleAxis(-90.0f, Vector3f.UNIT_Y);
+                rot.fromAngleAxis((float)Math.toRadians(-90.0f), Vector3f.UNIT_Y);
 
                 Vector3f attackleft = rot.mult(attackdir);
 

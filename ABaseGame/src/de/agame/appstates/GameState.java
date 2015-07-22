@@ -56,6 +56,7 @@ public class GameState extends AbstractAppState {
     
     @Override
     public void update(float tpf) {
+        m_worldManager.onUpdate(tpf);
     }
     
     @Override

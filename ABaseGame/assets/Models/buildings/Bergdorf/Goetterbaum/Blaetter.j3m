@@ -1,0 +1,33 @@
+Material My Material : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Models/buildings/Bergdorf/Goetterbaum/Blatt_texture.png
+        FilterMode : 0
+        UseAlpha : true
+        LowQuality : false
+        HardwareShadows : false
+        WardIso : false
+        SeparateTexCoord : false
+        EnvMapAsSphereMap : false
+        UseMaterialColors : true
+        SteepParallax : false
+        UseVertexColor : false
+        Minnaert : false
+        VertexLighting : false
+        LATC : false
+        HighQuality : false
+        AlphaDiscardThreshold : 0.90000004
+        Shininess : 1.0
+        Diffuse : 1 1 1 1
+        Specular : 0 0 0 0
+        Ambient : 0 0 0 0
+     }
+    AdditionalRenderState {
+      Blend Alpha
+      FaceCull Off
+      AlphaTestFalloff 0.0
+      Wireframe Off
+      DepthWrite On
+      ColorWrite On
+      DepthTest On
+    }
+}

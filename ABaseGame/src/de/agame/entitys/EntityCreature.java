@@ -105,9 +105,10 @@ public class EntityCreature extends EntityLivingAnimated {
                 Vector3f dir = m_destination.subtract(m_spatial.getWorldTranslation());
                 dir.setY(0);
 
-                setWalkDirection(dir);
+                getMovementManager().setMovementDirection(Vector3f.UNIT_X.mult(1.0f));
+                getMovementManager().setViewDirection(dir);
             } else {
-                setWalkDirection(new Vector3f(0, 0, 0));
+                getMovementManager().setMovementDirection(new Vector3f(0, 0, 0));
             }
         }
     }

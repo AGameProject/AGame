@@ -60,6 +60,7 @@ public class WorldManager {
         m_chasecam.setDefaultDistance(5.0f);
         m_chasecam.setMaxDistance(7.0f);
         m_chasecam.setMinDistance(3.0f);
+        m_chasecam.setMinVerticalRotation((float) Math.toRadians(-30.0d));
         
         m_entitymanager = new EntityManager();
         m_entitymanager.finishInit(m_physicsspace, m_dynamics, m_gui, cam, m_chasecam, m_input, m_assets);
@@ -77,12 +78,14 @@ public class WorldManager {
         m_statics.addControl(scenecontroll);
         m_physicsspace.add(m_statics);
         m_time = new DayTimeManager(m_assets);
-        
+
         //attach all leveldata to this worlds content
         m_whole.attachChild(m_statics);
         m_whole.attachChild(m_dynamics);
+        m_whole.attachChild(m_time.getSkyBox());
         m_whole.addLight(m_time.getSun());
         m_whole.addLight(m_time.getAmbient());
+        m_whole.addLight(m_time.getMoon());
         
         FilterPostProcessor shadowfilter = new FilterPostProcessor();
         shadowfilter.addFilter(m_time.getSunShadows());

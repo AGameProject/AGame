@@ -25,7 +25,7 @@ import com.jme3.shadow.EdgeFilteringMode;
  * @author Fredie
  */
 public class DayTimeManager {
-    public static final float CYCLE_LENGTH = 1200;
+    public static final float CYCLE_LENGTH = 600;
     public static final int YEAR_LENGTH = 60;
     
     private float m_currenttime = 0;

@@ -26,6 +26,7 @@ import com.jme3.shadow.EdgeFilteringMode;
  */
 public class DayTimeManager {
     public static final float CYCLE_LENGTH = 1200;
+    public static final int YEAR_LENGTH = 60;
     
     private float m_currenttime = 0;
     
@@ -40,6 +41,11 @@ public class DayTimeManager {
     private DirectionalLight m_moon;
     private AmbientLight m_ambient;
     
+    private Vector3f m_axis;
+    private float m_latitude;
+    private float m_season;
+    private int m_daysinyear;
+    
     private DirectionalLightShadowFilter m_sunshadows;
     
     public DayTimeManager(AssetManager assets) {
@@ -53,6 +59,7 @@ public class DayTimeManager {
         m_sunshadows = new DirectionalLightShadowFilter(assets, 1024, 2);
         m_sunshadows.setLight(m_sun);
         m_sunshadows.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
+        m_sunshadows.setLambda(0.9f);
         
         m_moon = new DirectionalLight();
         m_moon.setColor(m_mooncolor);
@@ -61,7 +68,7 @@ public class DayTimeManager {
         m_ambient = new AmbientLight();
         m_ambient.setColor(m_ambientcolor);
         
-        Sphere sphere = new Sphere(5, 5, 100, true, true);
+        Sphere sphere = new Sphere(3, 3, 100, true, true);
         Geometry geom = new Geometry("Sky", sphere);
         geom.setCullHint(Spatial.CullHint.Never);
         geom.setQueueBucket(RenderQueue.Bucket.Sky);
@@ -77,6 +84,30 @@ public class DayTimeManager {
         geom.setMaterial(m_skymat);
         
         m_sky = geom;
+        
+        setLatitude(48.0f);
+        setSeason(0.5f);
+        
+        m_daysinyear = 0;
+    }
+    
+    public void updateRotLevel() {
+        Quaternion quat = new Quaternion();
+        quat.fromAngleAxis((float) Math.toRadians(m_latitude - 46.88f * (m_season - 0.5f)), Vector3f.UNIT_Z);
+        m_axis = quat.mult(Vector3f.UNIT_X);
+    }
+    
+    public void setLatitude(float latitude) {
+        m_latitude = latitude;
+        
+        updateRotLevel();
+    }
+    
+    public void setSeason(float season) {
+        m_season = season;
+        m_daysinyear = (int) (YEAR_LENGTH / 2.0f * season);
+        
+        updateRotLevel();
     }
     
     public Spatial getSkyBox() {
@@ -96,7 +127,7 @@ public class DayTimeManager {
     }
     
     public boolean isDay() {
-        return m_currenttime < 600;
+        return m_currenttime < 0.5f * CYCLE_LENGTH;
     }
     
     public DirectionalLightShadowFilter getSunShadows() {
@@ -108,15 +139,24 @@ public class DayTimeManager {
      * @param tpf time since last update
      */
     public void onUpdate(float tpf) {
-        m_currenttime += 20.0f * tpf;
-        if(m_currenttime >= 1200) m_currenttime -= 1200;
+        m_currenttime += tpf;
+        if(m_currenttime >= CYCLE_LENGTH) {
+            m_currenttime -= CYCLE_LENGTH;
+            
+            m_daysinyear++;
+            m_season = m_daysinyear / (float) YEAR_LENGTH;
+            m_season = m_season * 2.0f;
+            m_season = m_season > 1.0f ? 1.0f - m_season : m_season;
+            
+            updateRotLevel();
+        }
         
-        float rot = ((float) Math.PI / 600.0f) * m_currenttime;
+        float rot = ((float) Math.PI / (0.5f * CYCLE_LENGTH)) * m_currenttime;
         Quaternion quat = new Quaternion();
-        quat.fromAngleAxis(rot, Vector3f.UNIT_X);
+        quat.fromAngleAxis(rot, m_axis);
         Vector3f sundir = quat.mult(Vector3f.UNIT_Z);
         
-        quat.fromAngleAxis(rot - (float) Math.PI, Vector3f.UNIT_X);
+        quat.fromAngleAxis(rot - (float) Math.PI, m_axis);
         Vector3f moondir = quat.mult(Vector3f.UNIT_Z);
         
         m_sun.setDirection(sundir);
@@ -125,20 +165,14 @@ public class DayTimeManager {
         m_moon.setDirection(moondir);
         m_skymat.setVector3("moondir", moondir);
         
-        float sunintens = 1.0f;
-        
-        if(isDay()) {
-            if(m_currenttime > 500) sunintens = 1.0f - ((m_currenttime - 500.0f) / 100.0f);
-            if(m_currenttime < 100) sunintens = m_currenttime / 100.0f;
-        } else {
-            sunintens = 0.0f;
-        }
+        float sunintens = new Vector3f(0, -1, 0).dot(sundir);
+        sunintens = Math.max(0, sunintens);
         
         m_sun.setColor(m_suncolor.mult(sunintens));
         m_moon.setColor(m_mooncolor.mult((1.0f - sunintens) * 0.4f));
         m_ambient.setColor(m_ambientcolor.mult(sunintens + 0.2f));
         
-        m_sunshadows.setShadowIntensity(1.0f - (sunintens + 0.4f) * 0.4f);
+        m_sunshadows.setShadowIntensity(0.7f * sunintens);
         
         if(m_sunshadows.isEnabled() && !isDay()) m_sunshadows.setEnabled(false);
         else if(!m_sunshadows.isEnabled() && isDay()) m_sunshadows.setEnabled(true);

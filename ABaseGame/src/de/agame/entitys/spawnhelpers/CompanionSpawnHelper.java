@@ -184,7 +184,7 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
     }
 
     public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
-        entity.teleportTo(spawnpoint.addLocal(0, 1, 0));
+        entity.teleportTo(spawnpoint.addLocal(0, 50, 0));
         entity.onAttach();
     }
     

@@ -87,9 +87,11 @@ public class WorldManager {
         m_whole.addLight(m_time.getAmbient());
         m_whole.addLight(m_time.getMoon());
         
-        FilterPostProcessor shadowfilter = new FilterPostProcessor();
-        shadowfilter.addFilter(m_time.getSunShadows());
-        m_app.getViewPort().addProcessor(shadowfilter);
+        
+        FilterPostProcessor filters = m_assets.loadFilter("Scenes/mainmenu/MainmenuFilters.j3f");
+        filters.addFilter(m_time.getSunShadows());
+        m_app.getViewPort().addProcessor(filters);
+        
     }
     
     /**

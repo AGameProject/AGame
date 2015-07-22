@@ -1,0 +1,11 @@
+Material Grass : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        UseMaterialColors : true
+        Diffuse : 0.16078432 0.32156864 0.15294118 1.0
+        Specular : 0.07450981 0.105882354 0.07058824 1.0
+        Shininess : 1.1
+        Ambient : 0.16078432 0.32156864 0.15294118 1.0
+     }
+    AdditionalRenderState {
+    }
+}

@@ -285,7 +285,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         player.setRightHand(rightitem);
         player.setLeftHand(leftitem);
         
-        Node sword = (Node) assets.loadModel("Models/Items/Kurz_Schwert_1/Kurz_Schwert_1.j3o");
+        Node sword = (Node) assets.loadModel("Models/Items/Waffen/Kurz_Schwert_1/Kurz_Schwert_1.j3o");
         Item item = new Item(sword, 1, 30.0f, 1.5f, 2.5f, false, true, "ATTACK_SWING", null);
         
         player.setHeldItem(item);
@@ -294,7 +294,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
     }
 
     public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
-        entity.teleportTo(spawnpoint.addLocal(0, 1, 0));
+        entity.teleportTo(spawnpoint.addLocal(0, 50, 0));
         entity.onAttach();
     }
 }

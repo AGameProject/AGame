@@ -175,16 +175,11 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
         companion.setRightHand(rightitem);
         companion.setLeftHand(leftitem);
         
-        Node sword = (Node) assets.loadModel("Models/Items/Kurz_Schwert_1/Kurz_Schwert_1.j3o");
-        Item item = new Item(sword, 1, 30.0f, 1.5f, 2.5f, true, true, null, null);
-        
-//        player.setHeldItem(item);
-        
         return companion;
     }
 
     public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
-        entity.teleportTo(spawnpoint.addLocal(0, 1, 0));
+        entity.teleportTo(spawnpoint.addLocal(0, 50, 0));
         entity.onAttach();
     }
     

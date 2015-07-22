@@ -1,0 +1,9 @@
+Material Dirt : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.5568628 0.41960785 0.21960784 1.0
+        UseMaterialColors : true
+        Ambient : 0.5568628 0.41960785 0.21960784 1.0
+     }
+    AdditionalRenderState {
+    }
+}

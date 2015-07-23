@@ -1,0 +1,9 @@
+Material Clay : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.8156863 0.7254902 0.49019608 1.0
+        UseMaterialColors : true
+        Ambient : 0.8156863 0.7254902 0.49019608 1.0
+     }
+    AdditionalRenderState {
+    }
+}

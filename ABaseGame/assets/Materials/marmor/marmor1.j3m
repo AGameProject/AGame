@@ -1,0 +1,11 @@
+Material Marmor : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.8156863 0.8 0.75686276 1.0
+        UseMaterialColors : true
+        Ambient : 0.8156863 0.841 0.75686276 1.0
+        Shininess : 5.2999997
+        Specular : 0.18039216 0.20392157 0.03529412 1.0
+     }
+    AdditionalRenderState {
+    }
+}

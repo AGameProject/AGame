@@ -1,0 +1,9 @@
+Material Brick : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.7294118 0.28627452 0.0 1.0
+        UseMaterialColors : true
+        Ambient : 0.7294118 0.28627452 0.0 1.0
+     }
+    AdditionalRenderState {
+    }
+}

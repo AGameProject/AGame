@@ -90,7 +90,7 @@ public class WorldManager {
         
         FilterPostProcessor filters = new FilterPostProcessor(m_assets);
         filters.addFilter(m_time.getSunShadows());
-        m_app.getViewPort().addProcessor(filters);
+//        m_app.getViewPort().addProcessor(filters);
         
     }
     

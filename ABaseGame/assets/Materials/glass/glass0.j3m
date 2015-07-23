@@ -1,0 +1,12 @@
+Material Glass : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.8 1.0 1.0 0.4
+        Ambient : 0.8 1.0 1.0 0.4
+        Specular : 0.4 0.4 0.4 0.4
+        UseMaterialColors : true
+        Shininess : 15.0
+     }
+    AdditionalRenderState {
+      Blend AlphaAdditive
+    }
+}

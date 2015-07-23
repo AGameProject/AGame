@@ -19,8 +19,8 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         // enable gamestate for debug purpose
-        stateManager.attach(new GameState(rootNode));
-//        stateManager.attach(new MainMenuState());
+//        stateManager.attach(new GameState(rootNode));
+        stateManager.attach(new MainMenuState(rootNode, flyCam));
     }
 
     @Override

@@ -98,12 +98,16 @@ public class WorldManager {
      * spawns a new EntityPlayer with a chasecam
      */
     public void spawnFreshPlayer() {
-        Entity e = m_entitymanager.spawnEntityAt("Player", Vector3f.ZERO);
+        Vector3f playerSpawnPoint = new Vector3f(0, 0, 0);
+        Vector3f companionSpawnPoint;
+        companionSpawnPoint = playerSpawnPoint.add((float) (Math.random() * 5f), 0f, (float) (Math.random() * 5f));
+        
+        Entity e = m_entitymanager.spawnEntityAt("Player", playerSpawnPoint);
         m_chasecam.setSpatial(e.getWrapperSpatial());
         m_chasecam.setSmoothMotion(false);
         m_chasecam.setLookAtOffset(new Vector3f(0, 1.7f, 0));
         
-        m_entitymanager.spawnEntityAt("Companion", Vector3f.ZERO);
+        m_entitymanager.spawnEntityAt("Companion", companionSpawnPoint);
     }
     
     /**

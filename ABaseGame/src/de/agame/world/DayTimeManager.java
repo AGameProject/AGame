@@ -59,7 +59,6 @@ public class DayTimeManager {
         m_sunshadows = new DirectionalLightShadowFilter(assets, 1024, 2);
         m_sunshadows.setLight(m_sun);
         m_sunshadows.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
-        m_sunshadows.setLambda(0.9f);
         
         m_moon = new DirectionalLight();
         m_moon.setColor(m_mooncolor);
@@ -85,7 +84,7 @@ public class DayTimeManager {
         
         m_sky = geom;
         
-        setLatitude(48.0f);
+        setLatitude(-25.0f);
         setSeason(0.5f);
         
         m_daysinyear = 0;

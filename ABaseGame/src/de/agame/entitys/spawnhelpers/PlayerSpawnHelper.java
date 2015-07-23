@@ -294,7 +294,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
     }
 
     public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
-        entity.teleportTo(spawnpoint.addLocal(0, 50, 0));
+        entity.teleportTo(spawnpoint.addLocal(0, 10, 0));
         entity.onAttach();
     }
 }

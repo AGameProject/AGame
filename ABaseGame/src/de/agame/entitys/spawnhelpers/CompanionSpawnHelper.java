@@ -10,11 +10,9 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import de.agame.Items.Item;
 import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EntityCompanion;
-import de.agame.entitys.EntityPlayer;
 import de.agame.entitys.animation.AnimationManager;
 import de.agame.entitys.animation.HumanoidAnimationProvider;
 import de.agame.entitys.combat.AttackPunch;
@@ -179,7 +177,7 @@ public class CompanionSpawnHelper implements EntitySpawnHelper{
     }
 
     public void spawnEntityAt(Vector3f spawnpoint, Entity entity) {
-        entity.teleportTo(spawnpoint.addLocal(0, 50, 0));
+        entity.teleportTo(spawnpoint.addLocal(0, 10, 0));
         entity.onAttach();
     }
     

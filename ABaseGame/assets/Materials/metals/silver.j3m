@@ -1,0 +1,12 @@
+Material Silver : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        UseMaterialColors : true
+        Diffuse : 0.65882355 0.7137255 0.7058824 1.0
+        Specular : 0.4 0.4 0.4 1.0
+        GlowColor : 0.0 0.0 0.0 1.0
+        Ambient : 0.65882355 0.7137255 0.7058824 1.0
+        Shininess : 3.0
+     }
+    AdditionalRenderState {
+    }
+}

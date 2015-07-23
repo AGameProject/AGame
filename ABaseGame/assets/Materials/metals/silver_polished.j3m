@@ -1,0 +1,24 @@
+Material polished Silver : MatDefs/Flat/Lighting.j3md {
+    MaterialParameters {
+        Minnaert : false
+        Specular : 1.0 1.0 1.0 1.0
+        Diffuse : 0.6745098 0.7764706 0.77254903 1.0
+        UseMaterialColors : true
+        ParallaxHeight : 0.05
+        Ambient : 0.6745098 0.7764706 0.77254903 1.0
+        Shininess : 20.0
+        WardIso : false
+        GlowColor : 0.0 0.0 0.0 1.0
+    }
+    AdditionalRenderState {
+      FaceCull Back
+      Wireframe Off
+      DepthWrite On
+      PolyOffset 0.0 0.0
+      AlphaTestFalloff 0.0
+      Blend Off
+      PointSprite Off
+      ColorWrite On
+      DepthTest On
+    }
+}

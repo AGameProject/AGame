@@ -1,0 +1,11 @@
+Material Leather : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.36078432 0.20392157 0.03529412 1.0
+        Ambient : 0.36078432 0.20392157 0.03529412 1.0
+        UseMaterialColors : true
+        Specular : 0.22745098 0.13725491 0.007843138 1.0
+        Shininess : 2.3999999
+     }
+    AdditionalRenderState {
+    }
+}

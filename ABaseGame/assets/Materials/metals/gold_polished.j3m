@@ -1,0 +1,15 @@
+Material polished Gold : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        LowQuality : false
+        HardwareShadows : false
+        WardIso : false
+        UseMaterialColors : true
+        GlowColor : 0.0 0.0 0.0 1.0
+        Specular : 0.90588236 0.84705883 0.50980395 1.0
+        Diffuse : 1.0 0.7647059 0.05882353 1.0
+        Ambient : 1.0 0.7647059 0.05882353 1.0
+        Shininess : 20.0
+     }
+    AdditionalRenderState {
+    }
+}

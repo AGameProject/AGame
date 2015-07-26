@@ -6,7 +6,6 @@ package de.agame.entitys.spawnhelpers;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
-import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -23,6 +22,7 @@ import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
+import de.agame.world.MeshProvider;
 
 /**
  *
@@ -30,8 +30,8 @@ import de.agame.entitys.sets.UserInterfaceSet;
  */
 public class CompanionSpawnHelper implements EntitySpawnHelper{
 
-    public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
-        Node model = (Node) assets.loadModel("Models/characters/Parkour Test Character/Character_ready.j3o");
+    public Entity createFromScratch(MeshProvider meshes, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
+        Node model = meshes.getMesh("Linggify").clone(false);
         
         Node rightitem = (Node) ((Node) ((Node) model.getChild("Armature")).getChild("righthand")).getChild("item");
         Node leftitem = (Node) ((Node) ((Node) model.getChild("Armature")).getChild("lefthand")).getChild("item");

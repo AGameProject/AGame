@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty-styles>
     <style id="agame-button#panel">
-        <attributes backgroundImage="de/agame/nifty/agame-button.png" childLayout="center" visibleToCursor="true"/>
+        <attributes backgroundImage="de/agame/nifty/button/agame-button.png" childLayout="center" visibleToCursor="true"/>
     </style>
     
     <style id="agame-button#text">

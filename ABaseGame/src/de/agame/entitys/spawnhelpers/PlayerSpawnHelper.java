@@ -25,6 +25,7 @@ import de.agame.entitys.movement.MovementManager;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
+import de.agame.world.MeshProvider;
 
 /**
  *
@@ -32,8 +33,8 @@ import de.agame.entitys.sets.UserInterfaceSet;
  */
 public class PlayerSpawnHelper implements EntitySpawnHelper{
 
-    public Entity createFromScratch(AssetManager assets, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
-        Node model = (Node) assets.loadModel("Models/characters/Parkour Test Character/Character_ready.j3o");
+    public Entity createFromScratch(MeshProvider meshes, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
+        Node model = meshes.getMesh("Linggify").clone(false);
         
         Node rightitem = (Node) ((Node) ((Node) model.getChild("Armature")).getChild("righthand")).getChild("item");
         Node leftitem = (Node) ((Node) ((Node) model.getChild("Armature")).getChild("lefthand")).getChild("item");
@@ -285,7 +286,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         player.setRightHand(rightitem);
         player.setLeftHand(leftitem);
         
-        Node sword = (Node) assets.loadModel("Models/Items/Waffen/Kurz_Schwert_1/Kurz_Schwert_1.j3o");
+        Node sword = meshes.getMesh("theSlasher");
         Item item = new Item(sword, 1, 30.0f, 1.5f, 2.5f, false, true, "ATTACK_SWING", null);
         
         player.setHeldItem(item);

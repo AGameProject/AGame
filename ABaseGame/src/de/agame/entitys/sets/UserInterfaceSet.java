@@ -6,6 +6,7 @@ package de.agame.entitys.sets;
 
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
@@ -16,7 +17,7 @@ import com.jme3.scene.Node;
 public class UserInterfaceSet {
     private Camera m_cam;
     private ChaseCamera m_chasecam;
-    private Node m_guinode;
+    private NiftyJmeDisplay m_guinode;
     private InputManager m_inputmanager;
     
     public void setCam(Camera cam) {
@@ -35,11 +36,11 @@ public class UserInterfaceSet {
         return m_chasecam;
     }
     
-    public void setGuiNode(Node guinode) {
+    public void setGuiNode(NiftyJmeDisplay guinode) {
         m_guinode = guinode;
     }
     
-    public Node getGuiNode() {
+    public NiftyJmeDisplay getGuiNode() {
         return m_guinode;
     }
     

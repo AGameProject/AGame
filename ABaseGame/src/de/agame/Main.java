@@ -2,8 +2,8 @@ package de.agame;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
-import de.agame.appstates.GameState;
-import de.agame.appstates.MainMenuState;
+import de.agame.appstates.LoadingState;
+import de.agame.loading.MainMenuLoader;
 
 /**
  * test
@@ -18,9 +18,11 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        // enable gamestate for debug purpose
-//        stateManager.attach(new GameState(rootNode));
-        stateManager.attach(new MainMenuState(rootNode, flyCam));
+        //disable flycam
+        flyCam.setEnabled(false);
+        
+        //start loadingscreen
+        stateManager.attach(new LoadingState(new MainMenuLoader(this, rootNode)));
     }
 
     @Override

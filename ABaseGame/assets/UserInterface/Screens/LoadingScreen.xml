@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://niftygui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+    
+    <useStyles filename="de/agame/nifty/progressbar/agame-progressbar-styles.xml" />
+    <useControls filename="de/agame/nifty/progressbar/agame-progressbar.xml" />
+    
+    <screen id="load">
+        <layer id="maincontainer" backgroundColor="#0000" childLayout="vertical">
+            <panel id="panel" height="100%" width="100%" align="center" childLayout="center" backgroundColor="#0000">
+                <image id="backgroun0" filename="Textures/loadingscreens/loadingscreen0.png" height="100%" width="100%">
+                </image>
+                <image id="background20" filename="Textures/loadingscreens/loadingscreen20.png" visible="false" height="100%" width="100%">
+                </image>
+                <image id="background40" filename="Textures/loadingscreens/loadingscreen40.png" visible="false" height="100%" width="100%">
+                </image>
+                <image id="background60" filename="Textures/loadingscreens/loadingscreen60.png" visible="false" height="100%" width="100%">
+                </image>
+                <image id="background80" filename="Textures/loadingscreens/loadingscreen80.png" visible="false" height="100%" width="100%">
+                </image>
+                <image id="background100" filename="Textures/loadingscreens/loadingscreen100.png" visible="false" height="100%" width="100%">
+                </image>
+                <control id="bar" name="progressbar" font="UserInterface/fonts/Content.fnt" progress="45%" width="80%" height="10%" align="center" valign="center">
+                </control>
+            </panel>
+        </layer>
+    </screen>
+</nifty>

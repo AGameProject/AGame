@@ -12,10 +12,12 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import de.agame.entitys.spawnhelpers.CompanionSpawnHelper;
 import de.agame.entitys.spawnhelpers.PlayerSpawnHelper;
+import de.agame.world.MeshProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,7 +27,7 @@ import java.util.Iterator;
  * @author Fredie
  */
 public class EntityManager {
-    private AssetManager m_assets;
+    private MeshProvider m_meshes;
     
     private ArrayList<Entity> m_entitys = new ArrayList<Entity>();
     private HashMap<String, EntitySpawnHelper> m_spawnhelpers = new HashMap<String, EntitySpawnHelper>();
@@ -33,10 +35,9 @@ public class EntityManager {
     private EnviromentObservationSet m_enviromentobservationset;
     private UserInterfaceSet m_userinterfaceset;
     
-    public void finishInit(PhysicsSpace physicsspace, Node root, Node gui, Camera cam, ChaseCamera chasecam, InputManager inputmanager, AssetManager assets) {
+    public void finishInit(Node root, NiftyJmeDisplay gui, Camera cam, ChaseCamera chasecam, InputManager inputmanager, MeshProvider meshes) {
         m_enviromentobservationset = new EnviromentObservationSet();
         m_enviromentobservationset.setEntityManager(this);
-        m_enviromentobservationset.setPhysicsSpace(physicsspace);
         m_enviromentobservationset.setRoot(root);
         
         m_userinterfaceset = new UserInterfaceSet();
@@ -45,11 +46,15 @@ public class EntityManager {
         m_userinterfaceset.setInputManager(inputmanager);
         m_userinterfaceset.setGuiNode(gui);
         
-        m_assets = assets;
+        m_meshes = meshes;
         
         //register SpawnHelpers
         m_spawnhelpers.put("Player", new PlayerSpawnHelper());
         m_spawnhelpers.put("Companion", new CompanionSpawnHelper());
+    }
+    
+    public void setPhysicsSpace(PhysicsSpace space) {
+        m_enviromentobservationset.setPhysicsSpace(space);
     }
     
     public Entity getEntity(int i) {
@@ -62,7 +67,7 @@ public class EntityManager {
     
     public Entity spawnEntityAt(String entity, Vector3f position) {
         EntitySpawnHelper helper = m_spawnhelpers.get(entity);
-        Entity e = helper.createFromScratch(m_assets, m_enviromentobservationset, m_userinterfaceset);
+        Entity e = helper.createFromScratch(m_meshes, m_enviromentobservationset, m_userinterfaceset);
         
         helper.spawnEntityAt(position, e);
         m_entitys.add(e);

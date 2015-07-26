@@ -27,8 +27,10 @@ public class GameState extends AbstractAppState {
     //the lowest node in the scenegraph
     private Node m_root;
     
-    public GameState(Node rootNode) {
+    public GameState(Node rootNode, WorldManager world, BulletAppState physics) {
         this.m_root = rootNode;
+        m_worldManager = world;
+        m_physics = physics;
     }
     
     @Override
@@ -38,8 +40,6 @@ public class GameState extends AbstractAppState {
         //initialize members
         this.m_app = app;
         this.m_stateManager = stateManager;
-        
-        this.m_physics = new BulletAppState();
         
         enable();
     }
@@ -73,14 +73,12 @@ public class GameState extends AbstractAppState {
         //enable physics
         m_stateManager.attach(m_physics);
         
-        //init worldmanager
-        this.m_worldManager = new WorldManager();
-        m_worldManager.initialize(m_app.getAssetManager(), m_app.getInputManager(), m_app.getCamera(), m_physics.getPhysicsSpace(), m_app);
-        
         //init level and game data
+        m_worldManager.setPhysicsSpace(m_physics.getPhysicsSpace());
         m_worldManager.freshLevel();
         m_worldManager.spawnFreshPlayer();
         m_root.attachChild(m_worldManager.getWholeWorld());
+        m_app.getViewPort().addProcessor(m_worldManager.getFilters());
     }
     
     /**
@@ -89,6 +87,7 @@ public class GameState extends AbstractAppState {
     public void disable() {
         //detach all level related data from scenegraph
         m_root.detachChild(m_worldManager.getWholeWorld());
+        m_app.getViewPort().removeProcessor(m_worldManager.getFilters());
         m_worldManager.setPaused(true);
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+
+    <style id="agame-progressbar#outer">
+        <attributes filename="de/agame/nifty/progressbar/progressbarouter.png" width="32px" height="100%" visibleToMouse="false"/>
+    </style>
+    
+    <style id="agame-progressbar#inner">
+        <attributes filename="de/agame/nifty/progressbar/progressbarinner.png" align="left" valign="center" width="45%" height="100%" visibleToMouse="false"/>
+    </style>
+    
+    <style id="agame-progressbar#backdrop">
+        <attributes backgroundImage="de/agame/nifty/progressbar/progressbarbackdrop.png" visibleToMouse="false" childLayout="center" />
+    </style>
+    
+    <style id="agame-progressbar#text">
+        <attributes align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="false"/>
+    </style>
+    
+</nifty-styles>

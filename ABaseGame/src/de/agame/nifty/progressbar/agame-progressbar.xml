@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-controls>
+
+    <controlDefinition style="agame-progressbar" name="progressbar" controller="de.agame.nifty.progressbar.ProgressBarControl">
+        <panel style="#backdrop" id="#backdrop">
+            <image style="#inner" id="#inner"/>
+            <image style="#outer" id="#outer"/>
+            <text style="#text" id="#text" text="$progress" font="$font"/>
+        </panel>
+    </controlDefinition>
+    
+</nifty-controls>

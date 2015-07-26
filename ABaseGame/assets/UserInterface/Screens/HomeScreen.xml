@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://niftygui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
     
-    <useStyles filename="de/agame/nifty/agame-button-styles.xml" />
-    <useControls filename="de/agame/nifty/agame-button.xml" />
+    <useStyles filename="de/agame/nifty/button/agame-button-styles.xml" />
+    <useControls filename="de/agame/nifty/button/agame-button.xml" />
     
-    <screen id="home">
+    <screen id="home" controller="de.agame.nifty.screencontrollers.HomeScreenController">
         <layer id="maincontainer" backgroundColor="#0000" childLayout="vertical">
             <panel id="titlepanel" height="33%" width="62.5%" align="center" childLayout="center" backgroundColor="#0000">
                 <text text="Agame" font="UserInterface/fonts/Title.fnt" width="100%" height="100%" />
@@ -12,16 +12,22 @@
             
             <panel id="centerpanel" height="44%" width="62.5%" align="center" childLayout="vertical" backgroundColor="#0000">
                 <panel id="playpanel" height="50%" width="100%" align="center" childLayout="center" backgroundColor="#0000">
-                    <control name="button" font="UserInterface/fonts/Content.fnt" label="Play" id="buttonplay" width="60%" height="50%" align="center" valign="center"/>
+                    <control name="button" font="UserInterface/fonts/Content.fnt" label="Play" id="buttonplay" width="60%" height="50%" align="center" valign="center">
+                        <interact onClick="play()"/>
+                    </control>
                 </panel>
                 
                 <panel id="settingspanel" height="50%" width="100%" align="center" childLayout="center" backgroundColor="#0000">
-                    <control name="button" font="UserInterface/fonts/Content.fnt" label="Settings" id="buttonsettings" width="60%" height="50%" align="center" valign="center"/>
+                    <control name="button" font="UserInterface/fonts/Content.fnt" label="Settings" id="buttonsettings" width="60%" height="50%" align="center" valign="center">
+                        <interact onClick="settings()"/>
+                    </control>
                 </panel>
             </panel>
             
             <panel id="bottompanel" height="23%" width="62.5%" align="center" childLayout="center" backgroundColor="#0000">
-                <control name="button" font="UserInterface/fonts/Content.fnt" label="Quit" id="buttonquit" width="40%" height="50%" align="center" valign="center"/>
+                <control name="button" font="UserInterface/fonts/Content.fnt" label="Quit" id="buttonquit" width="40%" height="50%" align="center" valign="center">
+                    <interact onClick="quit()"/>
+                </control>
             </panel>
         </layer>
     </screen>

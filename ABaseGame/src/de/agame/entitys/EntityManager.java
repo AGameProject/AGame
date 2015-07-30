@@ -18,6 +18,7 @@ import com.jme3.scene.Node;
 import de.agame.entitys.spawnhelpers.CompanionSpawnHelper;
 import de.agame.entitys.spawnhelpers.PlayerSpawnHelper;
 import de.agame.world.MeshProvider;
+import de.agame.world.WorldManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -55,6 +56,10 @@ public class EntityManager {
     
     public void setPhysicsSpace(PhysicsSpace space) {
         m_enviromentobservationset.setPhysicsSpace(space);
+    }
+    
+    public void setWorldManager(WorldManager manager) {
+        m_enviromentobservationset.setWorldManager(manager);
     }
     
     public Entity getEntity(int i) {

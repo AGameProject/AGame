@@ -7,8 +7,6 @@ package de.agame.world;
 import com.jme3.app.Application;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
@@ -18,7 +16,6 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import de.agame.data.StaticLocations;
 import de.agame.data.LevelIO;
 import de.agame.entitys.Entity;
 import de.agame.entitys.EntityManager;
@@ -54,6 +51,7 @@ public class WorldManager {
         m_assets = assets;
         m_meshprovider = meshprovider;
         m_entitymanager = entitymanager;
+        m_entitymanager.setWorldManager(this);
         m_chasecam = chasecam;
         m_app = app;
         m_time = daytime;
@@ -113,7 +111,7 @@ public class WorldManager {
      * spawns a new EntityPlayer with a chasecam
      */
     public void spawnFreshPlayer() {
-        Vector3f playerSpawnPoint = new Vector3f(0, 0, 0);
+        Vector3f playerSpawnPoint = new Vector3f(0, 30, 0);
         Vector3f companionSpawnPoint;
         companionSpawnPoint = playerSpawnPoint.add((float) (Math.random() * 5f), 0f, (float) (Math.random() * 5f));
         
@@ -139,6 +137,7 @@ public class WorldManager {
      */
     public void setPaused(boolean flag) {
         m_paused = flag;
+        m_chasecam.setDragToRotate(m_paused);
     }
     
     /**
@@ -158,6 +157,7 @@ public class WorldManager {
         if(m_paused) return;
         
         m_time.onUpdate(tpf);
+        m_entitymanager.doPossibleDespawns();
     }
     
     /**

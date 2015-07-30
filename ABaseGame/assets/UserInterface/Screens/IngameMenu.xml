@@ -4,18 +4,24 @@
     <useStyles filename="de/agame/nifty/button/agame-button-styles.xml" />
     <useControls filename="de/agame/nifty/button/agame-button.xml" />
     
-    <screen id="pause">
+    <screen id="pause" controller="de.agame.nifty.screencontrollers.IngameMenuController">
         <layer id="maincontainer" backgroundColor="#0000" childLayout="vertical">
             <panel id="upperpanel" height="33%" width="100%" align="center" childLayout="center" backgroundColor="#0000">
-                <control name="button" id="play" font="UserInterface/fonts/Content.fnt" label="Return To Game" width="50%" height="70%" align="center" valign="center"/>
+                <control name="button" id="play" font="UserInterface/fonts/Content.fnt" label="Return To Game" width="50%" height="40%" align="center" valign="center">
+                    <interact onClick="continuePlaying()" />
+                </control>
             </panel>
             
             <panel id="middlepanel" height="33%" width="100%" align="center" childLayout="center" backgroundColor="#0000">
-                <control name="button" id="settings" font="UserInterface/fonts/Content.fnt" label="Settings" width="50%" height="70%" align="center" valign="center"/>
+                <control name="button" id="settings" font="UserInterface/fonts/Content.fnt" label="Settings" width="50%" height="40%" align="center" valign="center">
+                    <interact onClick="settings()" />
+                </control>
             </panel>
             
             <panel id="lowerpanel" height="33%" width="100%" align="center" childLayout="center" backgroundColor="#0000">
-                <control name="button" id="title" font="UserInterface/fonts/Content.fnt" label="Return To Title" width="50%" height="70%" align="center" valign="center"/>
+                <control name="button" id="title" font="UserInterface/fonts/Content.fnt" label="Return To Title" width="50%" height="40%" align="center" valign="center">
+                    <interact onClick="title()" />
+                </control>
             </panel>
         </layer>
     </screen>

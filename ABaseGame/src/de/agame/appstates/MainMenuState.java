@@ -7,7 +7,6 @@ package de.agame.appstates;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.input.FlyByCamera;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
@@ -53,6 +52,8 @@ public class MainMenuState extends AbstractAppState implements UIListener{
         
         m_cam = m_app.getCamera();
         
+        m_gui.getNifty().fromXml("UserInterface/Screens/HomeScreen.xml", "home");
+        
         loadScreen("home");
         
         m_app.getGuiViewPort().addProcessor(m_gui);
@@ -71,42 +72,32 @@ public class MainMenuState extends AbstractAppState implements UIListener{
         Nifty nifty = m_gui.getNifty();
         nifty.gotoScreen(screen);
         
-        AbstractUIController controller = (AbstractUIController) nifty.getCurrentScreen().getScreenController();
+        AbstractUIController controller = (AbstractUIController) nifty.getScreen(screen).getScreenController();
         controller.setListener(this);
     }
     
+    @Override
     public void setEnabled(boolean enabled) {
         if(!enabled && isEnabled()) {
             m_app.getInputManager().setCursorVisible(false);
-            m_app.getGuiViewPort().removeProcessor(m_gui);
             
             m_app.getViewPort().removeProcessor(m_processor);
             
-            m_root.removeLight(m_daytime.getAmbient());
-            m_root.removeLight(m_daytime.getSun());
-            m_root.removeLight(m_daytime.getMoon());
+            m_root.detachChild(m_content);
             
-            m_root.detachAllChildren();
+            m_processor.cleanup();
+            
+            m_gui.getNifty().exit();
         } else if(enabled && !isEnabled()) {
             if(isInitialized()) {
-                Nifty nifty = m_gui.getNifty();
-                nifty.fromXml("UserInterface/MainMenu/MainMenu.xml", "home");
-        
                 loadScreen("home");
         
-                m_app.getGuiViewPort().addProcessor(m_gui);
                 m_app.getInputManager().setCursorVisible(true);
                 
                 m_app.getViewPort().getCamera().setLocation(new Vector3f(-100, 60, 100));
                 m_app.getViewPort().getCamera().lookAt(new Vector3f(0, 10, 0), Vector3f.UNIT_Y);
                 
-                m_root.attachChild(m_app.getAssetManager().loadModel("Scenes/mainmenu/mainmenu.j3o"));
-                
-                m_root.addLight(m_daytime.getAmbient());
-                m_root.addLight(m_daytime.getSun());
-                m_root.addLight(m_daytime.getMoon());
-        
-                m_root.attachChild(m_daytime.getSkyBox());
+                m_root.attachChild(m_content);
                 
                 m_app.getViewPort().addProcessor(m_processor);
             } else {
@@ -148,6 +139,6 @@ public class MainMenuState extends AbstractAppState implements UIListener{
         this.setEnabled(false);
         m_app.getStateManager().detach(this);
         
-        m_app.getStateManager().attach(new LoadingState(new MainLevelLoader(m_app, m_root)));
+        m_app.getStateManager().attach(new LoadingState(new MainLevelLoader(m_app, m_root, m_gui), m_gui));
     }
 }

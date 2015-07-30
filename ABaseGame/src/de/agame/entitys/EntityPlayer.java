@@ -84,6 +84,8 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
     }
 
     public void onAction(String name, boolean isPressed, float tpf) {
+        if(m_enviromentobservationset.getWorldManager().isPaused()) return;
+        
         if(name.equals("forward")) m_forward = isPressed;
         else if(name.equals("backward")) m_backward = isPressed;
         else if(name.equals("left")) m_left = isPressed;

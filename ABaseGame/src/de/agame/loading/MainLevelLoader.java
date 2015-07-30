@@ -58,9 +58,10 @@ public class MainLevelLoader extends LoadingTask{
     
     private NiftyJmeDisplay m_gui;
     
-    public MainLevelLoader(Application app, Node root) {
+    public MainLevelLoader(Application app, Node root, NiftyJmeDisplay gui) {
         m_app = app;
         m_root = root;
+        m_gui = gui;
     }
     
     @Override
@@ -79,8 +80,6 @@ public class MainLevelLoader extends LoadingTask{
         m_whole.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         setProgress(0.06f);
         m_dynamics = new Node("dynamics");
-        setProgress(0.07f);
-        m_gui = new NiftyJmeDisplay(m_assets, m_input, m_app.getAudioRenderer(), m_app.getGuiViewPort());
         setProgress(0.1f);
         
         //setup camera
@@ -133,7 +132,7 @@ public class MainLevelLoader extends LoadingTask{
 
     @Override
     public AbstractAppState getPreparedFollowUpState() {
-        return new GameState(m_root, m_worldmanager, m_physics);
+        return new GameState(m_root, m_gui, m_worldmanager, m_physics);
     }
     
 }

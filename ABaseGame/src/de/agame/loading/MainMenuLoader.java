@@ -11,7 +11,6 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Node;
 import de.agame.appstates.MainMenuState;
 import de.agame.world.DayTimeManager;
-import de.lessvoid.nifty.Nifty;
 
 /**
  *
@@ -27,26 +26,18 @@ public class MainMenuLoader extends LoadingTask{
     private Node m_content;
     private FilterPostProcessor m_processor;
     
-    public MainMenuLoader(Application app, Node root) {
+    public MainMenuLoader(Application app, Node root, NiftyJmeDisplay gui) {
         m_app = app;
         m_root = root;
         m_content = new Node();
+        m_gui = gui;
     }
     
     @Override
     protected void load() {
-         //load gui
-        m_gui = new NiftyJmeDisplay(m_app.getAssetManager(), m_app.getInputManager(), m_app.getAudioRenderer(), m_app.getGuiViewPort());
-        setProgress(0.1f);
-        
-        Nifty nifty = m_gui.getNifty();
-        nifty.fromXml("UserInterface/Screens/HomeScreen.xml", "home");
-        setProgress(0.2f);
-        
         //load background scene
-        
         m_daytime = new DayTimeManager(m_app.getAssetManager());
-        setProgress(0.3f);
+        setProgress(0.2f);
         
         m_content.addLight(m_daytime.getAmbient());
         setProgress(0.4f);

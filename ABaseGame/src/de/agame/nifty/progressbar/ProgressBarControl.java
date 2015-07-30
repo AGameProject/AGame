@@ -24,17 +24,24 @@ public class ProgressBarControl extends AbstractController{
     
     private float m_progress = 0;
     
+    private boolean m_bound = false;
+    
     @Override
     public void bind(Nifty nifty, Screen screen, Element element, Properties parameter, Attributes controlDefinitionAttributes) {
-        m_bar = nifty.getCurrentScreen().findElementByName(element.getId() + "#inner");
-        m_text = nifty.getCurrentScreen().findElementByName(element.getId() + "#text").getRenderer(TextRenderer.class);
+        super.bind(element);
+        m_bar = element.findElementByName("#inner");
+        m_text = element.findElementByName("#text").getRenderer(TextRenderer.class);
+        
+        m_bound = true;
     }
 
     public void setProgress(float progress) {
         m_progress = progress;
         
-        m_bar.setWidth((int) ((float) m_bar.getParent().getWidth() * m_progress));
-        m_text.setText((int) (m_progress * 100.0f) + "%");
+        if(m_bound) {
+            m_bar.setWidth((int) ((float) m_bar.getParent().getWidth() * m_progress));
+            m_text.setText((int) (m_progress * 100.0f) + "%");
+        }
     }
     
     public float getProgress() {

@@ -17,6 +17,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
+import com.jme3.shadow.CompareMode;
 import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.shadow.EdgeFilteringMode;
 
@@ -59,6 +60,10 @@ public class DayTimeManager {
         m_sunshadows = new DirectionalLightShadowFilter(assets, 1024, 2);
         m_sunshadows.setLight(m_sun);
         m_sunshadows.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
+        m_sunshadows.setShadowCompareMode(CompareMode.Hardware);
+        
+        m_sunshadows.setShadowZExtend(50.0f);
+        m_sunshadows.setShadowZFadeLength(2.0f);
         
         m_moon = new DirectionalLight();
         m_moon.setColor(m_mooncolor);

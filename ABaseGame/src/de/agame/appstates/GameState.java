@@ -75,6 +75,13 @@ public class GameState extends AbstractAppState implements UIListener, ActionLis
         super.cleanup();
         
         if(isEnabled()) disable();
+        
+        m_gui = null;
+        m_app = null;
+        m_physics = null;
+        m_root = null;
+        m_stateManager = null;
+        m_worldManager = null;
     }
     
     /**

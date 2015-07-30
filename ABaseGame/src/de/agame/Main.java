@@ -26,8 +26,7 @@ public class Main extends SimpleApplication {
         
         //create gui display
         m_gui = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, viewPort);
-        
-        getViewPort().addProcessor(m_gui);
+        getGuiViewPort().addProcessor(m_gui);
         
         //disable flycam
         flyCam.setEnabled(false);

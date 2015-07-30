@@ -85,8 +85,6 @@ public class MainMenuState extends AbstractAppState implements UIListener{
             
             m_root.detachChild(m_content);
             
-            m_processor.cleanup();
-            
             m_gui.getNifty().exit();
         } else if(enabled && !isEnabled()) {
             if(isInitialized()) {

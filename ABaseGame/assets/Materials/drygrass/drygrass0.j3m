@@ -1,0 +1,10 @@
+Material DryGrass : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        UseMaterialColors : true
+        Specular : 0.23529412 0.2 0.09411765 1.0
+        Diffuse : 0.79607844 0.8117647 0.28235295 1.0
+        Ambient : 0.79607844 0.8117647 0.28235295 1.0
+     }
+    AdditionalRenderState {
+    }
+}

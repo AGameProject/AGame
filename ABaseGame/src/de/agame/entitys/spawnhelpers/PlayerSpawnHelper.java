@@ -11,7 +11,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import de.agame.Items.Item;
+import de.agame.item.Item;
 import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.Entity;
 import de.agame.entitys.animation.AnimationManager;
@@ -287,7 +287,7 @@ public class PlayerSpawnHelper implements EntitySpawnHelper{
         player.setLeftHand(leftitem);
         
         Node sword = meshes.getMesh("theSlasher");
-        Item item = new Item(sword, 1, 30.0f, 1.5f, 2.5f, false, true, "ATTACK_SWING", null);
+        Item item = new Item(null, sword, 1, 30.0f, 1.5f, 2.5f, false, true, "ATTACK_SWING", null);
         
         player.setHeldItem(item);
         

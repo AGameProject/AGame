@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://niftygui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
     
-    <useStyles filename="de/agame/nifty/button/agame-button-styles.xml" />
-    <useControls filename="de/agame/nifty/button/agame-button.xml" />
+    <useStyles filename="de/agame/nifty/agame-controls-styles.xml" />
+    <useControls filename="de/agame/nifty/agame-controls.xml" />
     
     <screen id="pause" controller="de.agame.nifty.screencontrollers.IngameMenuController">
         <layer id="maincontainer" backgroundColor="#0000" childLayout="vertical">

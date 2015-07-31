@@ -6,7 +6,7 @@ package de.agame.entitys;
 
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import de.agame.Items.Item;
+import de.agame.item.Item;
 import de.agame.entitys.animation.AnimationProvider;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;

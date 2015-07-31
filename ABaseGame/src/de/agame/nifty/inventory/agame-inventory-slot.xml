@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-controls>
+
+    <controlDefinition style="agame-inventory-slot" name="inventoryslot" controller="de.agame.nifty.inventory.InventorySlot">
+        <panel style="#backdrop" id="#backdrop">
+            <image style="#item" id="#item"/>
+            <text style="#text" id="#text" font="$font" text="$slot" />
+        </panel>
+    </controlDefinition>
+    
+</nifty-controls>

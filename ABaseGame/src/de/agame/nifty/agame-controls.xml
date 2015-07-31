@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-controls>
+    <useControls filename="de/agame/nifty/button/agame-button.xml" />
+    <useControls filename="de/agame/nifty/progressbar/agame-progressbar.xml" />
+    <useControls filename="de/agame/nifty/inventory/agame-inventory-slot.xml" />
+    <useControls filename="de/agame/nifty/inventory/agame-inventory.xml" />
+</nifty-controls>

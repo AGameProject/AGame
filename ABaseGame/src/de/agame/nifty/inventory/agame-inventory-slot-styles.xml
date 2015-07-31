@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+    <style id="agame-inventory-slot#backdrop">
+        <attributes backgroundImage="de/agame/nifty/inventory/backdrop.png" width="100%" height="100%" visibleToMouse="false" />
+    </style>
+    
+    <style id="agame-inventory-slot#item">
+        <attributes width="90%" height="90%" visibleToMouse="true"/>
+    </style>
+    
+    <style id="agame-inventory-slot#text">
+        <attributes width="100%" height="100%" />
+    </style>
+    
+</nifty-styles>

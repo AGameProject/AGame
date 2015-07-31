@@ -6,7 +6,7 @@ package de.agame.entitys.animation;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import de.agame.Items.Item;
+import de.agame.item.Item;
 import de.agame.entitys.movement.MovementState;
 import java.util.ArrayList;
 import java.util.HashMap;

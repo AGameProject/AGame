@@ -4,7 +4,7 @@
  */
 package de.agame.entitys.animation;
 
-import de.agame.Items.Item;
+import de.agame.item.Item;
 import de.agame.entitys.movement.MovementState;
 
 /**

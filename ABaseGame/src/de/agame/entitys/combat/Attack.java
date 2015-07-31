@@ -4,7 +4,7 @@
  */
 package de.agame.entitys.combat;
 
-import de.agame.Items.Item;
+import de.agame.item.Item;
 import de.agame.entitys.EntityCreature;
 import de.agame.entitys.animation.AnimLink;
 import de.agame.entitys.animation.AnimRequest;

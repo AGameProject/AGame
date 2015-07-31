@@ -120,7 +120,7 @@ public class GameState extends AbstractAppState implements UIListener, ActionLis
     
     public void setPaused(boolean flag) {
         if(flag) showPause();
-        else showHud();
+        //else showHud();
         
         m_worldManager.setPaused(flag);
     }

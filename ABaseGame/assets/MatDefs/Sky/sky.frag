@@ -24,14 +24,14 @@ void main() {
     moonpart = clamp(moonpart, 0.0, 1.0);
 
     float afterglow = clamp(0.5 - abs(dot(down, sundir)), 0.0, 1.0);
-    afterglow *= clamp(0.7 - abs(dot(down, dir)), 0.0, 1.0) * 3.0f;
+    afterglow *= clamp(0.7 - abs(dot(down, dir)), 0.0, 1.0) * 3.0;
     vec4 afterglowpart = m_suncolor * m_suncolor * afterglow;
 
-    float skybrightness = dot(down, sundir) + 0.1f;
+    float skybrightness = dot(down, sundir) + 0.1;
     vec4 skypart = m_skycolor * skybrightness;
     skypart = clamp(skypart, 0.0, 1.0);
 
-    float starbrightness = dot(down, moondir) + 0.1f;
+    float starbrightness = dot(down, moondir) + 0.1;
     starbrightness = clamp(starbrightness, 0.0, 1.0);
     vec4 stars = vec4(0.0);
     if(starbrightness > 0.0) {

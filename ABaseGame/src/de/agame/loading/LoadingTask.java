@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Fredie
  */
-public abstract class LoadingTask extends Thread{
+public abstract class LoadingTask implements Runnable{
 
     private float m_progress = 0.0f;
     private Lock m_progressLock = new ReentrantLock();
@@ -20,6 +20,8 @@ public abstract class LoadingTask extends Thread{
     protected abstract void load();
     
     public abstract AbstractAppState getPreparedFollowUpState();
+    
+    public abstract void cleanup();
     
     protected void setProgress(float progress) {
         m_progressLock.lock();
@@ -41,9 +43,7 @@ public abstract class LoadingTask extends Thread{
     
     @Override
     public void run() {
-        super.run();
         m_progress = 0;
-        
         load();
     }
 }

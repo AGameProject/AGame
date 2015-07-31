@@ -4,7 +4,7 @@
     <useStyles filename="de/agame/nifty/progressbar/agame-progressbar-styles.xml" />
     <useControls filename="de/agame/nifty/progressbar/agame-progressbar.xml" />
     
-    <screen id="load">
+    <screen id="load" controller="de.agame.nifty.screencontrollers.LoadingScreenController">
         <layer id="maincontainer" backgroundColor="#0000" childLayout="vertical">
             <panel id="panel" height="100%" width="100%" align="center" childLayout="center" backgroundColor="#0000">
                 <image id="backgroun0" filename="Textures/loadingscreens/loadingscreen0.png" height="100%" width="100%">

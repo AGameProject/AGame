@@ -46,7 +46,6 @@ public class MainMenuState extends AbstractAppState implements UIListener{
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         
-        
         //display gui
         m_app = app;
         
@@ -56,7 +55,6 @@ public class MainMenuState extends AbstractAppState implements UIListener{
         
         loadScreen("home");
         
-        m_app.getGuiViewPort().addProcessor(m_gui);
         m_app.getInputManager().setCursorVisible(true);
 
         //display background scene
@@ -83,9 +81,8 @@ public class MainMenuState extends AbstractAppState implements UIListener{
             
             m_app.getViewPort().removeProcessor(m_processor);
             
-            m_root.detachChild(m_content);
+            m_root.detachAllChildren();
             
-            m_gui.getNifty().exit();
         } else if(enabled && !isEnabled()) {
             if(isInitialized()) {
                 loadScreen("home");

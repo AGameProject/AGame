@@ -8,7 +8,6 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.ChaseCamera;
@@ -66,7 +65,13 @@ public class MainLevelLoader extends LoadingTask{
     
     @Override
     protected void load() {
-        m_physics = new BulletAppState();
+        m_physics = m_app.getStateManager().getState(BulletAppState.class);
+        
+        if(m_physics == null) {
+            m_physics = new BulletAppState();
+            m_app.getStateManager().attach(m_physics);
+        }
+        
         setProgress(0.01f);
         
         m_io = new LevelIO();
@@ -133,6 +138,26 @@ public class MainLevelLoader extends LoadingTask{
     @Override
     public AbstractAppState getPreparedFollowUpState() {
         return new GameState(m_root, m_gui, m_worldmanager, m_physics);
+    }
+
+    @Override
+    public void cleanup() {
+        m_app = null;
+        m_assets = null;
+        m_chasecam = null;
+        m_dynamics = null;
+        m_entitymanager = null;
+        m_filters = null;
+        m_gui = null;
+        m_input = null;
+        m_io = null;
+        m_meshprovider = null;
+        m_physics = null;
+        m_root = null;
+        m_statics = null;
+        m_time = null;
+        m_whole = null;
+        m_worldmanager = null;
     }
     
 }

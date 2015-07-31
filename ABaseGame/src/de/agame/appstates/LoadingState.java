@@ -11,7 +11,6 @@ import com.jme3.niftygui.NiftyJmeDisplay;
 import de.agame.loading.LoadingTask;
 import de.agame.nifty.progressbar.ProgressBarControl;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.effects.EffectEventId;
 import de.lessvoid.nifty.elements.Element;
 
 /**
@@ -23,6 +22,7 @@ public class LoadingState<T extends LoadingTask> extends AbstractAppState{
     private Application m_app;
     
     private T m_task;
+    private Thread m_thread;
     
     private NiftyJmeDisplay m_gui;
     
@@ -44,7 +44,9 @@ public class LoadingState<T extends LoadingTask> extends AbstractAppState{
         nifty.gotoScreen("load");
         m_loadingbar = m_gui.getNifty().getScreen("load").findNiftyControl("bar", ProgressBarControl.class);
         m_loadingbar.setProgress(0);
-        m_task.start();
+        
+        m_thread = new Thread(m_task);
+        m_thread.start();
     }
     
     @Override
@@ -61,11 +63,22 @@ public class LoadingState<T extends LoadingTask> extends AbstractAppState{
             }
 
             if(m_loadingbar.getProgress() >= 1.0f) {
-                m_gui.getNifty().exit();
-                
                 m_app.getStateManager().detach(this);
-                m_app.getStateManager().attach(m_task.getPreparedFollowUpState());
+                
+                AbstractAppState newState = m_task.getPreparedFollowUpState();
+                m_task.cleanup();
+                
+                m_app.getStateManager().attach(newState);
             }
         }
+    }
+    
+    @Override
+    public void cleanup() {
+        m_task = null;
+        m_thread = null;
+        m_app = null;
+        m_gui = null;
+        m_loadingbar = null;
     }
 }

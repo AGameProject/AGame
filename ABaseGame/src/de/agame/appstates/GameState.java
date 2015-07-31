@@ -91,9 +91,6 @@ public class GameState extends AbstractAppState implements UIListener, ActionLis
         m_app.getInputManager().addMapping("pause", new KeyTrigger(KeyInput.KEY_ESCAPE));
         m_app.getInputManager().addListener(this, "pause");
         
-        //enable physics
-        m_stateManager.attach(m_physics);
-        
         //init level and game data
         m_worldManager.setPhysicsSpace(m_physics.getPhysicsSpace());
         m_worldManager.freshLevel();
@@ -115,11 +112,10 @@ public class GameState extends AbstractAppState implements UIListener, ActionLis
         m_app.getInputManager().removeListener(this);
         
         //detach all level related data from scenegraph
-        m_root.detachChild(m_worldManager.getWholeWorld());
+        m_root.detachAllChildren();
         m_app.getViewPort().removeProcessor(m_worldManager.getFilters());
         m_worldManager.setPaused(true);
-        
-        m_gui.getNifty().exit();
+        m_worldManager.cleanup();
     }
     
     public void setPaused(boolean flag) {

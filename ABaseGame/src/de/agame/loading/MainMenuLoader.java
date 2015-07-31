@@ -61,5 +61,15 @@ public class MainMenuLoader extends LoadingTask{
     public AbstractAppState getPreparedFollowUpState() {
         return new MainMenuState(m_root, m_content, m_processor, m_daytime, m_gui);
     }
+
+    @Override
+    public void cleanup() {
+        m_app = null;
+        m_content = null;
+        m_daytime = null;
+        m_gui = null;
+        m_processor = null;
+        m_root = null;
+    }
     
 }

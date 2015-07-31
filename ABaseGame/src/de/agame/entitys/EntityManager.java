@@ -7,7 +7,6 @@ package de.agame.entitys;
 import de.agame.entitys.spawnhelpers.EntitySpawnHelper;
 import de.agame.entitys.sets.UserInterfaceSet;
 import de.agame.entitys.sets.EnviromentObservationSet;
-import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
@@ -88,6 +87,12 @@ public class EntityManager {
     public void doPossibleDespawns() {
         for(Entity e : m_entitys) {
             if(e.mayDespawn()) despawnEntity(e);
+        }
+    }
+
+    public void cleanup() {
+        for(Entity e : m_entitys) {
+            e.onDetach();
         }
     }
 }

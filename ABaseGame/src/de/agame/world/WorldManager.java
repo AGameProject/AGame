@@ -12,8 +12,6 @@ import com.jme3.input.InputManager;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
-import com.jme3.renderer.Camera;
-import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import de.agame.data.LevelIO;
@@ -67,29 +65,6 @@ public class WorldManager {
         m_entitymanager.setPhysicsSpace(physics);
     }
     
-    public void initialize(AssetManager assets, InputManager inputManager, Camera cam, PhysicsSpace physicsspace, Application app) {
-        m_input = inputManager;
-        m_assets = assets;
-        m_whole = new Node("world");
-        m_whole.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        m_dynamics = new Node("dynamics");
-        m_physicsspace = physicsspace;
-        
-        cam.setAxes(Vector3f.UNIT_X, Vector3f.UNIT_Y, Vector3f.UNIT_Z);
-        m_chasecam = new ChaseCamera(cam, m_dynamics, m_input);
-        m_chasecam.setDragToRotate(false);
-        m_chasecam.setInvertVerticalAxis(true);
-        m_chasecam.setDefaultDistance(5.0f);
-        m_chasecam.setMaxDistance(7.0f);
-        m_chasecam.setMinDistance(3.0f);
-        m_chasecam.setMinVerticalRotation((float) Math.toRadians(-30.0d));
-        
-        m_entitymanager = new EntityManager();
-//        m_entitymanager.finishInit(m_physicsspace, m_dynamics, m_gui, cam, m_chasecam, m_input, m_meshprovider);
-        
-        m_app = app;
-    }
-    
     /**
      * Loads data for a fresh untouched level
      */
@@ -121,6 +96,11 @@ public class WorldManager {
         m_chasecam.setLookAtOffset(new Vector3f(0, 1.7f, 0));
         
         m_entitymanager.spawnEntityAt("Companion", companionSpawnPoint);
+    }
+    
+    public void cleanup() {
+        m_physicsspace.removeAll(m_statics);
+        m_entitymanager.cleanup();
     }
     
     /**

@@ -96,7 +96,7 @@ public class Entity extends AbstractControl{
         m_enviromentobservationset.getRoot().attachChild(m_spatial);
     }
     
-       public void onDetach() {
+    public void onDetach() {
         m_enviromentobservationset.getPhysicsSpace().removeAll(m_spatial);
         m_enviromentobservationset.getPhysicsSpace().remove(m_spatialcontrolset.getMovementControl());
         m_enviromentobservationset.getRoot().detachChild(m_spatial);

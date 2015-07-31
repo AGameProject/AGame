@@ -13,5 +13,5 @@ public class StaticLocations {
     /**
      * path to the main level
      */
-    public static final String WORLD_MAIN_LEVEL = "Scenes/mainmenu/mainmenu.j3o";
+    public static final String WORLD_MAIN_LEVEL = "Scenes/Levels/Beta-level_2 ready (mit Bauemen).j3o";
 }

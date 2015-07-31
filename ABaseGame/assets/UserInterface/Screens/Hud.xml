@@ -7,10 +7,10 @@
     <screen id="hud" controller="de.agame.nifty.screencontrollers.HudController">
         <layer id="maincontainer" backgroundColor="#0000" childLayout="vertical">
             <panel id="contentwrapper" width="100%" height="83.4%" backgroundColor="#0000" childLayout="center">
-                <panel id="content" width="90%" height="90%" backgroundColor="#f007" childLayout="center">
+                <panel id="content" width="90%" height="90%" backgroundColor="#0000" childLayout="center">
                 </panel>
             </panel>
-            <panel id="mainhud" width="100%" height="16.6%" backgroundColor="#7773" childLayout="horizontal">
+            <panel id="mainhud" width="100%" height="16.6%" backgroundColor="#0000" childLayout="horizontal">
                 
             </panel>
         </layer>

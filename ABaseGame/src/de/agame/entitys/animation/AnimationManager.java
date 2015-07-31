@@ -7,7 +7,7 @@ package de.agame.entitys.animation;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
-import de.agame.Items.Item;
+import de.agame.item.Item;
 import de.agame.entitys.combat.CombatStateListener;
 import de.agame.entitys.movement.MovementState;
 import de.agame.entitys.movement.MovementStateChangeListener;

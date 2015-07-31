@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://niftygui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
     
-    <useStyles filename="de/agame/nifty/button/agame-button-styles.xml" />
-    <useControls filename="de/agame/nifty/button/agame-button.xml" />
+    <useStyles filename="de/agame/nifty/agame-controls-styles.xml" />
+    <useControls filename="de/agame/nifty/agame-controls.xml" />
     
     <screen id="hud" controller="de.agame.nifty.screencontrollers.HudController">
         <layer id="maincontainer" backgroundColor="#0000" childLayout="vertical">
+            <panel id="contentwrapper" width="100%" height="83.4%" backgroundColor="#0000" childLayout="center">
+                <panel id="content" width="90%" height="90%" backgroundColor="#f007" childLayout="center">
+                </panel>
+            </panel>
+            <panel id="mainhud" width="100%" height="16.6%" backgroundColor="#7773" childLayout="horizontal">
+                
+            </panel>
         </layer>
     </screen>
 </nifty>

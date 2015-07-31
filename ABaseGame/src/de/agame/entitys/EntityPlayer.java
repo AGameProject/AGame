@@ -58,8 +58,9 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.addMapping("attack", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputmanager.addMapping("block", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         inputmanager.addMapping("lockview", new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE));
+        inputmanager.addMapping("toggleinventory", new KeyTrigger(KeyInput.KEY_E));
         
-        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint", "crouch", "attack", "block", "lockview");
+        inputmanager.addListener(this, "forward", "backward", "left", "right", "jump", "sprint", "crouch", "attack", "block", "lockview", "toggleinventory");
         
     }
     
@@ -108,6 +109,10 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         else if(name.equals("attack") && isPressed) attack();
         
         else if(name.equals("block") && isPressed) block();
+        
+        else if(name.equals("toggleinventory") && isPressed) {
+            
+        }
     }
     
     @Override

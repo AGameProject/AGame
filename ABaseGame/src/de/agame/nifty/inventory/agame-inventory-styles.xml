@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+    <style id="agame-inventory#backdrop">
+        <attributes backgroundColor="#7773" childLayout="vertical" visibleToMouse="false"/>
+    </style>
+    
+    <style id="agame-inventory#title">
+        <attributes width="100%" height="20%" textVAlign="center" textHAlign="center" visibleToMouse="false"/>
+    </style>
+    
+    <style id="agame-inventory#contentpanel">
+        <attributes width="100%" height="80%" backgroundColor="#5553" childLayout="vertical" visibleToMouse="false"/>
+    </style>
+</nifty-styles>

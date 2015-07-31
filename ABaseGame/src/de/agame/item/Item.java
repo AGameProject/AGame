@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.Items;
+package de.agame.item;
 
 import com.jme3.scene.Node;
 
@@ -30,7 +30,9 @@ public class Item {
     
     private float m_range;
     
-    public Item(Node itemmodel, int maxstacksize, float hitdamage, float range, float mass, boolean istwohanded, boolean sharp, String attacktag, String blocktag) {
+    private String m_thumbdir;
+    
+    public Item(String thumbdir, Node itemmodel, int maxstacksize, float hitdamage, float range, float mass, boolean istwohanded, boolean sharp, String attacktag, String blocktag) {
         m_itemmodel = itemmodel;
         m_maxstacksize = maxstacksize;
         m_hitdamage = hitdamage;
@@ -38,6 +40,7 @@ public class Item {
         m_isTwoHanded = istwohanded;
         m_isSharp = sharp;
         m_mass = mass;
+        m_thumbdir = thumbdir;
         
         m_attacktag = attacktag;
         m_blocktag = blocktag;
@@ -77,5 +80,9 @@ public class Item {
     
     public Node getItemModel() {
         return m_itemmodel;
+    }
+    
+    public String getThumbdir() {
+        return m_thumbdir;
     }
 }

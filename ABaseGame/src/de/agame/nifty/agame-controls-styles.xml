@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+    <useStyles filename="de/agame/nifty/button/agame-button-styles.xml" />
+    <useStyles filename="de/agame/nifty/progressbar/agame-progressbar-styles.xml" />
+    <useStyles filename="de/agame/nifty/inventory/agame-inventory-slot-styles.xml" />
+    <useStyles filename="de/agame/nifty/inventory/agame-inventory-styles.xml" />
+</nifty-styles>

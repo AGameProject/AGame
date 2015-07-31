@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.agame.Items;
+package de.agame.item;
 
 /**
  *
@@ -10,11 +10,11 @@ package de.agame.Items;
  */
 public class ItemStack {
     
-    private int m_itemid = -1;
+    private Item m_item;
     private int m_stacksize = 0;
     
-    public ItemStack(int itemid) {
-        m_itemid = itemid;
+    public ItemStack(Item item) {
+        m_item = item;
     }
     
     public void setSize(int size) {
@@ -25,7 +25,7 @@ public class ItemStack {
         return m_stacksize;
     }
     
-    public int getItemID() {
-        return m_itemid;
+    public Item getItem() {
+        return m_item;
     }
 }

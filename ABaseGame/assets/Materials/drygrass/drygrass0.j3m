@@ -1,0 +1,10 @@
+Material My Material : MatDefs/Flat/Lighting.j3md {
+     MaterialParameters {
+        UseMaterialColors : true
+        Specular : 0.23529412 0.2 0.09411765 1.0
+        Diffuse : 0.6509804 0.68235296 0.19215687 1.0
+        Ambient : 0.6509804 0.68235296 0.19215687 1.0
+     }
+    AdditionalRenderState {
+    }
+}

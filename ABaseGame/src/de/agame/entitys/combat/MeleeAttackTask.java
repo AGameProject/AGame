@@ -5,7 +5,7 @@
 package de.agame.entitys.combat;
 
 import com.jme3.math.Vector3f;
-import de.agame.Items.Item;
+import de.agame.item.Item;
 import de.agame.entitys.EntityCreature;
 import java.util.TimerTask;
 

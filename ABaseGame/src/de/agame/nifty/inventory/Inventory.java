@@ -18,7 +18,26 @@ import java.util.Properties;
  */
 public class Inventory extends AbstractController{
 
+    private Element m_title;
+    private Element m_contentspace;
+    
+    private boolean m_bound = false;
+    
+    private int m_slots = 12;
+    private int m_xslots = 4;
+    
     public void bind(Nifty nifty, Screen screen, Element element, Properties parameter, Attributes controlDefinitionAttributes) {
+        super.bind(element);
+        
+        m_title = element.findElementByName("#title");
+        m_contentspace = element.findElementByName("#contentpanel");
+        
+        m_bound = true;
+    }
+    
+    public void setSlotProps(int slots, int xslots) {
+        m_slots = slots;
+        m_xslots = slots;
     }
 
     public void onStartScreen() {

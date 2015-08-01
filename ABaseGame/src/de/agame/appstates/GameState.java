@@ -123,6 +123,8 @@ public class GameState extends AbstractAppState implements UIListener, ActionLis
         else showHud();
         
         m_worldManager.setPaused(flag);
+        if(flag) m_physics.setSpeed(0.0f);
+        else m_physics.setSpeed(1.0f);
     }
     
     public void showPause() {

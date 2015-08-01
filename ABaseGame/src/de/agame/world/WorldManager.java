@@ -24,7 +24,7 @@ import de.agame.entitys.EntityManager;
  */
 public class WorldManager {
     //not levelrelated members
-    private LevelIO m_io = new LevelIO();
+    private LevelIO m_io;
     private InputManager m_input;
     private AssetManager m_assets;
     private MeshProvider m_meshprovider;
@@ -117,7 +117,7 @@ public class WorldManager {
      */
     public void setPaused(boolean flag) {
         m_paused = flag;
-        m_chasecam.setDragToRotate(m_paused);
+        m_chasecam.setEnabled(!m_paused);
     }
     
     /**

@@ -23,6 +23,7 @@ import de.agame.appstates.GameState;
 import de.agame.data.LevelIO;
 import de.agame.data.StaticLocations;
 import de.agame.entitys.EntityManager;
+import de.agame.world.BetterChaseCam;
 import de.agame.world.DayTimeManager;
 import de.agame.world.MeshProvider;
 import de.agame.world.WorldManager;
@@ -90,7 +91,7 @@ public class MainLevelLoader extends LoadingTask{
         //setup camera
         Camera cam = m_app.getCamera();
         cam.setAxes(Vector3f.UNIT_X, Vector3f.UNIT_Y, Vector3f.UNIT_Z);
-        m_chasecam = new ChaseCamera(cam, m_dynamics, m_input);
+        m_chasecam = new BetterChaseCam(cam, m_dynamics, m_input);
         m_chasecam.setDragToRotate(false);
         m_chasecam.setInvertVerticalAxis(true);
         m_chasecam.setDefaultDistance(5.0f);

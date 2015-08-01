@@ -13,9 +13,13 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import de.agame.entitys.animation.AnimationProvider;
+import de.agame.entitys.movement.MovementState;
 import de.agame.entitys.sets.EnviromentObservationSet;
 import de.agame.entitys.sets.SpatialControlSet;
 import de.agame.entitys.sets.UserInterfaceSet;
+import de.agame.nifty.inventory.Inventory;
+import de.agame.nifty.inventory.InventoryFactory;
+import de.lessvoid.nifty.elements.Element;
 
 /**
  *
@@ -31,6 +35,9 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
     private boolean m_lockview = false;
     
     private Vector3f m_walkdirection = new Vector3f();
+    
+    private Inventory m_inventory;
+    private boolean m_showInventory = false;
     
     public EntityPlayer(AnimationProvider provider, Spatial spatial, SpatialControlSet spatialcontrolset, EnviromentObservationSet enviromentobservationset, UserInterfaceSet userinterfaceset) {
         super(provider, spatial, spatialcontrolset, enviromentobservationset, userinterfaceset);
@@ -79,6 +86,8 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         inputmanager.deleteMapping("crouch");
         inputmanager.deleteMapping("attack");
         inputmanager.deleteMapping("block");
+        inputmanager.deleteMapping("lockview");
+        inputmanager.deleteMapping("toggleinventory");
         
         inputmanager.removeListener(this);
         
@@ -87,37 +96,69 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
     public void onAction(String name, boolean isPressed, float tpf) {
         if(m_enviromentobservationset.getWorldManager().isPaused()) return;
         
-        if(name.equals("forward")) m_forward = isPressed;
-        else if(name.equals("backward")) m_backward = isPressed;
-        else if(name.equals("left")) m_left = isPressed;
-        else if(name.equals("right")) m_right = isPressed;
-        
-        else if(name.equals("sprint")) {
-            if(isPressed) getMovementManager().sprint();
-            else getMovementManager().walk();
+        if(name.equals("toggleinventory") && isPressed) {
+            if(m_inventory != null) {
+                m_showInventory = !m_showInventory;
+                m_inventory.getElement().setVisible(m_showInventory);
+                
+                m_userinterfaceset.getChaseCam().setEnabled(!m_showInventory);
+                m_userinterfaceset.getInputManager().setCursorVisible(m_showInventory);
+                
+                //if inventory is shown, stand still
+                if(m_showInventory) {
+                    getMovementManager().walk();
+                    m_forward = false;
+                    m_backward = false;
+                    m_left = false;
+                    m_right = false;
+                }
+            }
         }
-        else if(name.equals("crouch")) {
-            if(isPressed) getMovementManager().crouch();
-            else getMovementManager().unCrouch();
+        
+        if(!m_showInventory) {
+            if(name.equals("forward")) m_forward = isPressed;
+            else if(name.equals("backward")) m_backward = isPressed;
+            else if(name.equals("left")) m_left = isPressed;
+            else if(name.equals("right")) m_right = isPressed;
+
+            else if(name.equals("sprint")) {
+                if(isPressed) getMovementManager().sprint();
+                else getMovementManager().walk();
+            }
+            else if(name.equals("crouch")) {
+                if(isPressed) {
+                    if(getMovementManager().getCurrentState().getAdditionalArg() == MovementState.AdditionalMovementArg.crouching)
+                        getMovementManager().unCrouch();
+                    else getMovementManager().crouch();
+                }
+            }
+            else if(name.equals("lockview")) {
+                m_lockview = isPressed;
+            }
+
+            else if(name.equals("jump") && isPressed) getMovementManager().jump();
+
+            else if(name.equals("attack") && isPressed) attack();
+
+            else if(name.equals("block") && isPressed) block();
         }
-        else if(name.equals("lockview")) {
-            m_lockview = isPressed;
-        }
         
-        else if(name.equals("jump") && isPressed) getMovementManager().jump();
         
-        else if(name.equals("attack") && isPressed) attack();
-        
-        else if(name.equals("block") && isPressed) block();
-        
-        else if(name.equals("toggleinventory") && isPressed) {
-            
-        }
     }
     
     @Override
     public void simpleUpdate(float tpf) {
         super.simpleUpdate(tpf);
+        
+        if(m_inventory == null) {
+            try {
+                Element inventoryelement = m_userinterfaceset.getHudController().addCustomUIContent(InventoryFactory.createInventory("playerinventory"));
+                m_inventory = inventoryelement.getControl(Inventory.class);
+                m_inventory.getElement().setVisible(m_showInventory);
+            } catch (Exception e) {
+                //do nothing just try it again next time
+            }
+        }
         
         Vector3f camDir = m_userinterfaceset.getCam().getDirection();
         Vector3f camLeft = m_userinterfaceset.getCam().getLeft();
@@ -133,7 +174,9 @@ public class EntityPlayer extends EntityCharacter implements ActionListener{
         if(m_forward) m_walkdirection.addLocal(camDir);
         if(m_backward) m_walkdirection.addLocal(camDir.negate());
         
-        if(m_lockview) {
+        if(m_showInventory) {
+          getMovementManager().setMovementDirection(new Vector3f(0, 0, 0));
+        } else if(m_lockview) {
             Vector3f walk = new Vector3f(0, 0, 0);
             
             if(m_left) walk.subtractLocal(Vector3f.UNIT_Z);

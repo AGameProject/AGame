@@ -38,7 +38,7 @@ public abstract class EntityLiving extends Entity{
     protected void controlUpdate(float tpf) {
         super.controlUpdate(tpf);
         
-        if(m_enviromentobservationset.getWorldManager().isPaused()) tpf = 0;
+        if(m_enviromentobservationset.getWorldManager().isPaused()) return;
         
         //accumulate time passed since the last complex update sceduled
         m_accu += tpf;

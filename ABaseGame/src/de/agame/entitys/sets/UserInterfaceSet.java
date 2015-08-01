@@ -8,7 +8,7 @@ import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
-import com.jme3.scene.Node;
+import de.agame.nifty.screencontrollers.HudController;
 
 /**
  *
@@ -42,6 +42,10 @@ public class UserInterfaceSet {
     
     public NiftyJmeDisplay getGuiNode() {
         return m_guinode;
+    }
+    
+    public HudController getHudController() {
+        return (HudController) m_guinode.getNifty().getScreen("hud").getScreenController();
     }
     
     public void setInputManager(InputManager inputmanager) {
